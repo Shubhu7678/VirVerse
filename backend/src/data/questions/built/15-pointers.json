@@ -1,0 +1,864 @@
+[
+  {
+    "slug": "ptr-swap-two-numbers",
+    "title": "Swap Two Numbers Using Pointers",
+    "category": "pointers",
+    "difficulty": "Easy",
+    "description": "A pointer stores the address of a variable. `*p` reads or changes the variable it points to.\nWrite a function `void swap(int *a, int *b)` that swaps two integers, call it with `&x` and `&y`, then print the result.\n\nInput\nOne line with two integers `a` and `b`.\n\nOutput\nPrint the swapped values `b a` on one line separated by a single space.",
+    "exampleInput": "3 5",
+    "exampleOutput": "5 3",
+    "constraints": [
+      "-1000 <= a, b <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nvoid swap(int *a, int *b) {\n    // swap the values the pointers point to\n}\n\nint main(void) {\n    int a, b;\n    scanf(\"%d %d\", &a, &b);\n    swap(&a, &b);\n    printf(\"%d %d\\n\", a, b);\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3 5",
+        "expectedOutput": "5 3",
+        "isHidden": false
+      },
+      {
+        "input": "-1 7",
+        "expectedOutput": "7 -1",
+        "isHidden": false
+      },
+      {
+        "input": "10 10",
+        "expectedOutput": "10 10",
+        "isHidden": false
+      },
+      {
+        "input": "0 0",
+        "expectedOutput": "0 0",
+        "isHidden": true
+      },
+      {
+        "input": "1000 -1000",
+        "expectedOutput": "-1000 1000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 1
+  },
+  {
+    "slug": "ptr-double-value",
+    "title": "Double a Value Through a Pointer",
+    "category": "pointers",
+    "difficulty": "Easy",
+    "description": "Create an `int *p` that points to a variable `n`, then double `n` using only `*p`.\n\nInput\nOne integer `n`.\n\nOutput\nPrint the doubled value of `n`.",
+    "exampleInput": "4",
+    "exampleOutput": "8",
+    "constraints": [
+      "-100000 <= n <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "4",
+        "expectedOutput": "8",
+        "isHidden": false
+      },
+      {
+        "input": "-9",
+        "expectedOutput": "-18",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": false
+      },
+      {
+        "input": "100000",
+        "expectedOutput": "200000",
+        "isHidden": true
+      },
+      {
+        "input": "-100000",
+        "expectedOutput": "-200000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 2
+  },
+  {
+    "slug": "ptr-larger-of-two",
+    "title": "Pointer to the Larger Number",
+    "category": "pointers",
+    "difficulty": "Easy",
+    "description": "Write `int *larger(int *a, int *b)` that returns a pointer to the larger of two variables. Use the returned pointer to add 100 to that larger variable, then print both variables. If equal, return `a`.\n\nInput\nOne line with two integers `a` and `b`.\n\nOutput\nPrint `a` and `b` (after the change) separated by a space.",
+    "exampleInput": "3 8",
+    "exampleOutput": "3 108",
+    "constraints": [
+      "-1000 <= a, b <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3 8",
+        "expectedOutput": "3 108",
+        "isHidden": false
+      },
+      {
+        "input": "9 2",
+        "expectedOutput": "109 2",
+        "isHidden": false
+      },
+      {
+        "input": "5 5",
+        "expectedOutput": "105 5",
+        "isHidden": false
+      },
+      {
+        "input": "-7 -3",
+        "expectedOutput": "-7 97",
+        "isHidden": true
+      },
+      {
+        "input": "-1000 1000",
+        "expectedOutput": "-1000 1100",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 3
+  },
+  {
+    "slug": "ptr-array-sum",
+    "title": "Sum of Array Using Pointer Arithmetic",
+    "category": "pointers",
+    "difficulty": "Easy",
+    "description": "An array name acts like a pointer to its first element, and `p + i` points to element `i`. Compute the sum of an array by moving a pointer instead of using `a[i]`.\n\nInput\nFirst line: `n`. Second line: `n` integers.\n\nOutput\nPrint the sum.",
+    "exampleInput": "5\n1 2 3 4 5",
+    "exampleOutput": "15",
+    "constraints": [
+      "1 <= n <= 50",
+      "-1000 <= element <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n1 2 3 4 5",
+        "expectedOutput": "15",
+        "isHidden": false
+      },
+      {
+        "input": "3\n-4 10 -2",
+        "expectedOutput": "4",
+        "isHidden": false
+      },
+      {
+        "input": "1\n7",
+        "expectedOutput": "7",
+        "isHidden": false
+      },
+      {
+        "input": "4\n-1000 -1000 -1000 -1000",
+        "expectedOutput": "-4000",
+        "isHidden": true
+      },
+      {
+        "input": "2\n0 0",
+        "expectedOutput": "0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 4
+  },
+  {
+    "slug": "ptr-reverse-array",
+    "title": "Reverse an Array with Two Pointers",
+    "category": "pointers",
+    "difficulty": "Easy",
+    "description": "Use one pointer at the start and one at the end of the array. Swap the values they point to and move them toward each other until they meet.\n\nInput\nFirst line: `n`. Second line: `n` integers.\n\nOutput\nPrint the reversed array on one line, separated by single spaces.",
+    "exampleInput": "5\n1 2 3 4 5",
+    "exampleOutput": "5 4 3 2 1",
+    "constraints": [
+      "1 <= n <= 50",
+      "-1000 <= element <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n1 2 3 4 5",
+        "expectedOutput": "5 4 3 2 1",
+        "isHidden": false
+      },
+      {
+        "input": "4\n10 20 30 40",
+        "expectedOutput": "40 30 20 10",
+        "isHidden": false
+      },
+      {
+        "input": "1\n9",
+        "expectedOutput": "9",
+        "isHidden": false
+      },
+      {
+        "input": "2\n-5 5",
+        "expectedOutput": "5 -5",
+        "isHidden": true
+      },
+      {
+        "input": "6\n0 0 1 1 2 2",
+        "expectedOutput": "2 2 1 1 0 0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 5
+  },
+  {
+    "slug": "ptr-min-max-out-params",
+    "title": "Find Min and Max Using Pointer Parameters",
+    "category": "pointers",
+    "difficulty": "Easy",
+    "description": "A function can return several values by receiving pointers. Write `void minmax(int a[], int n, int *mn, int *mx)` and print both results.\n\nInput\nFirst line: `n`. Second line: `n` integers.\n\nOutput\nPrint `min max` separated by a space.",
+    "exampleInput": "5\n3 9 -2 7 0",
+    "exampleOutput": "-2 9",
+    "constraints": [
+      "1 <= n <= 50",
+      "-1000 <= element <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n3 9 -2 7 0",
+        "expectedOutput": "-2 9",
+        "isHidden": false
+      },
+      {
+        "input": "3\n4 4 4",
+        "expectedOutput": "4 4",
+        "isHidden": false
+      },
+      {
+        "input": "1\n-8",
+        "expectedOutput": "-8 -8",
+        "isHidden": false
+      },
+      {
+        "input": "4\n-1000 1000 0 5",
+        "expectedOutput": "-1000 1000",
+        "isHidden": true
+      },
+      {
+        "input": "2\n6 -6",
+        "expectedOutput": "-6 6",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 6
+  },
+  {
+    "slug": "ptr-string-length",
+    "title": "String Length with a char Pointer",
+    "category": "pointers",
+    "difficulty": "Easy",
+    "description": "Walk a `char *` along a string until you reach the `'\\0'` terminator and count the characters. Do not use `strlen`.\n\nInput\nOne word (no spaces).\n\nOutput\nPrint the length of the word.",
+    "exampleInput": "hello",
+    "exampleOutput": "5",
+    "constraints": [
+      "1 <= length <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "hello",
+        "expectedOutput": "5",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "VirVerse2024",
+        "expectedOutput": "12",
+        "isHidden": false
+      },
+      {
+        "input": "abcdefghijklmnopqrstuvwxyz",
+        "expectedOutput": "26",
+        "isHidden": true
+      },
+      {
+        "input": "x_y",
+        "expectedOutput": "3",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 7
+  },
+  {
+    "slug": "ptr-count-vowels",
+    "title": "Count Vowels Using a Pointer",
+    "category": "pointers",
+    "difficulty": "Easy",
+    "description": "Traverse a string with a `char *` and count characters that are vowels (`a e i o u`, lowercase or uppercase).\n\nInput\nOne word (no spaces).\n\nOutput\nPrint the number of vowels.",
+    "exampleInput": "programming",
+    "exampleOutput": "3",
+    "constraints": [
+      "1 <= length <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "programming",
+        "expectedOutput": "3",
+        "isHidden": false
+      },
+      {
+        "input": "AEIOU",
+        "expectedOutput": "5",
+        "isHidden": false
+      },
+      {
+        "input": "rhythm",
+        "expectedOutput": "0",
+        "isHidden": false
+      },
+      {
+        "input": "Education",
+        "expectedOutput": "5",
+        "isHidden": true
+      },
+      {
+        "input": "b",
+        "expectedOutput": "0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 8
+  },
+  {
+    "slug": "ptr-quotient-remainder",
+    "title": "Quotient and Remainder via Pointers",
+    "category": "pointers",
+    "difficulty": "Easy",
+    "description": "Write `void divide(int a, int b, int *q, int *r)` that stores the quotient and remainder of `a / b` through the pointers.\n\nInput\nOne line with two positive integers `a` and `b`.\n\nOutput\nPrint `quotient remainder` separated by a space.",
+    "exampleInput": "17 5",
+    "exampleOutput": "3 2",
+    "constraints": [
+      "0 <= a <= 100000",
+      "1 <= b <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "17 5",
+        "expectedOutput": "3 2",
+        "isHidden": false
+      },
+      {
+        "input": "20 4",
+        "expectedOutput": "5 0",
+        "isHidden": false
+      },
+      {
+        "input": "3 10",
+        "expectedOutput": "0 3",
+        "isHidden": false
+      },
+      {
+        "input": "0 7",
+        "expectedOutput": "0 0",
+        "isHidden": true
+      },
+      {
+        "input": "100000 1",
+        "expectedOutput": "100000 0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 9
+  },
+  {
+    "slug": "ptr-copy-string",
+    "title": "Copy a String Pointer by Pointer",
+    "category": "pointers",
+    "difficulty": "Easy",
+    "description": "Write `void copy(char *dest, const char *src)` that copies characters one by one using pointers (including the terminator). Do not use `strcpy`.\n\nInput\nOne word.\n\nOutput\nPrint the copied word.",
+    "exampleInput": "hello",
+    "exampleOutput": "hello",
+    "constraints": [
+      "1 <= length <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "hello",
+        "expectedOutput": "hello",
+        "isHidden": false
+      },
+      {
+        "input": "C_language",
+        "expectedOutput": "C_language",
+        "isHidden": false
+      },
+      {
+        "input": "Z",
+        "expectedOutput": "Z",
+        "isHidden": false
+      },
+      {
+        "input": "abc123",
+        "expectedOutput": "abc123",
+        "isHidden": true
+      },
+      {
+        "input": "MixedCASEword",
+        "expectedOutput": "MixedCASEword",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 10
+  },
+  {
+    "slug": "ptr-swap-pointers",
+    "title": "Swap Where Pointers Point",
+    "category": "pointers",
+    "difficulty": "Medium",
+    "description": "Pointer-to-pointer: `int **` stores the address of an `int *`. Write `void swapPtr(int **x, int **y)` that swaps two pointers (not the values). Set `p = &a`, `q = &b`, swap them, and print.\n\nInput\nOne line with two integers `a` and `b`.\n\nOutput\nLine 1: `*p *q` after swapping the pointers. Line 2: `a b` (unchanged).",
+    "exampleInput": "3 5",
+    "exampleOutput": "5 3\n3 5",
+    "constraints": [
+      "-1000 <= a, b <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3 5",
+        "expectedOutput": "5 3\n3 5",
+        "isHidden": false
+      },
+      {
+        "input": "-2 8",
+        "expectedOutput": "8 -2\n-2 8",
+        "isHidden": false
+      },
+      {
+        "input": "0 0",
+        "expectedOutput": "0 0\n0 0",
+        "isHidden": true
+      },
+      {
+        "input": "1000 -1000",
+        "expectedOutput": "-1000 1000\n1000 -1000",
+        "isHidden": true
+      },
+      {
+        "input": "7 7",
+        "expectedOutput": "7 7\n7 7",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 11
+  },
+  {
+    "slug": "ptr-dynamic-array-stats",
+    "title": "Dynamic Array Sum and Max",
+    "category": "pointers",
+    "difficulty": "Medium",
+    "description": "Use `malloc` to allocate space for `n` integers, read them, print the sum and the maximum, then `free` the memory.\n\nInput\nFirst line: `n`. Second line: `n` integers.\n\nOutput\nPrint `sum max` separated by a space.",
+    "exampleInput": "5\n4 8 1 9 3",
+    "exampleOutput": "25 9",
+    "constraints": [
+      "1 <= n <= 50",
+      "-1000 <= element <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n4 8 1 9 3",
+        "expectedOutput": "25 9",
+        "isHidden": false
+      },
+      {
+        "input": "3\n-5 -2 -9",
+        "expectedOutput": "-16 -2",
+        "isHidden": false
+      },
+      {
+        "input": "1\n6",
+        "expectedOutput": "6 6",
+        "isHidden": false
+      },
+      {
+        "input": "4\n1000 1000 1000 1000",
+        "expectedOutput": "4000 1000",
+        "isHidden": true
+      },
+      {
+        "input": "2\n0 -1",
+        "expectedOutput": "-1 0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 12
+  },
+  {
+    "slug": "ptr-reverse-string",
+    "title": "Reverse a String In Place",
+    "category": "pointers",
+    "difficulty": "Medium",
+    "description": "Reverse a string using two `char *` pointers (one at each end) swapping characters until they cross.\n\nInput\nOne word.\n\nOutput\nPrint the reversed word.",
+    "exampleInput": "hello",
+    "exampleOutput": "olleh",
+    "constraints": [
+      "1 <= length <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "hello",
+        "expectedOutput": "olleh",
+        "isHidden": false
+      },
+      {
+        "input": "abcd",
+        "expectedOutput": "dcba",
+        "isHidden": false
+      },
+      {
+        "input": "x",
+        "expectedOutput": "x",
+        "isHidden": false
+      },
+      {
+        "input": "racecar",
+        "expectedOutput": "racecar",
+        "isHidden": true
+      },
+      {
+        "input": "AbC12",
+        "expectedOutput": "21CbA",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 13
+  },
+  {
+    "slug": "ptr-palindrome-check",
+    "title": "Palindrome Check with Pointers",
+    "category": "pointers",
+    "difficulty": "Medium",
+    "description": "Use a left pointer and a right pointer moving inward, comparing characters. If all pairs match, the word is a palindrome (case-sensitive).\n\nInput\nOne word.\n\nOutput\nPrint `Yes` if it is a palindrome, otherwise `No`.",
+    "exampleInput": "madam",
+    "exampleOutput": "Yes",
+    "constraints": [
+      "1 <= length <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "madam",
+        "expectedOutput": "Yes",
+        "isHidden": false
+      },
+      {
+        "input": "hello",
+        "expectedOutput": "No",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "Yes",
+        "isHidden": false
+      },
+      {
+        "input": "abba",
+        "expectedOutput": "Yes",
+        "isHidden": true
+      },
+      {
+        "input": "Aba",
+        "expectedOutput": "No",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 14
+  },
+  {
+    "slug": "ptr-remove-vowels",
+    "title": "Remove Vowels with Read/Write Pointers",
+    "category": "pointers",
+    "difficulty": "Medium",
+    "description": "Use a read pointer and a write pointer on the same string: copy only non-vowel characters (vowels are `aeiouAEIOU`) to the write position, then terminate the string.\n\nInput\nOne word.\n\nOutput\nPrint the word without vowels.",
+    "exampleInput": "education",
+    "exampleOutput": "dctn",
+    "constraints": [
+      "1 <= length <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "education",
+        "expectedOutput": "dctn",
+        "isHidden": false
+      },
+      {
+        "input": "Programming",
+        "expectedOutput": "Prgrmmng",
+        "isHidden": false
+      },
+      {
+        "input": "rhythm",
+        "expectedOutput": "rhythm",
+        "isHidden": false
+      },
+      {
+        "input": "aeioub",
+        "expectedOutput": "b",
+        "isHidden": true
+      },
+      {
+        "input": "AbEcI",
+        "expectedOutput": "bc",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 15
+  },
+  {
+    "slug": "ptr-rotate-right",
+    "title": "Rotate Array Right Using Pointers",
+    "category": "pointers",
+    "difficulty": "Medium",
+    "description": "Rotate an array to the right by `k` positions. Allocate a second array with `malloc`, place element `i` at position `(i + k) % n` using pointers, then print and free.\n\nInput\nFirst line: `n` and `k`. Second line: `n` integers.\n\nOutput\nPrint the rotated array separated by single spaces.",
+    "exampleInput": "5 2\n1 2 3 4 5",
+    "exampleOutput": "4 5 1 2 3",
+    "constraints": [
+      "1 <= n <= 50",
+      "0 <= k <= 100",
+      "-1000 <= element <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5 2\n1 2 3 4 5",
+        "expectedOutput": "4 5 1 2 3",
+        "isHidden": false
+      },
+      {
+        "input": "4 1\n10 20 30 40",
+        "expectedOutput": "40 10 20 30",
+        "isHidden": false
+      },
+      {
+        "input": "3 0\n7 8 9",
+        "expectedOutput": "7 8 9",
+        "isHidden": false
+      },
+      {
+        "input": "3 3\n1 2 3",
+        "expectedOutput": "1 2 3",
+        "isHidden": true
+      },
+      {
+        "input": "1 100\n5",
+        "expectedOutput": "5",
+        "isHidden": true
+      },
+      {
+        "input": "4 6\n1 2 3 4",
+        "expectedOutput": "3 4 1 2",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 16
+  },
+  {
+    "slug": "ptr-merge-sorted",
+    "title": "Merge Two Sorted Arrays",
+    "category": "pointers",
+    "difficulty": "Medium",
+    "description": "Given two ascending arrays, merge them into one ascending array stored in `malloc`ed memory. Walk three pointers: one through each input and one through the output.\n\nInput\nLine 1: `n m`. Line 2: `n` integers (ascending). Line 3: `m` integers (ascending).\n\nOutput\nPrint the merged array separated by single spaces.",
+    "exampleInput": "3 3\n1 3 5\n2 4 6",
+    "exampleOutput": "1 2 3 4 5 6",
+    "constraints": [
+      "1 <= n, m <= 25",
+      "-1000 <= element <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3 3\n1 3 5\n2 4 6",
+        "expectedOutput": "1 2 3 4 5 6",
+        "isHidden": false
+      },
+      {
+        "input": "2 4\n1 1\n1 2 2 3",
+        "expectedOutput": "1 1 1 2 2 3",
+        "isHidden": false
+      },
+      {
+        "input": "1 1\n5\n-5",
+        "expectedOutput": "-5 5",
+        "isHidden": false
+      },
+      {
+        "input": "3 2\n-10 0 10\n-10 10",
+        "expectedOutput": "-10 -10 0 10 10",
+        "isHidden": true
+      },
+      {
+        "input": "1 3\n0\n1 2 3",
+        "expectedOutput": "0 1 2 3",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 17
+  },
+  {
+    "slug": "ptr-transpose-matrix",
+    "title": "Transpose a Matrix with Pointer Arithmetic",
+    "category": "pointers",
+    "difficulty": "Hard",
+    "description": "Store an `r x c` matrix in one `malloc`ed block. Element (i, j) is at `*(m + i*c + j)`. Build the transpose in a second block and print it.\n\nInput\nFirst line: `r c`. Then `r` lines of `c` integers.\n\nOutput\nPrint `c` lines with `r` integers each, separated by single spaces.",
+    "exampleInput": "2 3\n1 2 3\n4 5 6",
+    "exampleOutput": "1 4\n2 5\n3 6",
+    "constraints": [
+      "1 <= r, c <= 10",
+      "-1000 <= element <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2 3\n1 2 3\n4 5 6",
+        "expectedOutput": "1 4\n2 5\n3 6",
+        "isHidden": false
+      },
+      {
+        "input": "3 1\n7\n8\n9",
+        "expectedOutput": "7 8 9",
+        "isHidden": false
+      },
+      {
+        "input": "2 2\n1 0\n0 1",
+        "expectedOutput": "1 0\n0 1",
+        "isHidden": false
+      },
+      {
+        "input": "1 4\n1 2 3 4",
+        "expectedOutput": "1\n2\n3\n4",
+        "isHidden": true
+      },
+      {
+        "input": "3 3\n-1 2 -3\n4 -5 6\n-7 8 -9",
+        "expectedOutput": "-1 4 -7\n2 -5 8\n-3 6 -9",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 18
+  },
+  {
+    "slug": "ptr-sort-words-pointers",
+    "title": "Sort Words by Swapping Pointers",
+    "category": "pointers",
+    "difficulty": "Hard",
+    "description": "Keep an array of `char *` that point to `n` words. Sort the words alphabetically (as `strcmp` orders them) by swapping the pointers, not the text.\n\nInput\nFirst line: `n`. Then `n` words (whitespace separated).\n\nOutput\nPrint the sorted words, one per line.",
+    "exampleInput": "3\nbanana apple cherry",
+    "exampleOutput": "apple\nbanana\ncherry",
+    "constraints": [
+      "1 <= n <= 30",
+      "Each word has 1 to 20 characters, no spaces"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\nbanana apple cherry",
+        "expectedOutput": "apple\nbanana\ncherry",
+        "isHidden": false
+      },
+      {
+        "input": "4\ndog cat Cat bird",
+        "expectedOutput": "Cat\nbird\ncat\ndog",
+        "isHidden": false
+      },
+      {
+        "input": "1\nsolo",
+        "expectedOutput": "solo",
+        "isHidden": false
+      },
+      {
+        "input": "5\nb a b a c",
+        "expectedOutput": "a\na\nb\nb\nc",
+        "isHidden": true
+      },
+      {
+        "input": "3\nabc ab abcd",
+        "expectedOutput": "ab\nabc\nabcd",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 19
+  },
+  {
+    "slug": "ptr-function-pointer-reduce",
+    "title": "Reduce an Array with Function Pointers",
+    "category": "pointers",
+    "difficulty": "Hard",
+    "description": "Keep three functions `sum`, `maxv`, `minv`, each taking `(int *a, int n)`, in an array of function pointers. Choose one by its index and call it.\n\nInput\nFirst line: `n` and `op`, where `op` is 0 (sum), 1 (maximum) or 2 (minimum). Second line: `n` integers.\n\nOutput\nPrint the result.",
+    "exampleInput": "4 0\n1 2 3 4",
+    "exampleOutput": "10",
+    "constraints": [
+      "1 <= n <= 50",
+      "0 <= op <= 2",
+      "-1000 <= element <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "4 0\n1 2 3 4",
+        "expectedOutput": "10",
+        "isHidden": false
+      },
+      {
+        "input": "4 1\n5 -2 9 3",
+        "expectedOutput": "9",
+        "isHidden": false
+      },
+      {
+        "input": "4 2\n5 -2 9 3",
+        "expectedOutput": "-2",
+        "isHidden": false
+      },
+      {
+        "input": "1 0\n-7",
+        "expectedOutput": "-7",
+        "isHidden": true
+      },
+      {
+        "input": "3 2\n0 0 0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "3 1\n-5 -6 -7",
+        "expectedOutput": "-5",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 15,
+    "questionOrder": 20
+  }
+]

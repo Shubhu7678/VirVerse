@@ -1,0 +1,872 @@
+[
+  {
+    "slug": "quotient-and-remainder",
+    "title": "Quotient and Remainder",
+    "category": "operators",
+    "difficulty": "Easy",
+    "description": "Read two integers `a` and `b`. Print the quotient (`a / b`) on the first line and the remainder (`a % b`) on the second line.\n\nInput: two integers `a b`.\nOutput: two lines, quotient then remainder.",
+    "exampleInput": "17 5",
+    "exampleOutput": "3\n2",
+    "constraints": [
+      "0 <= a <= 100000",
+      "1 <= b <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "17 5",
+        "expectedOutput": "3\n2",
+        "isHidden": false
+      },
+      {
+        "input": "10 2",
+        "expectedOutput": "5\n0",
+        "isHidden": false
+      },
+      {
+        "input": "3 7",
+        "expectedOutput": "0\n3",
+        "isHidden": true
+      },
+      {
+        "input": "100000 1",
+        "expectedOutput": "100000\n0",
+        "isHidden": true
+      },
+      {
+        "input": "0 9",
+        "expectedOutput": "0\n0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 1
+  },
+  {
+    "slug": "is-divisible",
+    "title": "Is It Divisible?",
+    "category": "operators",
+    "difficulty": "Easy",
+    "description": "Read `a` and `b`. Print `1` if `a` is divisible by `b`, otherwise `0`.\n\nHint: a relational expression like `x == y` gives 1 or 0.\n\nInput: two integers.\nOutput: `1` or `0`.",
+    "exampleInput": "10 5",
+    "exampleOutput": "1",
+    "constraints": [
+      "0 <= a <= 100000",
+      "1 <= b <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "10 5",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "10 3",
+        "expectedOutput": "0",
+        "isHidden": false
+      },
+      {
+        "input": "0 4",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "7 7",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "99999 100000",
+        "expectedOutput": "0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 2
+  },
+  {
+    "slug": "compare-two-numbers",
+    "title": "Compare Two Numbers",
+    "category": "operators",
+    "difficulty": "Easy",
+    "description": "Read two integers `a` and `b`. Print three lines with the values of `a > b`, `a == b` and `a < b` (each is 1 or 0).\n\nInput: two integers.\nOutput: three lines.",
+    "exampleInput": "5 3",
+    "exampleOutput": "1\n0\n0",
+    "constraints": [
+      "-1000 <= a, b <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5 3",
+        "expectedOutput": "1\n0\n0",
+        "isHidden": false
+      },
+      {
+        "input": "2 2",
+        "expectedOutput": "0\n1\n0",
+        "isHidden": false
+      },
+      {
+        "input": "-4 6",
+        "expectedOutput": "0\n0\n1",
+        "isHidden": true
+      },
+      {
+        "input": "-1000 1000",
+        "expectedOutput": "0\n0\n1",
+        "isHidden": true
+      },
+      {
+        "input": "0 0",
+        "expectedOutput": "0\n1\n0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 3
+  },
+  {
+    "slug": "increment-decrement-values",
+    "title": "Increment and Decrement",
+    "category": "operators",
+    "difficulty": "Easy",
+    "description": "Read an integer `n`. Print four lines, using the operators exactly in this order with the same variable `n` (the value changes as you go):\n1. `n++`\n2. `n`\n3. `++n`\n4. `n--`\n\nInput: one integer.\nOutput: four lines with the values printed by those expressions.",
+    "exampleInput": "5",
+    "exampleOutput": "5\n6\n7\n7",
+    "constraints": [
+      "-1000 <= n <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "5\n6\n7\n7",
+        "isHidden": false
+      },
+      {
+        "input": "-3",
+        "expectedOutput": "-3\n-2\n-1\n-1",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0\n1\n2\n2",
+        "isHidden": true
+      },
+      {
+        "input": "1000",
+        "expectedOutput": "1000\n1001\n1002\n1002",
+        "isHidden": true
+      },
+      {
+        "input": "-1000",
+        "expectedOutput": "-1000\n-999\n-998\n-998",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 4
+  },
+  {
+    "slug": "compound-assignment-steps",
+    "title": "Compound Assignment Steps",
+    "category": "operators",
+    "difficulty": "Easy",
+    "description": "Read an integer `x`. Apply these steps in order, printing `x` after each step on its own line:\n`x += 3`, `x *= 2`, `x -= 4`, `x /= 3`, `x %= 5`.\n\nInput: one integer `x`.\nOutput: five lines.",
+    "exampleInput": "10",
+    "exampleOutput": "13\n26\n22\n7\n2",
+    "constraints": [
+      "0 <= x <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "10",
+        "expectedOutput": "13\n26\n22\n7\n2",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "3\n6\n2\n0\n0",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "4\n8\n4\n1\n1",
+        "isHidden": true
+      },
+      {
+        "input": "1000",
+        "expectedOutput": "1003\n2006\n2002\n667\n2",
+        "isHidden": true
+      },
+      {
+        "input": "47",
+        "expectedOutput": "50\n100\n96\n32\n2",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 5
+  },
+  {
+    "slug": "larger-of-two-ternary",
+    "title": "Larger of Two (Ternary)",
+    "category": "operators",
+    "difficulty": "Easy",
+    "description": "Read two integers and print the larger one using the ternary operator `condition ? a : b`.\n\nInput: two integers.\nOutput: the larger value.",
+    "exampleInput": "3 9",
+    "exampleOutput": "9",
+    "constraints": [
+      "-100000 <= a, b <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3 9",
+        "expectedOutput": "9",
+        "isHidden": false
+      },
+      {
+        "input": "-5 -8",
+        "expectedOutput": "-5",
+        "isHidden": false
+      },
+      {
+        "input": "4 4",
+        "expectedOutput": "4",
+        "isHidden": true
+      },
+      {
+        "input": "-100000 100000",
+        "expectedOutput": "100000",
+        "isHidden": true
+      },
+      {
+        "input": "0 -1",
+        "expectedOutput": "0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 6
+  },
+  {
+    "slug": "logical-operators-table",
+    "title": "Logical Operators",
+    "category": "operators",
+    "difficulty": "Easy",
+    "description": "Read two integers `a` and `b` that are each 0 or 1. Print three lines: `a && b`, `a || b`, and `!a`.\n\nInput: `a b`.\nOutput: three lines of 0 or 1.",
+    "exampleInput": "1 0",
+    "exampleOutput": "0\n1\n0",
+    "constraints": [
+      "a and b are each 0 or 1"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 0",
+        "expectedOutput": "0\n1\n0",
+        "isHidden": false
+      },
+      {
+        "input": "1 1",
+        "expectedOutput": "1\n1\n0",
+        "isHidden": false
+      },
+      {
+        "input": "0 0",
+        "expectedOutput": "0\n0\n1",
+        "isHidden": true
+      },
+      {
+        "input": "0 1",
+        "expectedOutput": "0\n1\n1",
+        "isHidden": true
+      },
+      {
+        "input": "1 1",
+        "expectedOutput": "1\n1\n0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 7
+  },
+  {
+    "slug": "bitwise-and-or-xor",
+    "title": "Bitwise AND, OR, XOR",
+    "category": "operators",
+    "difficulty": "Easy",
+    "description": "Read two non-negative integers and print `a & b`, `a | b` and `a ^ b` on three lines.\n\nInput: `a b`.\nOutput: three lines.",
+    "exampleInput": "12 10",
+    "exampleOutput": "8\n14\n6",
+    "constraints": [
+      "0 <= a, b <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "12 10",
+        "expectedOutput": "8\n14\n6",
+        "isHidden": false
+      },
+      {
+        "input": "5 3",
+        "expectedOutput": "1\n7\n6",
+        "isHidden": false
+      },
+      {
+        "input": "0 0",
+        "expectedOutput": "0\n0\n0",
+        "isHidden": true
+      },
+      {
+        "input": "1000000 999999",
+        "expectedOutput": "999936\n1000063\n127",
+        "isHidden": true
+      },
+      {
+        "input": "255 255",
+        "expectedOutput": "255\n255\n0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 8
+  },
+  {
+    "slug": "seconds-to-hms",
+    "title": "Seconds to Hours, Minutes, Seconds",
+    "category": "operators",
+    "difficulty": "Easy",
+    "description": "Read a number of seconds and convert it to hours, minutes and seconds using `/` and `%`. Print them as `H M S` on one line separated by single spaces.\n\nInput: one integer.\nOutput: `H M S`.",
+    "exampleInput": "3661",
+    "exampleOutput": "1 1 1",
+    "constraints": [
+      "0 <= seconds <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3661",
+        "expectedOutput": "1 1 1",
+        "isHidden": false
+      },
+      {
+        "input": "59",
+        "expectedOutput": "0 0 59",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0 0 0",
+        "isHidden": true
+      },
+      {
+        "input": "1000000",
+        "expectedOutput": "277 46 40",
+        "isHidden": true
+      },
+      {
+        "input": "7200",
+        "expectedOutput": "2 0 0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 9
+  },
+  {
+    "slug": "leap-year-check",
+    "title": "Leap Year Check",
+    "category": "operators",
+    "difficulty": "Easy",
+    "description": "A year is a leap year if it is divisible by 4 and not by 100, or it is divisible by 400. Read a year and print `Leap` or `Not Leap`. Use logical operators.\n\nInput: one integer year.\nOutput: `Leap` or `Not Leap`.",
+    "exampleInput": "2024",
+    "exampleOutput": "Leap",
+    "constraints": [
+      "1 <= year <= 9999"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2024",
+        "expectedOutput": "Leap",
+        "isHidden": false
+      },
+      {
+        "input": "2023",
+        "expectedOutput": "Not Leap",
+        "isHidden": false
+      },
+      {
+        "input": "1900",
+        "expectedOutput": "Not Leap",
+        "isHidden": true
+      },
+      {
+        "input": "2000",
+        "expectedOutput": "Leap",
+        "isHidden": true
+      },
+      {
+        "input": "4",
+        "expectedOutput": "Leap",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 10
+  },
+  {
+    "slug": "power-of-two-check",
+    "title": "Power of Two Check",
+    "category": "operators",
+    "difficulty": "Medium",
+    "description": "Print `Yes` if `n` is a power of two (1, 2, 4, 8, ...), otherwise `No`.\n\nHint: a power of two has exactly one bit set, so `n & (n - 1)` is 0.\n\nInput: one integer.\nOutput: `Yes` or `No`.",
+    "exampleInput": "16",
+    "exampleOutput": "Yes",
+    "constraints": [
+      "0 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "16",
+        "expectedOutput": "Yes",
+        "isHidden": false
+      },
+      {
+        "input": "18",
+        "expectedOutput": "No",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "Yes",
+        "isHidden": true
+      },
+      {
+        "input": "0",
+        "expectedOutput": "No",
+        "isHidden": true
+      },
+      {
+        "input": "1073741824",
+        "expectedOutput": "Yes",
+        "isHidden": true
+      },
+      {
+        "input": "1000000000",
+        "expectedOutput": "No",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 11
+  },
+  {
+    "slug": "set-clear-toggle-bit",
+    "title": "Set, Clear and Toggle a Bit",
+    "category": "operators",
+    "difficulty": "Medium",
+    "description": "Read `n` and a bit position `k` (bit 0 is the least significant). Print three lines: `n` with bit `k` set, with bit `k` cleared, and with bit `k` toggled.\n\nHint: use `1 << k` with `|`, `& ~`, and `^`.\n\nInput: `n k`.\nOutput: three integers on three lines.",
+    "exampleInput": "10 0",
+    "exampleOutput": "11\n10\n11",
+    "constraints": [
+      "0 <= n <= 1000000",
+      "0 <= k <= 20"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "10 0",
+        "expectedOutput": "11\n10\n11",
+        "isHidden": false
+      },
+      {
+        "input": "10 1",
+        "expectedOutput": "10\n8\n8",
+        "isHidden": false
+      },
+      {
+        "input": "0 5",
+        "expectedOutput": "32\n0\n32",
+        "isHidden": true
+      },
+      {
+        "input": "1000000 20",
+        "expectedOutput": "2048576\n1000000\n2048576",
+        "isHidden": true
+      },
+      {
+        "input": "255 7",
+        "expectedOutput": "255\n127\n127",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 12
+  },
+  {
+    "slug": "count-set-bits",
+    "title": "Count Set Bits",
+    "category": "operators",
+    "difficulty": "Medium",
+    "description": "Print how many bits are 1 in the binary form of `n`.\n\nHint: check the last bit with `n & 1`, then shift right with `n >>= 1`, repeat.\n\nInput: one non-negative integer.\nOutput: the count.",
+    "exampleInput": "13",
+    "exampleOutput": "3",
+    "constraints": [
+      "0 <= n <= 2000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "13",
+        "expectedOutput": "3",
+        "isHidden": false
+      },
+      {
+        "input": "255",
+        "expectedOutput": "8",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "2000000000",
+        "expectedOutput": "13",
+        "isHidden": true
+      },
+      {
+        "input": "1024",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "2147483647",
+        "expectedOutput": "31",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 13
+  },
+  {
+    "slug": "swap-with-xor",
+    "title": "Swap Two Numbers with XOR",
+    "category": "operators",
+    "difficulty": "Medium",
+    "description": "Read two integers `a` and `b` and swap them using only XOR (`^=`) operations, with no temporary variable. Print them as `a b` after swapping.\n\nInput: two integers.\nOutput: the swapped pair on one line.",
+    "exampleInput": "3 8",
+    "exampleOutput": "8 3",
+    "constraints": [
+      "-100000 <= a, b <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3 8",
+        "expectedOutput": "8 3",
+        "isHidden": false
+      },
+      {
+        "input": "-5 12",
+        "expectedOutput": "12 -5",
+        "isHidden": false
+      },
+      {
+        "input": "7 7",
+        "expectedOutput": "7 7",
+        "isHidden": true
+      },
+      {
+        "input": "0 -1",
+        "expectedOutput": "-1 0",
+        "isHidden": true
+      },
+      {
+        "input": "-100000 100000",
+        "expectedOutput": "100000 -100000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 14
+  },
+  {
+    "slug": "operator-precedence-expressions",
+    "title": "Operator Precedence",
+    "category": "operators",
+    "difficulty": "Medium",
+    "description": "Read three integers `a b c`. Print the values of these four expressions on four lines, exactly as C evaluates them:\n`a + b * c`, `(a + b) * c`, `a - b - c`, `a * b / c`.\n\nInput: `a b c`.\nOutput: four integers.",
+    "exampleInput": "2 3 4",
+    "exampleOutput": "14\n20\n-5\n1",
+    "constraints": [
+      "-100 <= a, b <= 100",
+      "1 <= c <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2 3 4",
+        "expectedOutput": "14\n20\n-5\n1",
+        "isHidden": false
+      },
+      {
+        "input": "10 -3 4",
+        "expectedOutput": "-2\n28\n9\n-7",
+        "isHidden": false
+      },
+      {
+        "input": "0 0 1",
+        "expectedOutput": "0\n0\n-1\n0",
+        "isHidden": true
+      },
+      {
+        "input": "-100 100 7",
+        "expectedOutput": "600\n0\n-207\n-1428",
+        "isHidden": true
+      },
+      {
+        "input": "7 5 3",
+        "expectedOutput": "22\n36\n-1\n11",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 15
+  },
+  {
+    "slug": "valid-triangle-sides",
+    "title": "Valid Triangle Sides",
+    "category": "operators",
+    "difficulty": "Medium",
+    "description": "Three lengths form a triangle only if the sum of any two sides is greater than the third. Read three positive integers. Print `Valid` or `Invalid`. Use a single expression with `&&`.\n\nInput: `a b c`.\nOutput: `Valid` or `Invalid`.",
+    "exampleInput": "3 4 5",
+    "exampleOutput": "Valid",
+    "constraints": [
+      "1 <= a, b, c <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3 4 5",
+        "expectedOutput": "Valid",
+        "isHidden": false
+      },
+      {
+        "input": "1 2 3",
+        "expectedOutput": "Invalid",
+        "isHidden": false
+      },
+      {
+        "input": "5 5 5",
+        "expectedOutput": "Valid",
+        "isHidden": true
+      },
+      {
+        "input": "1 1 1000000",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      },
+      {
+        "input": "10 6 5",
+        "expectedOutput": "Valid",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 16
+  },
+  {
+    "slug": "median-of-three-ternary",
+    "title": "Median of Three",
+    "category": "operators",
+    "difficulty": "Medium",
+    "description": "Read three integers and print the middle value (median) when sorted. Use comparison and ternary operators; no arrays or sorting.\n\nInput: `a b c`.\nOutput: the median.",
+    "exampleInput": "3 1 2",
+    "exampleOutput": "2",
+    "constraints": [
+      "-100000 <= each number <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3 1 2",
+        "expectedOutput": "2",
+        "isHidden": false
+      },
+      {
+        "input": "5 5 9",
+        "expectedOutput": "9",
+        "isHidden": false
+      },
+      {
+        "input": "-1 -1 -1",
+        "expectedOutput": "-1",
+        "isHidden": true
+      },
+      {
+        "input": "100000 -100000 0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "7 9 8",
+        "expectedOutput": "8",
+        "isHidden": true
+      },
+      {
+        "input": "4 4 1",
+        "expectedOutput": "4",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 17
+  },
+  {
+    "slug": "reverse-eight-bit-number",
+    "title": "Reverse the Bits of a Byte",
+    "category": "operators",
+    "difficulty": "Hard",
+    "description": "Treat `n` as an 8-bit number and reverse its bits. For example 1 (00000001) becomes 128 (10000000), and 6 (00000110) becomes 96 (01100000). Print the result.\n\nHint: loop 8 times, shifting the result left and adding the lowest bit of `n`.\n\nInput: one integer.\nOutput: the reversed value.",
+    "exampleInput": "1",
+    "exampleOutput": "128",
+    "constraints": [
+      "0 <= n <= 255"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1",
+        "expectedOutput": "128",
+        "isHidden": false
+      },
+      {
+        "input": "6",
+        "expectedOutput": "96",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "255",
+        "expectedOutput": "255",
+        "isHidden": true
+      },
+      {
+        "input": "170",
+        "expectedOutput": "85",
+        "isHidden": true
+      },
+      {
+        "input": "128",
+        "expectedOutput": "1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 18
+  },
+  {
+    "slug": "add-without-plus",
+    "title": "Add Without the Plus Operator",
+    "category": "operators",
+    "difficulty": "Hard",
+    "description": "Add two non-negative integers without using `+`, `-`, `++` or `--`. Use XOR for the sum without carry and AND with a left shift for the carry, and repeat until the carry is 0.\n\nInput: `a b`.\nOutput: the sum `a + b`.",
+    "exampleInput": "5 7",
+    "exampleOutput": "12",
+    "constraints": [
+      "0 <= a, b <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5 7",
+        "expectedOutput": "12",
+        "isHidden": false
+      },
+      {
+        "input": "123 877",
+        "expectedOutput": "1000",
+        "isHidden": false
+      },
+      {
+        "input": "0 0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "1000000000 1000000000",
+        "expectedOutput": "2000000000",
+        "isHidden": true
+      },
+      {
+        "input": "1 999999999",
+        "expectedOutput": "1000000000",
+        "isHidden": true
+      },
+      {
+        "input": "0 42",
+        "expectedOutput": "42",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 19
+  },
+  {
+    "slug": "find-the-unique-number",
+    "title": "Find the Unique Number",
+    "category": "operators",
+    "difficulty": "Hard",
+    "description": "Read `n` followed by `n` integers (n is odd). Every value appears exactly twice except one value that appears once. Print that value.\n\nHint: `x ^ x` is 0 and `x ^ 0` is `x`, so XOR all the numbers together.\n\nInput: `n`, then `n` integers.\nOutput: the unique value.",
+    "exampleInput": "5\n4 1 2 1 2\n",
+    "exampleOutput": "4",
+    "constraints": [
+      "1 <= n <= 99, n is odd",
+      "0 <= each number <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n4 1 2 1 2\n",
+        "expectedOutput": "4",
+        "isHidden": false
+      },
+      {
+        "input": "3\n7 3 7\n",
+        "expectedOutput": "3",
+        "isHidden": false
+      },
+      {
+        "input": "1\n0\n",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "7\n1000000 5 5 9 9 8 8\n",
+        "expectedOutput": "1000000",
+        "isHidden": true
+      },
+      {
+        "input": "5\n0 6 0 6 3\n",
+        "expectedOutput": "3",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 4,
+    "questionOrder": 20
+  }
+]

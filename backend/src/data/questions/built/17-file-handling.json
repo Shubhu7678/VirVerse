@@ -1,0 +1,756 @@
+[
+  {
+    "slug": "file-write-and-read-word",
+    "title": "Write a Word to a File and Read it Back",
+    "category": "file-handling",
+    "difficulty": "Easy",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read one word with `scanf`. Write it to a file named `data.txt` using `fprintf`, close the file, open it again for reading and read the word with `fscanf`.\n\nInput: one word.\nOutput: `Read: ` followed by the word read from the file.",
+    "exampleInput": "hello",
+    "exampleOutput": "Read: hello",
+    "constraints": [
+      "The word has at most 50 characters and no spaces"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "hello",
+        "expectedOutput": "Read: hello",
+        "isHidden": false
+      },
+      {
+        "input": "world",
+        "expectedOutput": "Read: world",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "Read: a",
+        "isHidden": true
+      },
+      {
+        "input": "VirVerse",
+        "expectedOutput": "Read: VirVerse",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 1
+  },
+  {
+    "slug": "file-write-and-read-integer",
+    "title": "Save an Integer and Read it Back",
+    "category": "file-handling",
+    "difficulty": "Easy",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read an integer, write it to `number.txt` with `fprintf`, then read it back from the file with `fscanf` and print its double.\n\nInput: one integer.\nOutput: a single integer, twice the value read from the file.",
+    "exampleInput": "5",
+    "exampleOutput": "10",
+    "constraints": [
+      "-1000000 <= n <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "10",
+        "isHidden": false
+      },
+      {
+        "input": "21",
+        "expectedOutput": "42",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "-7",
+        "expectedOutput": "-14",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 2
+  },
+  {
+    "slug": "file-fputc-fgetc-word",
+    "title": "Copy a Word Character by Character",
+    "category": "file-handling",
+    "difficulty": "Easy",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read a word. Write it to `chars.txt` one character at a time with `fputc`. Then read the file back one character at a time with `fgetc` (until `EOF`) and print each character on its own line.\n\nInput: one word.\nOutput: each character of the word on its own line.",
+    "exampleInput": "cat",
+    "exampleOutput": "c\na\nt",
+    "constraints": [
+      "The word has 1 to 20 characters and no spaces"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "cat",
+        "expectedOutput": "c\na\nt",
+        "isHidden": false
+      },
+      {
+        "input": "File",
+        "expectedOutput": "F\ni\nl\ne",
+        "isHidden": false
+      },
+      {
+        "input": "x",
+        "expectedOutput": "x",
+        "isHidden": true
+      },
+      {
+        "input": "C11",
+        "expectedOutput": "C\n1\n1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 3
+  },
+  {
+    "slug": "file-fputs-fgets-line",
+    "title": "Store a Sentence in a File",
+    "category": "file-handling",
+    "difficulty": "Easy",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read one whole line with `fgets`. Write it to `line.txt` with `fputs`, then read the file back with `fgets` and print the line.\n\nInput: one line of text (may contain spaces).\nOutput: the same line, read back from the file.",
+    "exampleInput": "Hello File Handling\n",
+    "exampleOutput": "Hello File Handling",
+    "constraints": [
+      "The line has at most 100 characters"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "Hello File Handling\n",
+        "expectedOutput": "Hello File Handling",
+        "isHidden": false
+      },
+      {
+        "input": "C is fun\n",
+        "expectedOutput": "C is fun",
+        "isHidden": false
+      },
+      {
+        "input": "one\n",
+        "expectedOutput": "one",
+        "isHidden": true
+      },
+      {
+        "input": "a b  c d\n",
+        "expectedOutput": "a b  c d",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 4
+  },
+  {
+    "slug": "file-check-existence",
+    "title": "Does the File Exist?",
+    "category": "file-handling",
+    "difficulty": "Easy",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read an integer `flag`. If `flag` is 1, create a file `exists.txt` containing the text `ok`. Then try to open `exists.txt` for reading with `fopen`. If `fopen` returns `NULL`, print `Not found`, otherwise print `Found` (and close the file).\n\nInput: one integer, 0 or 1.\nOutput: `Found` or `Not found`.",
+    "exampleInput": "1",
+    "exampleOutput": "Found",
+    "constraints": [
+      "flag is 0 or 1"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1",
+        "expectedOutput": "Found",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "Not found",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "Found",
+        "isHidden": true
+      },
+      {
+        "input": "0",
+        "expectedOutput": "Not found",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 5
+  },
+  {
+    "slug": "file-sum-numbers-from-file",
+    "title": "Sum Numbers Stored in a File",
+    "category": "file-handling",
+    "difficulty": "Easy",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read `n`, then `n` integers. Write them to `numbers.txt`, one per line. Reopen the file, read the numbers back with `fscanf` in a loop (until it no longer returns 1) and print their sum.\n\nInput: `n` then `n` integers.\nOutput: the sum.",
+    "exampleInput": "3\n1 2 3",
+    "exampleOutput": "6",
+    "constraints": [
+      "1 <= n <= 100",
+      "Each number is between -1000 and 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\n1 2 3",
+        "expectedOutput": "6",
+        "isHidden": false
+      },
+      {
+        "input": "4\n10 20 30 40",
+        "expectedOutput": "100",
+        "isHidden": false
+      },
+      {
+        "input": "1\n-5",
+        "expectedOutput": "-5",
+        "isHidden": true
+      },
+      {
+        "input": "5\n-1000 1000 7 -7 3",
+        "expectedOutput": "3",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 6
+  },
+  {
+    "slug": "file-append-mode",
+    "title": "Append a Second Word",
+    "category": "file-handling",
+    "difficulty": "Easy",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read two words. Write the first to `log.txt` (mode `\"w\"`) followed by a newline. Then reopen `log.txt` in append mode (`\"a\"`) and add the second word and a newline. Finally read the file back and print its lines.\n\nInput: two words separated by whitespace.\nOutput: the first word on line 1, the second on line 2.",
+    "exampleInput": "first second",
+    "exampleOutput": "first\nsecond",
+    "constraints": [
+      "Each word has at most 30 characters"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "first second",
+        "expectedOutput": "first\nsecond",
+        "isHidden": false
+      },
+      {
+        "input": "A B",
+        "expectedOutput": "A\nB",
+        "isHidden": false
+      },
+      {
+        "input": "x yz",
+        "expectedOutput": "x\nyz",
+        "isHidden": true
+      },
+      {
+        "input": "Vir Verse",
+        "expectedOutput": "Vir\nVerse",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 7
+  },
+  {
+    "slug": "file-count-characters",
+    "title": "Count Characters in a File",
+    "category": "file-handling",
+    "difficulty": "Easy",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read one word and write it to `count.txt`. Reopen the file and count the characters using `fgetc` until `EOF`. Print the count.\n\nInput: one word.\nOutput: the number of characters in the file.",
+    "exampleInput": "hello",
+    "exampleOutput": "5",
+    "constraints": [
+      "The word has 1 to 50 characters and no spaces"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "hello",
+        "expectedOutput": "5",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "programming",
+        "expectedOutput": "11",
+        "isHidden": true
+      },
+      {
+        "input": "VirVerseLearning",
+        "expectedOutput": "16",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 8
+  },
+  {
+    "slug": "file-binary-int-array",
+    "title": "Binary File of Integers",
+    "category": "file-handling",
+    "difficulty": "Easy",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read `n` and then `n` integers. Write the whole array to a binary file `nums.bin` with one `fwrite` call. Read it back into a second array with `fread` and print the values separated by single spaces.\n\nInput: `n` then `n` integers.\nOutput: the integers on one line, separated by single spaces.",
+    "exampleInput": "3\n1 2 3",
+    "exampleOutput": "1 2 3",
+    "constraints": [
+      "1 <= n <= 50",
+      "Values fit in an int"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\n1 2 3",
+        "expectedOutput": "1 2 3",
+        "isHidden": false
+      },
+      {
+        "input": "5\n9 8 7 6 5",
+        "expectedOutput": "9 8 7 6 5",
+        "isHidden": false
+      },
+      {
+        "input": "1\n42",
+        "expectedOutput": "42",
+        "isHidden": true
+      },
+      {
+        "input": "4\n-1 0 100000 -100000",
+        "expectedOutput": "-1 0 100000 -100000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 9
+  },
+  {
+    "slug": "file-find-maximum",
+    "title": "Largest Number in a File",
+    "category": "file-handling",
+    "difficulty": "Easy",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read `n` and `n` integers. Write them to `values.txt` separated by spaces. Read the file back and print the largest number.\n\nInput: `n` then `n` integers.\nOutput: the maximum value.",
+    "exampleInput": "3\n4 9 2",
+    "exampleOutput": "9",
+    "constraints": [
+      "1 <= n <= 100",
+      "Values are between -10000 and 10000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\n4 9 2",
+        "expectedOutput": "9",
+        "isHidden": false
+      },
+      {
+        "input": "5\n-3 -8 -1 -9 -2",
+        "expectedOutput": "-1",
+        "isHidden": false
+      },
+      {
+        "input": "1\n7",
+        "expectedOutput": "7",
+        "isHidden": true
+      },
+      {
+        "input": "4\n5 5 5 5",
+        "expectedOutput": "5",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 10
+  },
+  {
+    "slug": "file-count-lines-words-chars",
+    "title": "Lines, Words and Characters of a File",
+    "category": "file-handling",
+    "difficulty": "Medium",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read `n`, then `n` lines of text (use `fgets`). Write the lines to `text.txt`, then read it back with `fgetc` and count lines (newline characters), words (groups of non-space characters) and characters (including newlines).\n\nInput: `n`, then `n` lines.\nOutput: `lines words chars` separated by single spaces.",
+    "exampleInput": "2\nhello world\nfoo\n",
+    "exampleOutput": "2 3 16",
+    "constraints": [
+      "1 <= n <= 10",
+      "Each line has at most 80 characters and at least one word"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2\nhello world\nfoo\n",
+        "expectedOutput": "2 3 16",
+        "isHidden": false
+      },
+      {
+        "input": "1\nOne two three four\n",
+        "expectedOutput": "1 4 19",
+        "isHidden": false
+      },
+      {
+        "input": "3\na\nb c\nd e f\n",
+        "expectedOutput": "3 6 12",
+        "isHidden": true
+      },
+      {
+        "input": "2\n  spaced   out  \nend\n",
+        "expectedOutput": "2 3 21",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 11
+  },
+  {
+    "slug": "file-copy-uppercase",
+    "title": "Copy a File in Uppercase",
+    "category": "file-handling",
+    "difficulty": "Medium",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read a single line with `fgets` and write it to `source.txt`. Then copy `source.txt` to `copy.txt` character by character, converting letters to uppercase with `toupper`. Print the contents of `copy.txt`.\n\nInput: one line of text.\nOutput: the line in uppercase.",
+    "exampleInput": "hello world\n",
+    "exampleOutput": "HELLO WORLD",
+    "constraints": [
+      "The line has at most 100 characters"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "hello world\n",
+        "expectedOutput": "HELLO WORLD",
+        "isHidden": false
+      },
+      {
+        "input": "Mixed Case 123\n",
+        "expectedOutput": "MIXED CASE 123",
+        "isHidden": false
+      },
+      {
+        "input": "ABC\n",
+        "expectedOutput": "ABC",
+        "isHidden": true
+      },
+      {
+        "input": "c is great!\n",
+        "expectedOutput": "C IS GREAT!",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 12
+  },
+  {
+    "slug": "file-merge-sorted-files",
+    "title": "Merge Two Sorted Files",
+    "category": "file-handling",
+    "difficulty": "Medium",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read `n` then `n` sorted integers and write them to `a.txt`. Read `m` then `m` sorted integers and write them to `b.txt`. Merge the two files into `merged.txt` so the result stays sorted (compare the current numbers of both files). Print the contents of `merged.txt` on one line, separated by single spaces.\n\nInput: `n`, `n` integers, `m`, `m` integers (both ascending).\nOutput: all numbers in ascending order.",
+    "exampleInput": "3\n1 3 5\n3\n2 4 6\n",
+    "exampleOutput": "1 2 3 4 5 6",
+    "constraints": [
+      "1 <= n, m <= 30",
+      "Each list is in non-decreasing order"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\n1 3 5\n3\n2 4 6\n",
+        "expectedOutput": "1 2 3 4 5 6",
+        "isHidden": false
+      },
+      {
+        "input": "2\n1 2\n3\n3 4 5\n",
+        "expectedOutput": "1 2 3 4 5",
+        "isHidden": false
+      },
+      {
+        "input": "1\n5\n1\n5\n",
+        "expectedOutput": "5 5",
+        "isHidden": true
+      },
+      {
+        "input": "4\n-5 -1 0 9\n2\n-3 10\n",
+        "expectedOutput": "-5 -3 -1 0 9 10",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 13
+  },
+  {
+    "slug": "file-count-vowels",
+    "title": "Count Vowels in a File",
+    "category": "file-handling",
+    "difficulty": "Medium",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read one line of text with `fgets` and save it to `vowels.txt`. Read the file back with `fgetc` and count vowels (`a e i o u`, upper or lower case) and consonants (other letters). Ignore everything else.\n\nInput: one line.\nOutput: `vowels consonants` separated by a single space.",
+    "exampleInput": "Hello World\n",
+    "exampleOutput": "3 7",
+    "constraints": [
+      "The line has at most 100 characters"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "Hello World\n",
+        "expectedOutput": "3 7",
+        "isHidden": false
+      },
+      {
+        "input": "aeiou\n",
+        "expectedOutput": "5 0",
+        "isHidden": false
+      },
+      {
+        "input": "rhythm\n",
+        "expectedOutput": "0 6",
+        "isHidden": true
+      },
+      {
+        "input": "123 !!\n",
+        "expectedOutput": "0 0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 14
+  },
+  {
+    "slug": "file-struct-records-top-student",
+    "title": "Top Student from a Record File",
+    "category": "file-handling",
+    "difficulty": "Medium",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read `n`, then `n` students, each as a name (one word) and an integer mark. Store each as a `struct` and write all of them to the binary file `students.bin` using `fwrite`. Read the records back with `fread` and print the name and mark of the student with the highest mark (marks are all different).\n\nInput: `n`, then `n` pairs `name mark`.\nOutput: `name mark`.",
+    "exampleInput": "3\nAmit 80\nRiya 95\nSam 70\n",
+    "exampleOutput": "Riya 95",
+    "constraints": [
+      "1 <= n <= 20",
+      "Names have at most 20 characters",
+      "Marks are distinct integers 0 to 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\nAmit 80\nRiya 95\nSam 70\n",
+        "expectedOutput": "Riya 95",
+        "isHidden": false
+      },
+      {
+        "input": "1\nSolo 50\n",
+        "expectedOutput": "Solo 50",
+        "isHidden": false
+      },
+      {
+        "input": "4\nA 10\nB 20\nC 30\nD 40\n",
+        "expectedOutput": "D 40",
+        "isHidden": true
+      },
+      {
+        "input": "3\nZed 99\nYan 5\nXia 60\n",
+        "expectedOutput": "Zed 99",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 15
+  },
+  {
+    "slug": "file-fseek-kth-number",
+    "title": "Jump to the k-th Number with fseek",
+    "category": "file-handling",
+    "difficulty": "Medium",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read `n` and `n` integers and write them to the binary file `data.bin` with `fwrite`. Then read `k` (1-based). Use `fseek` with `(k - 1) * sizeof(int)` from `SEEK_SET` to jump straight to the k-th integer and read it with `fread`. Print it.\n\nInput: `n`, `n` integers, then `k`.\nOutput: the k-th integer.",
+    "exampleInput": "5\n10 20 30 40 50\n3\n",
+    "exampleOutput": "30",
+    "constraints": [
+      "1 <= n <= 50",
+      "1 <= k <= n"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n10 20 30 40 50\n3\n",
+        "expectedOutput": "30",
+        "isHidden": false
+      },
+      {
+        "input": "3\n7 8 9\n1\n",
+        "expectedOutput": "7",
+        "isHidden": false
+      },
+      {
+        "input": "4\n1 2 3 4\n4\n",
+        "expectedOutput": "4",
+        "isHidden": true
+      },
+      {
+        "input": "1\n-6\n1\n",
+        "expectedOutput": "-6",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 16
+  },
+  {
+    "slug": "file-split-even-odd",
+    "title": "Split Numbers into Even and Odd Files",
+    "category": "file-handling",
+    "difficulty": "Medium",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read `n` and `n` integers and write them to `all.txt`. Read `all.txt` back and write even numbers to `even.txt` and odd numbers to `odd.txt` (one per line). Finally print the contents of `even.txt` on one line, then `odd.txt` on the next line, numbers separated by single spaces. If a file is empty print an empty line.\n\nInput: `n` then `n` non-negative integers.\nOutput: two lines (evens, then odds).",
+    "exampleInput": "5\n1 2 3 4 5\n",
+    "exampleOutput": "2 4\n1 3 5",
+    "constraints": [
+      "1 <= n <= 50",
+      "0 <= value <= 10000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n1 2 3 4 5\n",
+        "expectedOutput": "2 4\n1 3 5",
+        "isHidden": false
+      },
+      {
+        "input": "3\n2 4 6\n",
+        "expectedOutput": "2 4 6",
+        "isHidden": false
+      },
+      {
+        "input": "3\n1 3 5\n",
+        "expectedOutput": "\n1 3 5",
+        "isHidden": true
+      },
+      {
+        "input": "1\n0\n",
+        "expectedOutput": "0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 17
+  },
+  {
+    "slug": "file-reverse-lines",
+    "title": "Print the Lines of a File in Reverse Order",
+    "category": "file-handling",
+    "difficulty": "Hard",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read `n`, then `n` lines of text (use `fgets`). Write the lines to `lines.txt`. Read the file back line by line into an array, then print the lines from last to first.\n\nInput: `n`, then `n` lines.\nOutput: the lines in reverse order, one per line.",
+    "exampleInput": "3\nfirst\nsecond\nthird\n",
+    "exampleOutput": "third\nsecond\nfirst",
+    "constraints": [
+      "1 <= n <= 20",
+      "Each line has 1 to 80 characters"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\nfirst\nsecond\nthird\n",
+        "expectedOutput": "third\nsecond\nfirst",
+        "isHidden": false
+      },
+      {
+        "input": "1\nonly line\n",
+        "expectedOutput": "only line",
+        "isHidden": false
+      },
+      {
+        "input": "4\na b\nc d\ne f\ng h\n",
+        "expectedOutput": "g h\ne f\nc d\na b",
+        "isHidden": true
+      },
+      {
+        "input": "2\nHello, World!\nBye\n",
+        "expectedOutput": "Bye\nHello, World!",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 18
+  },
+  {
+    "slug": "file-word-frequency",
+    "title": "Word Frequency from a File",
+    "category": "file-handling",
+    "difficulty": "Hard",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. Read `n` and then `n` words. Write them to `words.txt`, separated by spaces. Read the file back and count how many times each distinct word occurs (case-sensitive). Print each distinct word with its count, in order of first appearance, one `word count` pair per line.\n\nInput: `n` then `n` words.\nOutput: lines of the form `word count`.",
+    "exampleInput": "5\nto be or not to\n",
+    "exampleOutput": "to 2\nbe 1\nor 1\nnot 1",
+    "constraints": [
+      "1 <= n <= 50",
+      "Each word has at most 20 characters"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\nto be or not to\n",
+        "expectedOutput": "to 2\nbe 1\nor 1\nnot 1",
+        "isHidden": false
+      },
+      {
+        "input": "3\nsame same same\n",
+        "expectedOutput": "same 3",
+        "isHidden": false
+      },
+      {
+        "input": "1\nsolo\n",
+        "expectedOutput": "solo 1",
+        "isHidden": true
+      },
+      {
+        "input": "6\nApple apple Apple b b c\n",
+        "expectedOutput": "Apple 2\napple 1\nb 2\nc 1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 19
+  },
+  {
+    "slug": "file-update-account-records",
+    "title": "Update Records in a Binary File",
+    "category": "file-handling",
+    "difficulty": "Hard",
+    "description": "The judge starts with an empty folder, so your program must first CREATE the file itself and then read it back. A bank keeps accounts numbered 1 to `n` in the binary file `accounts.bin`; record `i` is one `int` balance. Read `n` and the `n` starting balances and write them with `fwrite`. Then read `q` operations, each `id amount` (amount may be negative). For each operation open the file in `\"r+b\"` mode, `fseek` to record `id`, `fread` the balance, add the amount, `fseek` back and `fwrite` the new balance. At the end read the whole file and print all balances separated by single spaces.\n\nInput: `n`, `n` balances, `q`, then `q` pairs `id amount`.\nOutput: the final balances on one line.",
+    "exampleInput": "3\n100 200 300\n2\n1 50\n3 -100\n",
+    "exampleOutput": "150 200 200",
+    "constraints": [
+      "1 <= n <= 20",
+      "1 <= q <= 20",
+      "1 <= id <= n",
+      "Balances always stay within -100000 to 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\n100 200 300\n2\n1 50\n3 -100\n",
+        "expectedOutput": "150 200 200",
+        "isHidden": false
+      },
+      {
+        "input": "2\n10 20\n3\n1 5\n1 5\n2 -30\n",
+        "expectedOutput": "20 -10",
+        "isHidden": false
+      },
+      {
+        "input": "1\n0\n1\n1 999\n",
+        "expectedOutput": "999",
+        "isHidden": true
+      },
+      {
+        "input": "4\n1 2 3 4\n2\n4 -4\n2 10\n",
+        "expectedOutput": "1 12 3 0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 17,
+    "questionOrder": 20
+  }
+]

@@ -1,0 +1,851 @@
+[
+  {
+    "slug": "string-length-manual",
+    "title": "Length of a String",
+    "category": "strings",
+    "difficulty": "Easy",
+    "description": "A C string ends with the special character `'\\0'`. Count characters with a loop until you reach it (do not use `strlen`).\n\nInput: The input is a single word (no spaces).\nOutput: One integer, the number of characters.",
+    "exampleInput": "hello",
+    "exampleOutput": "5",
+    "constraints": [
+      "1 <= length of the word <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "hello",
+        "expectedOutput": "5",
+        "isHidden": false
+      },
+      {
+        "input": "VirVerse",
+        "expectedOutput": "8",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "abcdefghijklmnopqrstuvwxyz0123456789",
+        "expectedOutput": "36",
+        "isHidden": true
+      },
+      {
+        "input": "xxxxxxxxxx",
+        "expectedOutput": "10",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 1
+  },
+  {
+    "slug": "reverse-a-string",
+    "title": "Reverse a String",
+    "category": "strings",
+    "difficulty": "Easy",
+    "description": "Print the characters of the string in reverse order. Loop from the last index down to 0.\n\nInput: The input is a single word (no spaces).\nOutput: The reversed word.",
+    "exampleInput": "hello",
+    "exampleOutput": "olleh",
+    "constraints": [
+      "1 <= length of the word <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "hello",
+        "expectedOutput": "olleh",
+        "isHidden": false
+      },
+      {
+        "input": "abc123",
+        "expectedOutput": "321cba",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "a",
+        "isHidden": true
+      },
+      {
+        "input": "aaaa",
+        "expectedOutput": "aaaa",
+        "isHidden": true
+      },
+      {
+        "input": "level",
+        "expectedOutput": "level",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 2
+  },
+  {
+    "slug": "palindrome-word-check",
+    "title": "Palindrome Check",
+    "category": "strings",
+    "difficulty": "Easy",
+    "description": "A palindrome reads the same forwards and backwards. Compare the first character with the last, the second with the second last, and so on. Letters are compared exactly (case-sensitive).\n\nInput: The input is a single word (no spaces).\nOutput: Print `Palindrome` or `Not Palindrome`.",
+    "exampleInput": "madam",
+    "exampleOutput": "Palindrome",
+    "constraints": [
+      "1 <= length of the word <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "madam",
+        "expectedOutput": "Palindrome",
+        "isHidden": false
+      },
+      {
+        "input": "hello",
+        "expectedOutput": "Not Palindrome",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "Palindrome",
+        "isHidden": true
+      },
+      {
+        "input": "abba",
+        "expectedOutput": "Palindrome",
+        "isHidden": true
+      },
+      {
+        "input": "Madam",
+        "expectedOutput": "Not Palindrome",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 3
+  },
+  {
+    "slug": "count-vowels-consonants",
+    "title": "Count Vowels and Consonants",
+    "category": "strings",
+    "difficulty": "Easy",
+    "description": "Vowels are `a e i o u` (either case). Every other letter is a consonant. Ignore anything that is not a letter.\n\nInput: The input is one line that may contain spaces. It contains letters, spaces and punctuation.\nOutput: One line: the vowel count and the consonant count separated by a space.",
+    "exampleInput": "Hello World",
+    "exampleOutput": "3 7",
+    "constraints": [
+      "1 <= length of the line <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "Hello World",
+        "expectedOutput": "3 7",
+        "isHidden": false
+      },
+      {
+        "input": "programming",
+        "expectedOutput": "3 8",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "1 0",
+        "isHidden": true
+      },
+      {
+        "input": "xyz",
+        "expectedOutput": "0 3",
+        "isHidden": true
+      },
+      {
+        "input": "AEIOU aeiou",
+        "expectedOutput": "10 0",
+        "isHidden": true
+      },
+      {
+        "input": "1234 !!",
+        "expectedOutput": "0 0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 4
+  },
+  {
+    "slug": "convert-to-uppercase",
+    "title": "Convert to Uppercase",
+    "category": "strings",
+    "difficulty": "Easy",
+    "description": "Turn every lowercase letter into uppercase and leave all other characters unchanged. In ASCII, a lowercase letter minus 32 gives the uppercase letter (or use `toupper`).\n\nInput: The input is one line that may contain spaces.\nOutput: The converted line.",
+    "exampleInput": "hello world",
+    "exampleOutput": "HELLO WORLD",
+    "constraints": [
+      "1 <= length of the line <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "hello world",
+        "expectedOutput": "HELLO WORLD",
+        "isHidden": false
+      },
+      {
+        "input": "C is Fun 123",
+        "expectedOutput": "C IS FUN 123",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "A",
+        "isHidden": true
+      },
+      {
+        "input": "ALREADY UPPER",
+        "expectedOutput": "ALREADY UPPER",
+        "isHidden": true
+      },
+      {
+        "input": "z!",
+        "expectedOutput": "Z!",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 5
+  },
+  {
+    "slug": "toggle-letter-case",
+    "title": "Toggle Case",
+    "category": "strings",
+    "difficulty": "Easy",
+    "description": "Change uppercase letters to lowercase and lowercase letters to uppercase. Other characters stay the same.\n\nInput: The input is one line that may contain spaces.\nOutput: The line with every letter's case flipped.",
+    "exampleInput": "Hello World",
+    "exampleOutput": "hELLO wORLD",
+    "constraints": [
+      "1 <= length of the line <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "Hello World",
+        "expectedOutput": "hELLO wORLD",
+        "isHidden": false
+      },
+      {
+        "input": "cOdInG 4 fUn",
+        "expectedOutput": "CoDiNg 4 FuN",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "A",
+        "isHidden": true
+      },
+      {
+        "input": "Z",
+        "expectedOutput": "z",
+        "isHidden": true
+      },
+      {
+        "input": "123 !?",
+        "expectedOutput": "123 !?",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 6
+  },
+  {
+    "slug": "count-letters-digits-others",
+    "title": "Letters, Digits and Others",
+    "category": "strings",
+    "difficulty": "Easy",
+    "description": "Classify every character of the line as a letter, a digit, or something else (spaces and symbols).\n\nInput: The input is one line that may contain spaces.\nOutput: One line: `letters digits others`, three integers separated by single spaces.",
+    "exampleInput": "Hello 123!",
+    "exampleOutput": "5 3 2",
+    "constraints": [
+      "1 <= length of the line <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "Hello 123!",
+        "expectedOutput": "5 3 2",
+        "isHidden": false
+      },
+      {
+        "input": "abc def",
+        "expectedOutput": "6 0 1",
+        "isHidden": false
+      },
+      {
+        "input": "7",
+        "expectedOutput": "0 1 0",
+        "isHidden": true
+      },
+      {
+        "input": "###",
+        "expectedOutput": "0 0 3",
+        "isHidden": true
+      },
+      {
+        "input": "a1 b2 c3",
+        "expectedOutput": "3 3 2",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 7
+  },
+  {
+    "slug": "remove-spaces",
+    "title": "Remove All Spaces",
+    "category": "strings",
+    "difficulty": "Easy",
+    "description": "Copy only the non-space characters to the output. Keep a separate write index.\n\nInput: The input is one line that may contain spaces. It has at least one non-space character.\nOutput: The line with all spaces removed.",
+    "exampleInput": "a b c",
+    "exampleOutput": "abc",
+    "constraints": [
+      "1 <= length of the line <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "a b c",
+        "expectedOutput": "abc",
+        "isHidden": false
+      },
+      {
+        "input": "Hello World From C",
+        "expectedOutput": "HelloWorldFromC",
+        "isHidden": false
+      },
+      {
+        "input": "x",
+        "expectedOutput": "x",
+        "isHidden": true
+      },
+      {
+        "input": "no_spaces",
+        "expectedOutput": "no_spaces",
+        "isHidden": true
+      },
+      {
+        "input": "a  b   c",
+        "expectedOutput": "abc",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 8
+  },
+  {
+    "slug": "count-character-occurrences",
+    "title": "Count a Given Character",
+    "category": "strings",
+    "difficulty": "Easy",
+    "description": "Count how many times a given character appears in a line (case-sensitive).\n\nInput: The first line is the text (may contain spaces). The second line has one character `ch`.\nOutput: One integer, the number of occurrences of `ch`.",
+    "exampleInput": "banana\na",
+    "exampleOutput": "3",
+    "constraints": [
+      "1 <= length of the line <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "banana\na",
+        "expectedOutput": "3",
+        "isHidden": false
+      },
+      {
+        "input": "Hello World\no",
+        "expectedOutput": "2",
+        "isHidden": false
+      },
+      {
+        "input": "a\na",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "aaaa\na",
+        "expectedOutput": "4",
+        "isHidden": true
+      },
+      {
+        "input": "abc\nz",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "a b c\n ",
+        "expectedOutput": "2",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 9
+  },
+  {
+    "slug": "join-two-words",
+    "title": "Join Two Words",
+    "category": "strings",
+    "difficulty": "Easy",
+    "description": "Combine two words into one by appending the second to the first (you may use `strcat`). Make sure the destination array is large enough.\n\nInput: Two words separated by whitespace.\nOutput: The first word immediately followed by the second, then a space-free newline.",
+    "exampleInput": "Vir Verse",
+    "exampleOutput": "VirVerse",
+    "constraints": [
+      "1 <= length of each word <= 50"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "Vir Verse",
+        "expectedOutput": "VirVerse",
+        "isHidden": false
+      },
+      {
+        "input": "hello world",
+        "expectedOutput": "helloworld",
+        "isHidden": false
+      },
+      {
+        "input": "a b",
+        "expectedOutput": "ab",
+        "isHidden": true
+      },
+      {
+        "input": "abc abc",
+        "expectedOutput": "abcabc",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 10
+  },
+  {
+    "slug": "count-words-in-sentence",
+    "title": "Count Words",
+    "category": "strings",
+    "difficulty": "Medium",
+    "description": "Words are separated by single spaces. Count how many words the sentence has. Hint: count the positions where a non-space character starts a word.\n\nInput: The input is one line that may contain spaces. No leading, trailing or repeated spaces.\nOutput: One integer, the number of words.",
+    "exampleInput": "the quick brown fox",
+    "exampleOutput": "4",
+    "constraints": [
+      "1 <= length of the line <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "the quick brown fox",
+        "expectedOutput": "4",
+        "isHidden": false
+      },
+      {
+        "input": "hello",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "a b c d e f g",
+        "expectedOutput": "7",
+        "isHidden": true
+      },
+      {
+        "input": "one two",
+        "expectedOutput": "2",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 11
+  },
+  {
+    "slug": "letter-frequency",
+    "title": "Letter Frequency",
+    "category": "strings",
+    "difficulty": "Medium",
+    "description": "Count how often each lowercase letter `a`-`z` appears (ignore case: treat `A` as `a`). An array of 26 counters indexed by `ch - 'a'` works well.\n\nInput: The input is one line that may contain spaces.\nOutput: For every letter that appears at least once, in alphabetical order, print a line `letter count`.",
+    "exampleInput": "Hello World",
+    "exampleOutput": "d 1\ne 1\nh 1\nl 3\no 2\nr 1\nw 1",
+    "constraints": [
+      "1 <= length of the line <= 100",
+      "At least one letter is present"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "Hello World",
+        "expectedOutput": "d 1\ne 1\nh 1\nl 3\no 2\nr 1\nw 1",
+        "isHidden": false
+      },
+      {
+        "input": "banana",
+        "expectedOutput": "a 3\nb 1\nn 2",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "a 1",
+        "isHidden": true
+      },
+      {
+        "input": "AaAa",
+        "expectedOutput": "a 4",
+        "isHidden": true
+      },
+      {
+        "input": "z y x 1 2",
+        "expectedOutput": "x 1\ny 1\nz 1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 12
+  },
+  {
+    "slug": "anagram-check",
+    "title": "Anagram Check",
+    "category": "strings",
+    "difficulty": "Medium",
+    "description": "Two words are anagrams if they use exactly the same letters the same number of times, in any order (case-sensitive here).\n\nInput: Two words separated by whitespace, each made of lowercase letters.\nOutput: Print `Anagrams` or `Not Anagrams`.",
+    "exampleInput": "listen silent",
+    "exampleOutput": "Anagrams",
+    "constraints": [
+      "1 <= length of each word <= 100",
+      "Lowercase letters only"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "listen silent",
+        "expectedOutput": "Anagrams",
+        "isHidden": false
+      },
+      {
+        "input": "hello world",
+        "expectedOutput": "Not Anagrams",
+        "isHidden": false
+      },
+      {
+        "input": "a a",
+        "expectedOutput": "Anagrams",
+        "isHidden": true
+      },
+      {
+        "input": "a b",
+        "expectedOutput": "Not Anagrams",
+        "isHidden": true
+      },
+      {
+        "input": "abc ab",
+        "expectedOutput": "Not Anagrams",
+        "isHidden": true
+      },
+      {
+        "input": "aab abb",
+        "expectedOutput": "Not Anagrams",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 13
+  },
+  {
+    "slug": "remove-duplicate-characters",
+    "title": "Remove Duplicate Characters",
+    "category": "strings",
+    "difficulty": "Medium",
+    "description": "Keep only the first occurrence of each character and drop later repeats, preserving the original order.\n\nInput: The input is a single word (no spaces).\nOutput: The word without repeated characters.",
+    "exampleInput": "programming",
+    "exampleOutput": "progamin",
+    "constraints": [
+      "1 <= length of the word <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "programming",
+        "expectedOutput": "progamin",
+        "isHidden": false
+      },
+      {
+        "input": "aabbcc",
+        "expectedOutput": "abc",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "a",
+        "isHidden": true
+      },
+      {
+        "input": "aaaaaa",
+        "expectedOutput": "a",
+        "isHidden": true
+      },
+      {
+        "input": "abcabc",
+        "expectedOutput": "abc",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 14
+  },
+  {
+    "slug": "longest-word",
+    "title": "Longest Word in a Sentence",
+    "category": "strings",
+    "difficulty": "Medium",
+    "description": "Find the longest word in a sentence. If several words tie, print the first one.\n\nInput: The input is one line that may contain spaces. Words are separated by single spaces.\nOutput: The longest word.",
+    "exampleInput": "I love programming in C",
+    "exampleOutput": "programming",
+    "constraints": [
+      "1 <= length of the line <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "I love programming in C",
+        "expectedOutput": "programming",
+        "isHidden": false
+      },
+      {
+        "input": "cat dog bat",
+        "expectedOutput": "cat",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "a",
+        "isHidden": true
+      },
+      {
+        "input": "hi there everyone",
+        "expectedOutput": "everyone",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 15
+  },
+  {
+    "slug": "capitalize-each-word",
+    "title": "Capitalize Each Word",
+    "category": "strings",
+    "difficulty": "Medium",
+    "description": "Make the first letter of every word uppercase and all other letters lowercase.\n\nInput: The input is one line that may contain spaces. Words are separated by single spaces and contain only letters.\nOutput: The converted sentence.",
+    "exampleInput": "hello world",
+    "exampleOutput": "Hello World",
+    "constraints": [
+      "1 <= length of the line <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "hello world",
+        "expectedOutput": "Hello World",
+        "isHidden": false
+      },
+      {
+        "input": "hELLO wORLD fRoM c",
+        "expectedOutput": "Hello World From C",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "A",
+        "isHidden": true
+      },
+      {
+        "input": "ALL CAPS HERE",
+        "expectedOutput": "All Caps Here",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 16
+  },
+  {
+    "slug": "run-length-encoding",
+    "title": "Run-Length Compression",
+    "category": "strings",
+    "difficulty": "Medium",
+    "description": "Replace each group of identical consecutive characters by the character followed by the group length. Example: `aaabcc` becomes `a3b1c2`.\n\nInput: The input is a single word (no spaces). It contains only letters.\nOutput: The compressed string.",
+    "exampleInput": "aaabcc",
+    "exampleOutput": "a3b1c2",
+    "constraints": [
+      "1 <= length of the word <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "aaabcc",
+        "expectedOutput": "a3b1c2",
+        "isHidden": false
+      },
+      {
+        "input": "abc",
+        "expectedOutput": "a1b1c1",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "a1",
+        "isHidden": true
+      },
+      {
+        "input": "zzzzzzzzzz",
+        "expectedOutput": "z10",
+        "isHidden": true
+      },
+      {
+        "input": "aabbaa",
+        "expectedOutput": "a2b2a2",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 17
+  },
+  {
+    "slug": "longest-palindromic-substring",
+    "title": "Longest Palindromic Substring",
+    "category": "strings",
+    "difficulty": "Hard",
+    "description": "Find the longest contiguous part of the word that is a palindrome. If several have the same length, choose the one that starts earliest. Hint: expand outwards from every possible centre (both single-character and between-character centres).\n\nInput: The input is a single word (no spaces).\nOutput: The longest palindromic substring.",
+    "exampleInput": "babad",
+    "exampleOutput": "bab",
+    "constraints": [
+      "1 <= length of the word <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "babad",
+        "expectedOutput": "bab",
+        "isHidden": false
+      },
+      {
+        "input": "cbbd",
+        "expectedOutput": "bb",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "a",
+        "isHidden": true
+      },
+      {
+        "input": "abc",
+        "expectedOutput": "a",
+        "isHidden": true
+      },
+      {
+        "input": "forgeeksskeegfor",
+        "expectedOutput": "geeksskeeg",
+        "isHidden": true
+      },
+      {
+        "input": "aaaa",
+        "expectedOutput": "aaaa",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 18
+  },
+  {
+    "slug": "longest-substring-without-repeats",
+    "title": "Longest Substring Without Repeating Characters",
+    "category": "strings",
+    "difficulty": "Hard",
+    "description": "Find the length of the longest contiguous part of the word in which no character appears twice. Hint: keep a window `[start, i]` and the last seen index of each character; when a repeat is found inside the window, move `start` past the earlier copy.\n\nInput: The input is a single word (no spaces).\nOutput: One integer, the length of that longest substring.",
+    "exampleInput": "abcabcbb",
+    "exampleOutput": "3",
+    "constraints": [
+      "1 <= length of the word <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "abcabcbb",
+        "expectedOutput": "3",
+        "isHidden": false
+      },
+      {
+        "input": "bbbbb",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "pwwkew",
+        "expectedOutput": "3",
+        "isHidden": true
+      },
+      {
+        "input": "abcdef",
+        "expectedOutput": "6",
+        "isHidden": true
+      },
+      {
+        "input": "abba",
+        "expectedOutput": "2",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 19
+  },
+  {
+    "slug": "run-length-decoding",
+    "title": "Run-Length Decompression",
+    "category": "strings",
+    "difficulty": "Hard",
+    "description": "The input is a compressed string made of letters each followed by a count (the count may have several digits). Expand it: `a3b12` becomes `aaabbbbbbbbbbbb`. Hint: after a letter, build the number digit by digit with `n = n * 10 + digit`.\n\nInput: The input is a single word (no spaces). Every letter is followed by a count of at least 1.\nOutput: The expanded string.",
+    "exampleInput": "a3b2c1",
+    "exampleOutput": "aaabbc",
+    "constraints": [
+      "1 <= length of the input <= 100",
+      "The expanded string has at most 200 characters",
+      "Each count is between 1 and 99"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "a3b2c1",
+        "expectedOutput": "aaabbc",
+        "isHidden": false
+      },
+      {
+        "input": "x12y3",
+        "expectedOutput": "xxxxxxxxxxxxyyy",
+        "isHidden": false
+      },
+      {
+        "input": "z1",
+        "expectedOutput": "z",
+        "isHidden": true
+      },
+      {
+        "input": "a1b1c1d1",
+        "expectedOutput": "abcd",
+        "isHidden": true
+      },
+      {
+        "input": "q99",
+        "expectedOutput": "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 12,
+    "questionOrder": 20
+  }
+]

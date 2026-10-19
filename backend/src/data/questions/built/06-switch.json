@@ -1,0 +1,952 @@
+[
+  {
+    "slug": "day-of-the-week",
+    "title": "Day of the Week",
+    "category": "switch",
+    "difficulty": "Easy",
+    "description": "Read a number from 1 to 7 and print the matching day name using a `switch` statement (1 = Monday ... 7 = Sunday).\n\nFor any other number, print `Invalid`.\n\nInput: one integer `n`.\nOutput: the day name (e.g. `Wednesday`) or `Invalid`.",
+    "exampleInput": "3",
+    "exampleOutput": "Wednesday",
+    "constraints": [
+      "-100 <= n <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3",
+        "expectedOutput": "Wednesday",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "Monday",
+        "isHidden": false
+      },
+      {
+        "input": "7",
+        "expectedOutput": "Sunday",
+        "isHidden": true
+      },
+      {
+        "input": "9",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      },
+      {
+        "input": "0",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      },
+      {
+        "input": "-5",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 1
+  },
+  {
+    "slug": "vowel-or-consonant",
+    "title": "Vowel or Consonant",
+    "category": "switch",
+    "difficulty": "Easy",
+    "description": "Read a letter and say whether it is a vowel (a, e, i, o, u in either case) or a consonant. Use `switch` with grouped cases.\n\nInput: one alphabetic character (read with `scanf(\" %c\", &ch)`).\nOutput: `Vowel` or `Consonant`.",
+    "exampleInput": "e",
+    "exampleOutput": "Vowel",
+    "constraints": [
+      "The input is an English letter"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "e",
+        "expectedOutput": "Vowel",
+        "isHidden": false
+      },
+      {
+        "input": "k",
+        "expectedOutput": "Consonant",
+        "isHidden": false
+      },
+      {
+        "input": "U",
+        "expectedOutput": "Vowel",
+        "isHidden": true
+      },
+      {
+        "input": "Z",
+        "expectedOutput": "Consonant",
+        "isHidden": true
+      },
+      {
+        "input": "a",
+        "expectedOutput": "Vowel",
+        "isHidden": true
+      },
+      {
+        "input": "y",
+        "expectedOutput": "Consonant",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 2
+  },
+  {
+    "slug": "month-name",
+    "title": "Month Name",
+    "category": "switch",
+    "difficulty": "Easy",
+    "description": "Read a month number (1 to 12) and print its name (`January`, `February`, ... `December`). Print `Invalid` for any other number.\n\nInput: one integer `m`.\nOutput: the month name or `Invalid`.",
+    "exampleInput": "5",
+    "exampleOutput": "May",
+    "constraints": [
+      "-100 <= m <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "May",
+        "isHidden": false
+      },
+      {
+        "input": "12",
+        "expectedOutput": "December",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "January",
+        "isHidden": true
+      },
+      {
+        "input": "13",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      },
+      {
+        "input": "0",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      },
+      {
+        "input": "10",
+        "expectedOutput": "October",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 3
+  },
+  {
+    "slug": "simple-calculator",
+    "title": "Simple Calculator",
+    "category": "switch",
+    "difficulty": "Easy",
+    "description": "Read two integers and an operator (`+`, `-`, `*`, `/`) and print the result. `/` is integer division. If the operator is `/` and the second number is 0, print `Error`. For any other operator, print `Invalid`.\n\nInput: `a op b` separated by spaces (read the operator with `scanf(\" %c\", &op)`).\nOutput: the integer result, `Error` or `Invalid`.",
+    "exampleInput": "8 + 5",
+    "exampleOutput": "13",
+    "constraints": [
+      "-10000 <= a, b <= 10000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "8 + 5",
+        "expectedOutput": "13",
+        "isHidden": false
+      },
+      {
+        "input": "9 / 2",
+        "expectedOutput": "4",
+        "isHidden": false
+      },
+      {
+        "input": "4 / 0",
+        "expectedOutput": "Error",
+        "isHidden": true
+      },
+      {
+        "input": "6 % 4",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      },
+      {
+        "input": "-3 * 7",
+        "expectedOutput": "-21",
+        "isHidden": true
+      },
+      {
+        "input": "2 - 10",
+        "expectedOutput": "-8",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 4
+  },
+  {
+    "slug": "traffic-light",
+    "title": "Traffic Light",
+    "category": "switch",
+    "difficulty": "Easy",
+    "description": "Read a traffic light colour letter: `R` prints `Stop`, `Y` prints `Wait`, `G` prints `Go`. Any other letter prints `Invalid`.\n\nInput: one character (read with `scanf(\" %c\", &ch)`).\nOutput: `Stop`, `Wait`, `Go` or `Invalid`.",
+    "exampleInput": "R",
+    "exampleOutput": "Stop",
+    "constraints": [
+      "The input is a single uppercase or lowercase letter"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "R",
+        "expectedOutput": "Stop",
+        "isHidden": false
+      },
+      {
+        "input": "G",
+        "expectedOutput": "Go",
+        "isHidden": false
+      },
+      {
+        "input": "Y",
+        "expectedOutput": "Wait",
+        "isHidden": true
+      },
+      {
+        "input": "B",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      },
+      {
+        "input": "r",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 5
+  },
+  {
+    "slug": "grade-remark",
+    "title": "Grade Remark",
+    "category": "switch",
+    "difficulty": "Easy",
+    "description": "Print a remark for a grade letter: `A` -> `Excellent`, `B` -> `Good`, `C` -> `Average`, `D` -> `Poor`, `F` -> `Fail`. Any other character prints `Invalid`.\n\nInput: one character (read with `scanf(\" %c\", &g)`).\nOutput: the remark.",
+    "exampleInput": "A",
+    "exampleOutput": "Excellent",
+    "constraints": [
+      "The input is a single letter"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "A",
+        "expectedOutput": "Excellent",
+        "isHidden": false
+      },
+      {
+        "input": "C",
+        "expectedOutput": "Average",
+        "isHidden": false
+      },
+      {
+        "input": "F",
+        "expectedOutput": "Fail",
+        "isHidden": true
+      },
+      {
+        "input": "E",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      },
+      {
+        "input": "b",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      },
+      {
+        "input": "D",
+        "expectedOutput": "Poor",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 6
+  },
+  {
+    "slug": "days-in-month",
+    "title": "Days in a Month",
+    "category": "switch",
+    "difficulty": "Easy",
+    "description": "Given a month number (1-12) print how many days it has, treating February as having 28 days. Use grouped `case` labels. Print `Invalid` for other numbers.\n\nInput: one integer `m`.\nOutput: the number of days, or `Invalid`.",
+    "exampleInput": "1",
+    "exampleOutput": "31",
+    "constraints": [
+      "-100 <= m <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1",
+        "expectedOutput": "31",
+        "isHidden": false
+      },
+      {
+        "input": "4",
+        "expectedOutput": "30",
+        "isHidden": false
+      },
+      {
+        "input": "2",
+        "expectedOutput": "28",
+        "isHidden": true
+      },
+      {
+        "input": "12",
+        "expectedOutput": "31",
+        "isHidden": true
+      },
+      {
+        "input": "0",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      },
+      {
+        "input": "13",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 7
+  },
+  {
+    "slug": "digit-to-word",
+    "title": "Digit to Word",
+    "category": "switch",
+    "difficulty": "Easy",
+    "description": "Read a single digit (0-9) and print it in words in lowercase: `zero`, `one`, ... `nine`. If the number is outside 0-9, print `invalid`.\n\nInput: one integer `d`.\nOutput: the word.",
+    "exampleInput": "4",
+    "exampleOutput": "four",
+    "constraints": [
+      "-100 <= d <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "4",
+        "expectedOutput": "four",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "zero",
+        "isHidden": false
+      },
+      {
+        "input": "9",
+        "expectedOutput": "nine",
+        "isHidden": true
+      },
+      {
+        "input": "10",
+        "expectedOutput": "invalid",
+        "isHidden": true
+      },
+      {
+        "input": "-1",
+        "expectedOutput": "invalid",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 8
+  },
+  {
+    "slug": "weekday-or-weekend",
+    "title": "Weekday or Weekend",
+    "category": "switch",
+    "difficulty": "Easy",
+    "description": "Read a day number (1 = Monday ... 7 = Sunday). Print `Weekend` for 6 and 7, `Weekday` for 1 to 5, and `Invalid` otherwise. Use fall-through case labels.\n\nInput: one integer `n`.\nOutput: `Weekday`, `Weekend` or `Invalid`.",
+    "exampleInput": "2",
+    "exampleOutput": "Weekday",
+    "constraints": [
+      "-100 <= n <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2",
+        "expectedOutput": "Weekday",
+        "isHidden": false
+      },
+      {
+        "input": "6",
+        "expectedOutput": "Weekend",
+        "isHidden": false
+      },
+      {
+        "input": "5",
+        "expectedOutput": "Weekday",
+        "isHidden": true
+      },
+      {
+        "input": "7",
+        "expectedOutput": "Weekend",
+        "isHidden": true
+      },
+      {
+        "input": "8",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      },
+      {
+        "input": "0",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 9
+  },
+  {
+    "slug": "compass-direction",
+    "title": "Compass Direction",
+    "category": "switch",
+    "difficulty": "Easy",
+    "description": "Read a direction letter and print its name: `N` -> `North`, `S` -> `South`, `E` -> `East`, `W` -> `West`. Accept both uppercase and lowercase. Otherwise print `Unknown`.\n\nInput: one character (read with `scanf(\" %c\", &ch)`).\nOutput: the direction name or `Unknown`.",
+    "exampleInput": "N",
+    "exampleOutput": "North",
+    "constraints": [
+      "The input is a single letter"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "N",
+        "expectedOutput": "North",
+        "isHidden": false
+      },
+      {
+        "input": "w",
+        "expectedOutput": "West",
+        "isHidden": false
+      },
+      {
+        "input": "S",
+        "expectedOutput": "South",
+        "isHidden": true
+      },
+      {
+        "input": "e",
+        "expectedOutput": "East",
+        "isHidden": true
+      },
+      {
+        "input": "X",
+        "expectedOutput": "Unknown",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 10
+  },
+  {
+    "slug": "quarter-of-year",
+    "title": "Quarter of the Year",
+    "category": "switch",
+    "difficulty": "Medium",
+    "description": "Months 1-3 are quarter 1, 4-6 quarter 2, 7-9 quarter 3, and 10-12 quarter 4. Given a month number, print `Q1`, `Q2`, `Q3` or `Q4`. Print `Invalid` for other numbers.\n\nHint: you can use `switch (m)` with grouped cases, or `switch ((m - 1) / 3)` for numbers 1-12.\n\nInput: one integer `m`.\nOutput: the quarter or `Invalid`.",
+    "exampleInput": "2",
+    "exampleOutput": "Q1",
+    "constraints": [
+      "-100 <= m <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2",
+        "expectedOutput": "Q1",
+        "isHidden": false
+      },
+      {
+        "input": "8",
+        "expectedOutput": "Q3",
+        "isHidden": false
+      },
+      {
+        "input": "3",
+        "expectedOutput": "Q1",
+        "isHidden": true
+      },
+      {
+        "input": "4",
+        "expectedOutput": "Q2",
+        "isHidden": true
+      },
+      {
+        "input": "12",
+        "expectedOutput": "Q4",
+        "isHidden": true
+      },
+      {
+        "input": "0",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      },
+      {
+        "input": "13",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 11
+  },
+  {
+    "slug": "restaurant-bill",
+    "title": "Restaurant Bill",
+    "category": "switch",
+    "difficulty": "Medium",
+    "description": "A menu has: 1 = Burger (80), 2 = Pizza (150), 3 = Pasta (120), 4 = Coffee (40). Given an item number and a quantity, print the total cost. For an item number not on the menu, print `Invalid item`.\n\nInput: two integers `item quantity`.\nOutput: the total cost as an integer, or `Invalid item`.",
+    "exampleInput": "1 3",
+    "exampleOutput": "240",
+    "constraints": [
+      "-10 <= item <= 10",
+      "1 <= quantity <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 3",
+        "expectedOutput": "240",
+        "isHidden": false
+      },
+      {
+        "input": "4 2",
+        "expectedOutput": "80",
+        "isHidden": false
+      },
+      {
+        "input": "2 1",
+        "expectedOutput": "150",
+        "isHidden": false
+      },
+      {
+        "input": "3 100",
+        "expectedOutput": "12000",
+        "isHidden": true
+      },
+      {
+        "input": "5 2",
+        "expectedOutput": "Invalid item",
+        "isHidden": true
+      },
+      {
+        "input": "0 1",
+        "expectedOutput": "Invalid item",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 12
+  },
+  {
+    "slug": "days-in-month-with-leap-year",
+    "title": "Days in Month (Leap Year Aware)",
+    "category": "switch",
+    "difficulty": "Medium",
+    "description": "Given a month and a year, print the number of days in that month. February has 29 days in a leap year (divisible by 4, except centuries not divisible by 400), otherwise 28. If the month is not 1-12 print `Invalid`.\n\nInput: two integers `month year`.\nOutput: the number of days or `Invalid`.",
+    "exampleInput": "2 2024",
+    "exampleOutput": "29",
+    "constraints": [
+      "-5 <= month <= 20",
+      "1 <= year <= 9999"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2 2024",
+        "expectedOutput": "29",
+        "isHidden": false
+      },
+      {
+        "input": "2 2023",
+        "expectedOutput": "28",
+        "isHidden": false
+      },
+      {
+        "input": "7 2020",
+        "expectedOutput": "31",
+        "isHidden": false
+      },
+      {
+        "input": "2 1900",
+        "expectedOutput": "28",
+        "isHidden": true
+      },
+      {
+        "input": "2 2000",
+        "expectedOutput": "29",
+        "isHidden": true
+      },
+      {
+        "input": "11 2021",
+        "expectedOutput": "30",
+        "isHidden": true
+      },
+      {
+        "input": "14 2021",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 13
+  },
+  {
+    "slug": "unit-converter",
+    "title": "Unit Converter",
+    "category": "switch",
+    "difficulty": "Medium",
+    "description": "Convert a whole number value using a menu choice: 1 = kilometres to metres (x 1000), 2 = hours to minutes (x 60), 3 = kilograms to grams (x 1000), 4 = days to hours (x 24). For any other choice print `Invalid`.\n\nInput: two integers `choice value`.\nOutput: the converted integer or `Invalid`.",
+    "exampleInput": "1 5",
+    "exampleOutput": "5000",
+    "constraints": [
+      "-10 <= choice <= 10",
+      "0 <= value <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 5",
+        "expectedOutput": "5000",
+        "isHidden": false
+      },
+      {
+        "input": "2 3",
+        "expectedOutput": "180",
+        "isHidden": false
+      },
+      {
+        "input": "4 10",
+        "expectedOutput": "240",
+        "isHidden": false
+      },
+      {
+        "input": "3 100000",
+        "expectedOutput": "100000000",
+        "isHidden": true
+      },
+      {
+        "input": "5 7",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      },
+      {
+        "input": "2 0",
+        "expectedOutput": "0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 14
+  },
+  {
+    "slug": "shape-area",
+    "title": "Area of a Shape",
+    "category": "switch",
+    "difficulty": "Medium",
+    "description": "Choose a shape by code and print its area with exactly 2 digits after the decimal point.\n- 1 = circle, input one integer radius `r`, area = 3.14159 * r * r\n- 2 = rectangle, input `length width`, area = length * width\n- 3 = triangle, input `base height`, area = 0.5 * base * height\nFor any other code print `Invalid`.\n\nInput: the code on the first line, then the needed integers on the next line.\nOutput: the area formatted like `78.54`, or `Invalid`.",
+    "exampleInput": "1\n5",
+    "exampleOutput": "78.54",
+    "constraints": [
+      "1 <= each dimension <= 1000",
+      "code is between -10 and 10"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1\n5",
+        "expectedOutput": "78.54",
+        "isHidden": false
+      },
+      {
+        "input": "2\n4 6",
+        "expectedOutput": "24.00",
+        "isHidden": false
+      },
+      {
+        "input": "3\n5 3",
+        "expectedOutput": "7.50",
+        "isHidden": false
+      },
+      {
+        "input": "3\n7 7",
+        "expectedOutput": "24.50",
+        "isHidden": true
+      },
+      {
+        "input": "1\n1000",
+        "expectedOutput": "3141590.00",
+        "isHidden": true
+      },
+      {
+        "input": "9",
+        "expectedOutput": "Invalid",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 15
+  },
+  {
+    "slug": "shipping-cost",
+    "title": "Shipping Cost",
+    "category": "switch",
+    "difficulty": "Medium",
+    "description": "Shipping has a base cost by zone: zone 1 = 50, zone 2 = 80, zone 3 = 120. Every kilogram above 5 kg costs an extra 10 (zone 1), 15 (zone 2) or 20 (zone 3). Print the total cost. For any other zone print `Invalid zone`.\n\nInput: two integers `zone weight` (weight in whole kg).\nOutput: the total cost as an integer, or `Invalid zone`.",
+    "exampleInput": "1 3",
+    "exampleOutput": "50",
+    "constraints": [
+      "-5 <= zone <= 10",
+      "1 <= weight <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 3",
+        "expectedOutput": "50",
+        "isHidden": false
+      },
+      {
+        "input": "2 10",
+        "expectedOutput": "155",
+        "isHidden": false
+      },
+      {
+        "input": "3 5",
+        "expectedOutput": "120",
+        "isHidden": false
+      },
+      {
+        "input": "3 6",
+        "expectedOutput": "140",
+        "isHidden": true
+      },
+      {
+        "input": "4 2",
+        "expectedOutput": "Invalid zone",
+        "isHidden": true
+      },
+      {
+        "input": "1 1000",
+        "expectedOutput": "10000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 16
+  },
+  {
+    "slug": "operation-chain",
+    "title": "Operation Chain",
+    "category": "switch",
+    "difficulty": "Medium",
+    "description": "Start with the value 0. Read `n` operations; each is an operator character and an integer: `+ x` adds x, `- x` subtracts x, `* x` multiplies by x, `/ x` divides by x using integer division (skip the operation if x is 0), and any other operator is ignored. Print the final value.\n\nInput: first `n`, then `n` lines each with `op x` (read op with `scanf(\" %c\", &op)`).\nOutput: the final integer value.",
+    "exampleInput": "3\n+ 10\n* 3\n- 5",
+    "exampleOutput": "25",
+    "constraints": [
+      "1 <= n <= 20",
+      "-100 <= x <= 100",
+      "Intermediate values fit in a 64-bit integer"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\n+ 10\n* 3\n- 5",
+        "expectedOutput": "25",
+        "isHidden": false
+      },
+      {
+        "input": "4\n+ 7\n/ 2\n* 5\n+ 1",
+        "expectedOutput": "16",
+        "isHidden": false
+      },
+      {
+        "input": "3\n+ 9\n/ 0\n% 4",
+        "expectedOutput": "9",
+        "isHidden": true
+      },
+      {
+        "input": "2\n- 7\n/ 2",
+        "expectedOutput": "-3",
+        "isHidden": true
+      },
+      {
+        "input": "1\n* 5",
+        "expectedOutput": "0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 17
+  },
+  {
+    "slug": "atm-menu-simulation",
+    "title": "ATM Menu Simulation",
+    "category": "switch",
+    "difficulty": "Hard",
+    "description": "Simulate a simple ATM. Start with a balance read from input. Then read commands until the command `Q`:\n- `D x`: deposit `x` (balance += x)\n- `W x`: withdraw `x`; if `x` is more than the balance print `Insufficient` and leave the balance unchanged\n- `B`: print the current balance\n- `Q`: quit\n- any other letter: print `Invalid`\nPrint every message on its own line.\n\nInput: the starting balance, then commands (each read with `scanf(\" %c\", &cmd)`, followed by an integer for `D` and `W`). The last command is always `Q`.\nOutput: one line for each `B`, failed `W`, or invalid command.",
+    "exampleInput": "1000\nB\nQ",
+    "exampleOutput": "1000",
+    "constraints": [
+      "0 <= balance <= 1000000",
+      "0 <= x <= 1000000",
+      "At most 50 commands"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1000\nB\nQ",
+        "expectedOutput": "1000",
+        "isHidden": false
+      },
+      {
+        "input": "500\nD 200\nW 100\nB\nQ",
+        "expectedOutput": "600",
+        "isHidden": false
+      },
+      {
+        "input": "100\nW 150\nB\nQ",
+        "expectedOutput": "Insufficient\n100",
+        "isHidden": false
+      },
+      {
+        "input": "0\nX\nD 50\nW 50\nB\nQ",
+        "expectedOutput": "Invalid\n0",
+        "isHidden": true
+      },
+      {
+        "input": "100\nW 100\nB\nW 1\nQ",
+        "expectedOutput": "0\nInsufficient",
+        "isHidden": true
+      },
+      {
+        "input": "5\nB\nZ\nQ",
+        "expectedOutput": "5\nInvalid",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 18
+  },
+  {
+    "slug": "next-date",
+    "title": "Next Date",
+    "category": "switch",
+    "difficulty": "Hard",
+    "description": "Given a valid date, print the date of the next day. Handle month ends, year ends and leap-year February (29 days when the year is divisible by 4, except centuries not divisible by 400). Use a `switch` on the month to find its length.\n\nInput: three integers `day month year`.\nOutput: the next date as `day month year` separated by single spaces.",
+    "exampleInput": "15 8 2024",
+    "exampleOutput": "16 8 2024",
+    "constraints": [
+      "The input date is valid",
+      "1 <= year <= 9998"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "15 8 2024",
+        "expectedOutput": "16 8 2024",
+        "isHidden": false
+      },
+      {
+        "input": "31 12 2023",
+        "expectedOutput": "1 1 2024",
+        "isHidden": false
+      },
+      {
+        "input": "28 2 2023",
+        "expectedOutput": "1 3 2023",
+        "isHidden": false
+      },
+      {
+        "input": "28 2 2024",
+        "expectedOutput": "29 2 2024",
+        "isHidden": true
+      },
+      {
+        "input": "29 2 2024",
+        "expectedOutput": "1 3 2024",
+        "isHidden": true
+      },
+      {
+        "input": "28 2 1900",
+        "expectedOutput": "1 3 1900",
+        "isHidden": true
+      },
+      {
+        "input": "30 4 2022",
+        "expectedOutput": "1 5 2022",
+        "isHidden": true
+      },
+      {
+        "input": "29 2 2000",
+        "expectedOutput": "1 3 2000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 19
+  },
+  {
+    "slug": "robot-commands",
+    "title": "Robot Commands",
+    "category": "switch",
+    "difficulty": "Hard",
+    "description": "A robot starts at (0, 0) facing North (North is +y, East is +x). Read command letters until `X`:\n- `F`: move one step forward in the facing direction\n- `B`: move one step backward\n- `L`: turn 90 degrees left\n- `R`: turn 90 degrees right\n- any other letter is ignored\nPrint the final position and facing direction.\n\nInput: a single string of uppercase letters, ending with `X` (read letters one by one with `scanf(\" %c\", &c)`).\nOutput: `x y Direction`, where Direction is `North`, `East`, `South` or `West`.",
+    "exampleInput": "FFRFFX",
+    "exampleOutput": "2 2 East",
+    "constraints": [
+      "At most 100 commands before X"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "FFRFFX",
+        "expectedOutput": "2 2 East",
+        "isHidden": false
+      },
+      {
+        "input": "X",
+        "expectedOutput": "0 0 North",
+        "isHidden": false
+      },
+      {
+        "input": "LFFBX",
+        "expectedOutput": "-1 0 West",
+        "isHidden": false
+      },
+      {
+        "input": "RRFFFX",
+        "expectedOutput": "0 -3 South",
+        "isHidden": true
+      },
+      {
+        "input": "LLLLFZFRBBX",
+        "expectedOutput": "-2 2 East",
+        "isHidden": true
+      },
+      {
+        "input": "RFRFRFRFX",
+        "expectedOutput": "0 0 North",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 6,
+    "questionOrder": 20
+  }
+]

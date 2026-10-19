@@ -1,0 +1,841 @@
+[
+  {
+    "slug": "struct-student-record",
+    "title": "Print a Student Record",
+    "category": "structures",
+    "difficulty": "Easy",
+    "description": "A `struct` groups related variables. Define `struct Student { char name[21]; int roll; int marks; }`, read one student, and print it.\n\nInput\nOne line: `name roll marks` (name is a single word).\n\nOutput\nPrint `Name: <name>, Roll: <roll>, Marks: <marks>`.",
+    "exampleInput": "Asha 12 88",
+    "exampleOutput": "Name: Asha, Roll: 12, Marks: 88",
+    "constraints": [
+      "name has 1 to 20 characters",
+      "1 <= roll <= 1000",
+      "0 <= marks <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "Asha 12 88",
+        "expectedOutput": "Name: Asha, Roll: 12, Marks: 88",
+        "isHidden": false
+      },
+      {
+        "input": "Bob 1 0",
+        "expectedOutput": "Name: Bob, Roll: 1, Marks: 0",
+        "isHidden": false
+      },
+      {
+        "input": "Zed 1000 100",
+        "expectedOutput": "Name: Zed, Roll: 1000, Marks: 100",
+        "isHidden": true
+      },
+      {
+        "input": "Q 7 55",
+        "expectedOutput": "Name: Q, Roll: 7, Marks: 55",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 1
+  },
+  {
+    "slug": "struct-point-distance",
+    "title": "Squared Distance Between Points",
+    "category": "structures",
+    "difficulty": "Easy",
+    "description": "Define `struct Point { int x, y; }`. Read two points and print the squared distance `(x1-x2)^2 + (y1-y2)^2`.\n\nInput\nOne line: `x1 y1 x2 y2`.\n\nOutput\nPrint the squared distance.",
+    "exampleInput": "0 0 3 4",
+    "exampleOutput": "25",
+    "constraints": [
+      "-100 <= coordinates <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "0 0 3 4",
+        "expectedOutput": "25",
+        "isHidden": false
+      },
+      {
+        "input": "1 1 1 1",
+        "expectedOutput": "0",
+        "isHidden": false
+      },
+      {
+        "input": "-2 5 4 -3",
+        "expectedOutput": "100",
+        "isHidden": false
+      },
+      {
+        "input": "-100 -100 100 100",
+        "expectedOutput": "80000",
+        "isHidden": true
+      },
+      {
+        "input": "5 5 5 9",
+        "expectedOutput": "16",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 2
+  },
+  {
+    "slug": "struct-rectangle-compare",
+    "title": "Compare Two Rectangles",
+    "category": "structures",
+    "difficulty": "Easy",
+    "description": "Define `struct Rect { int w, h; }`. Compute the area of two rectangles and report which is larger.\n\nInput\nOne line: `w1 h1 w2 h2`.\n\nOutput\nPrint `First` if the first area is larger, `Second` if the second is larger, or `Equal`.",
+    "exampleInput": "3 4 2 5",
+    "exampleOutput": "First",
+    "constraints": [
+      "1 <= w, h <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3 4 2 5",
+        "expectedOutput": "First",
+        "isHidden": false
+      },
+      {
+        "input": "1 1 2 2",
+        "expectedOutput": "Second",
+        "isHidden": false
+      },
+      {
+        "input": "2 6 3 4",
+        "expectedOutput": "Equal",
+        "isHidden": false
+      },
+      {
+        "input": "1000 1000 999 1000",
+        "expectedOutput": "First",
+        "isHidden": true
+      },
+      {
+        "input": "1 7 7 1",
+        "expectedOutput": "Equal",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 3
+  },
+  {
+    "slug": "struct-total-marks",
+    "title": "Total Marks of All Students",
+    "category": "structures",
+    "difficulty": "Easy",
+    "description": "Read `n` students into an array of structs and print the total of all their marks.\n\nInput\nFirst line: `n`. Then `n` lines: `name roll marks`.\n\nOutput\nPrint the total marks.",
+    "exampleInput": "3\nAsha 1 80\nBob 2 70\nCy 3 90",
+    "exampleOutput": "240",
+    "constraints": [
+      "1 <= n <= 50",
+      "0 <= marks <= 100",
+      "name is one word of at most 20 characters"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\nAsha 1 80\nBob 2 70\nCy 3 90",
+        "expectedOutput": "240",
+        "isHidden": false
+      },
+      {
+        "input": "1\nSolo 5 100",
+        "expectedOutput": "100",
+        "isHidden": false
+      },
+      {
+        "input": "2\nA 1 0\nB 2 0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "4\nW 1 100\nX 2 100\nY 3 100\nZ 4 100",
+        "expectedOutput": "400",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 4
+  },
+  {
+    "slug": "struct-find-topper",
+    "title": "Find the Topper",
+    "category": "structures",
+    "difficulty": "Easy",
+    "description": "Find the student with the highest marks. Marks are all different.\n\nInput\nFirst line: `n`. Then `n` lines: `name roll marks`.\n\nOutput\nPrint `name roll marks` of the topper separated by single spaces.",
+    "exampleInput": "3\nAsha 1 80\nBob 2 95\nCy 3 90",
+    "exampleOutput": "Bob 2 95",
+    "constraints": [
+      "1 <= n <= 50",
+      "0 <= marks <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\nAsha 1 80\nBob 2 95\nCy 3 90",
+        "expectedOutput": "Bob 2 95",
+        "isHidden": false
+      },
+      {
+        "input": "2\nA 10 5\nB 20 6",
+        "expectedOutput": "B 20 6",
+        "isHidden": false
+      },
+      {
+        "input": "1\nOnly 9 50",
+        "expectedOutput": "Only 9 50",
+        "isHidden": false
+      },
+      {
+        "input": "3\nA 1 100\nB 2 0\nC 3 1",
+        "expectedOutput": "A 1 100",
+        "isHidden": true
+      },
+      {
+        "input": "4\nP 4 10\nQ 3 20\nR 2 30\nS 1 40",
+        "expectedOutput": "S 1 40",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 5
+  },
+  {
+    "slug": "struct-box-volume",
+    "title": "Pass a Struct to a Function",
+    "category": "structures",
+    "difficulty": "Easy",
+    "description": "Structs can be passed by value. Write `int volume(struct Box b)` that returns `l*w*h`.\n\nInput\nOne line: `l w h`.\n\nOutput\nPrint the volume.",
+    "exampleInput": "2 3 4",
+    "exampleOutput": "24",
+    "constraints": [
+      "1 <= l, w, h <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nstruct Box { int l, w, h; };\n\nint volume(struct Box b) {\n    // return the volume\n    return 0;\n}\n\nint main(void) {\n    struct Box b;\n    scanf(\"%d %d %d\", &b.l, &b.w, &b.h);\n    printf(\"%d\\n\", volume(b));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2 3 4",
+        "expectedOutput": "24",
+        "isHidden": false
+      },
+      {
+        "input": "1 1 1",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "10 10 10",
+        "expectedOutput": "1000",
+        "isHidden": false
+      },
+      {
+        "input": "100 100 100",
+        "expectedOutput": "1000000",
+        "isHidden": true
+      },
+      {
+        "input": "1 50 2",
+        "expectedOutput": "100",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 6
+  },
+  {
+    "slug": "struct-bonus-pointer",
+    "title": "Modify a Struct Through a Pointer",
+    "category": "structures",
+    "difficulty": "Easy",
+    "description": "Write `void addBonus(struct Student *s, int bonus)` that adds bonus marks, never going above 100. Use the arrow operator `s->marks`.\n\nInput\nOne line: `name roll marks bonus`.\n\nOutput\nPrint `name roll marks` after the bonus.",
+    "exampleInput": "Asha 1 80 5",
+    "exampleOutput": "Asha 1 85",
+    "constraints": [
+      "0 <= marks, bonus <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "Asha 1 80 5",
+        "expectedOutput": "Asha 1 85",
+        "isHidden": false
+      },
+      {
+        "input": "Bob 2 98 10",
+        "expectedOutput": "Bob 2 100",
+        "isHidden": false
+      },
+      {
+        "input": "Cy 3 0 0",
+        "expectedOutput": "Cy 3 0",
+        "isHidden": false
+      },
+      {
+        "input": "D 4 100 100",
+        "expectedOutput": "D 4 100",
+        "isHidden": true
+      },
+      {
+        "input": "E 5 50 50",
+        "expectedOutput": "E 5 100",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 7
+  },
+  {
+    "slug": "struct-complex-add",
+    "title": "Add Complex Numbers with typedef",
+    "category": "structures",
+    "difficulty": "Easy",
+    "description": "Use `typedef struct { int re, im; } Complex;` and a function `Complex add(Complex a, Complex b)` that returns a struct.\n\nInput\nOne line: `re1 im1 re2 im2`.\n\nOutput\nPrint `re im` of the sum.",
+    "exampleInput": "1 2 3 4",
+    "exampleOutput": "4 6",
+    "constraints": [
+      "-1000 <= each value <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 2 3 4",
+        "expectedOutput": "4 6",
+        "isHidden": false
+      },
+      {
+        "input": "-5 0 5 0",
+        "expectedOutput": "0 0",
+        "isHidden": false
+      },
+      {
+        "input": "0 0 0 0",
+        "expectedOutput": "0 0",
+        "isHidden": false
+      },
+      {
+        "input": "1000 1000 1000 1000",
+        "expectedOutput": "2000 2000",
+        "isHidden": true
+      },
+      {
+        "input": "-1000 -1000 1 1",
+        "expectedOutput": "-999 -999",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 8
+  },
+  {
+    "slug": "struct-enum-weekday",
+    "title": "Day Names with enum",
+    "category": "structures",
+    "difficulty": "Easy",
+    "description": "Define `enum Day { MON = 1, TUE, WED, THU, FRI, SAT, SUN };`. Read a number 1-7 into an enum and print its name in uppercase 3 letters (`MON`...`SUN`), then `Weekend` for SAT/SUN or `Weekday` otherwise, on the same line separated by a space.\n\nInput\nOne integer `d`.\n\nOutput\nPrint `<NAME> <Weekend|Weekday>`.",
+    "exampleInput": "1",
+    "exampleOutput": "MON Weekday",
+    "constraints": [
+      "1 <= d <= 7"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1",
+        "expectedOutput": "MON Weekday",
+        "isHidden": false
+      },
+      {
+        "input": "6",
+        "expectedOutput": "SAT Weekend",
+        "isHidden": false
+      },
+      {
+        "input": "4",
+        "expectedOutput": "THU Weekday",
+        "isHidden": false
+      },
+      {
+        "input": "7",
+        "expectedOutput": "SUN Weekend",
+        "isHidden": true
+      },
+      {
+        "input": "5",
+        "expectedOutput": "FRI Weekday",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 9
+  },
+  {
+    "slug": "struct-time-add",
+    "title": "Add Time Durations",
+    "category": "structures",
+    "difficulty": "Easy",
+    "description": "Define `struct Time { int h, m, s; }`. Add two durations and normalise so that `0 <= m < 60` and `0 <= s < 60` (hours can grow).\n\nInput\nOne line: `h1 m1 s1 h2 m2 s2`.\n\nOutput\nPrint `h m s` separated by single spaces.",
+    "exampleInput": "1 30 45 2 40 30",
+    "exampleOutput": "4 11 15",
+    "constraints": [
+      "0 <= h <= 100",
+      "0 <= m, s <= 59"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 30 45 2 40 30",
+        "expectedOutput": "4 11 15",
+        "isHidden": false
+      },
+      {
+        "input": "0 0 0 0 0 0",
+        "expectedOutput": "0 0 0",
+        "isHidden": false
+      },
+      {
+        "input": "0 59 59 0 0 1",
+        "expectedOutput": "1 0 0",
+        "isHidden": false
+      },
+      {
+        "input": "100 59 59 100 59 59",
+        "expectedOutput": "201 59 58",
+        "isHidden": true
+      },
+      {
+        "input": "5 10 20 0 0 0",
+        "expectedOutput": "5 10 20",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 10
+  },
+  {
+    "slug": "struct-sort-by-marks",
+    "title": "Sort Students by Marks",
+    "category": "structures",
+    "difficulty": "Medium",
+    "description": "Sort an array of student structs by marks from highest to lowest. Students with equal marks must keep their original input order (use a stable sort such as insertion sort).\n\nInput\nFirst line: `n`. Then `n` lines: `name roll marks`.\n\nOutput\nPrint one student per line as `name roll marks`.",
+    "exampleInput": "3\nAsha 1 80\nBob 2 95\nCy 3 90",
+    "exampleOutput": "Bob 2 95\nCy 3 90\nAsha 1 80",
+    "constraints": [
+      "1 <= n <= 50",
+      "0 <= marks <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\nAsha 1 80\nBob 2 95\nCy 3 90",
+        "expectedOutput": "Bob 2 95\nCy 3 90\nAsha 1 80",
+        "isHidden": false
+      },
+      {
+        "input": "4\nA 1 50\nB 2 70\nC 3 50\nD 4 70",
+        "expectedOutput": "B 2 70\nD 4 70\nA 1 50\nC 3 50",
+        "isHidden": false
+      },
+      {
+        "input": "1\nSolo 1 1",
+        "expectedOutput": "Solo 1 1",
+        "isHidden": false
+      },
+      {
+        "input": "3\nX 1 10\nY 2 10\nZ 3 10",
+        "expectedOutput": "X 1 10\nY 2 10\nZ 3 10",
+        "isHidden": true
+      },
+      {
+        "input": "5\nA 1 1\nB 2 2\nC 3 3\nD 4 4\nE 5 5",
+        "expectedOutput": "E 5 5\nD 4 4\nC 3 3\nB 2 2\nA 1 1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 11
+  },
+  {
+    "slug": "struct-nested-join-date",
+    "title": "Employees Joined Before a Year",
+    "category": "structures",
+    "difficulty": "Medium",
+    "description": "Define `struct Date { int d, m, y; }` and `struct Employee { char name[21]; struct Date join; }` (a nested struct). Count and list the employees who joined strictly before year `Y`.\n\nInput\nFirst line: `n Y`. Then `n` lines: `name day month year`.\n\nOutput\nFirst line: the count. Then the names (in input order), one per line.",
+    "exampleInput": "3 2020\nAsha 1 1 2018\nBob 5 6 2020\nCy 9 9 2015",
+    "exampleOutput": "2\nAsha\nCy",
+    "constraints": [
+      "1 <= n <= 50",
+      "1990 <= year, Y <= 2030"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3 2020\nAsha 1 1 2018\nBob 5 6 2020\nCy 9 9 2015",
+        "expectedOutput": "2\nAsha\nCy",
+        "isHidden": false
+      },
+      {
+        "input": "2 2000\nA 1 1 2001\nB 2 2 2002",
+        "expectedOutput": "0",
+        "isHidden": false
+      },
+      {
+        "input": "2 2030\nA 1 1 1990\nB 2 2 2029",
+        "expectedOutput": "2\nA\nB",
+        "isHidden": true
+      },
+      {
+        "input": "1 1990\nZ 1 1 1990",
+        "expectedOutput": "0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 12
+  },
+  {
+    "slug": "struct-tagged-union",
+    "title": "Tagged Union Printer",
+    "category": "structures",
+    "difficulty": "Medium",
+    "description": "A `union` stores one of several types in the same memory. Use `struct Value { int type; union { int i; double d; char c; } u; }`. Type 0 = int, 1 = double, 2 = char. Read `n` values and print each according to its type: ints as `%d`, doubles with `%.2f`, chars as `%c`.\n\nInput\nFirst line: `n`. Then `n` lines: `type value` (for char the value is a single non-space character).\n\nOutput\nPrint each value on its own line.",
+    "exampleInput": "3\n0 42\n1 3.5\n2 x",
+    "exampleOutput": "42\n3.50\nx",
+    "constraints": [
+      "1 <= n <= 30",
+      "Doubles have at most 2 decimal places and absolute value <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\n0 42\n1 3.5\n2 x",
+        "expectedOutput": "42\n3.50\nx",
+        "isHidden": false
+      },
+      {
+        "input": "2\n1 -2.25\n0 -7",
+        "expectedOutput": "-2.25\n-7",
+        "isHidden": false
+      },
+      {
+        "input": "1\n2 Z",
+        "expectedOutput": "Z",
+        "isHidden": true
+      },
+      {
+        "input": "3\n1 0.00\n1 999.99\n0 0",
+        "expectedOutput": "0.00\n999.99\n0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 13
+  },
+  {
+    "slug": "struct-search-roll",
+    "title": "Search a Student by Roll Number",
+    "category": "structures",
+    "difficulty": "Medium",
+    "description": "Search an array of students for a given roll number.\n\nInput\nFirst line: `n`. Then `n` lines: `name roll marks`. Last line: the roll `r` to find.\n\nOutput\nPrint `name marks` of the matching student, or `Not found`.",
+    "exampleInput": "3\nAsha 1 80\nBob 2 95\nCy 3 90\n2",
+    "exampleOutput": "Bob 95",
+    "constraints": [
+      "1 <= n <= 50",
+      "Roll numbers are unique",
+      "1 <= roll <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\nAsha 1 80\nBob 2 95\nCy 3 90\n2",
+        "expectedOutput": "Bob 95",
+        "isHidden": false
+      },
+      {
+        "input": "2\nA 10 5\nB 20 6\n30",
+        "expectedOutput": "Not found",
+        "isHidden": false
+      },
+      {
+        "input": "1\nOnly 1000 100\n1000",
+        "expectedOutput": "Only 100",
+        "isHidden": true
+      },
+      {
+        "input": "2\nA 5 0\nB 6 1\n5",
+        "expectedOutput": "A 0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 14
+  },
+  {
+    "slug": "struct-fraction-add",
+    "title": "Add Fractions in Lowest Terms",
+    "category": "structures",
+    "difficulty": "Medium",
+    "description": "Define `struct Fraction { int num, den; }`. Add two fractions and reduce the result using the GCD.\n\nInput\nOne line: `n1 d1 n2 d2`.\n\nOutput\nPrint `num/den` in lowest terms. If the result is a whole number, still print `num/1`.",
+    "exampleInput": "1 2 1 3",
+    "exampleOutput": "5/6",
+    "constraints": [
+      "1 <= n1, d1, n2, d2 <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 2 1 3",
+        "expectedOutput": "5/6",
+        "isHidden": false
+      },
+      {
+        "input": "1 2 1 2",
+        "expectedOutput": "1/1",
+        "isHidden": false
+      },
+      {
+        "input": "2 4 3 6",
+        "expectedOutput": "1/1",
+        "isHidden": false
+      },
+      {
+        "input": "100 1 100 1",
+        "expectedOutput": "200/1",
+        "isHidden": true
+      },
+      {
+        "input": "1 100 1 100",
+        "expectedOutput": "1/50",
+        "isHidden": true
+      },
+      {
+        "input": "5 7 2 7",
+        "expectedOutput": "1/1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 15
+  },
+  {
+    "slug": "struct-bank-transactions",
+    "title": "Bank Account Transactions",
+    "category": "structures",
+    "difficulty": "Medium",
+    "description": "Define `struct Account { int id; int balance; }`. Process transactions: `D` deposits, `W` withdraws. A withdrawal larger than the balance is rejected and the balance stays unchanged. Count rejected withdrawals.\n\nInput\nFirst line: `n m` (accounts, transactions). Then `n` lines: `id balance`. Then `m` lines: `id type amount` (`type` is `D` or `W`). All ids exist.\n\nOutput\nPrint `id balance` for each account in input order, then a final line `Rejected: k`.",
+    "exampleInput": "2 3\n1 100\n2 50\n1 W 30\n2 W 80\n2 D 10",
+    "exampleOutput": "1 70\n2 60\nRejected: 1",
+    "constraints": [
+      "1 <= n <= 20",
+      "1 <= m <= 50",
+      "0 <= balance, amount <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2 3\n1 100\n2 50\n1 W 30\n2 W 80\n2 D 10",
+        "expectedOutput": "1 70\n2 60\nRejected: 1",
+        "isHidden": false
+      },
+      {
+        "input": "1 2\n7 0\n7 D 5\n7 W 5",
+        "expectedOutput": "7 0\nRejected: 0",
+        "isHidden": false
+      },
+      {
+        "input": "1 1\n1 10\n1 W 11",
+        "expectedOutput": "1 10\nRejected: 1",
+        "isHidden": true
+      },
+      {
+        "input": "2 4\n10 0\n20 0\n10 D 100000\n20 W 1\n10 W 100000\n20 D 0",
+        "expectedOutput": "10 0\n20 0\nRejected: 1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 16
+  },
+  {
+    "slug": "struct-sort-by-name",
+    "title": "Sort Students by Name",
+    "category": "structures",
+    "difficulty": "Medium",
+    "description": "Sort students alphabetically by name using `strcmp` (uppercase letters come before lowercase). Names are unique. Swap whole structs.\n\nInput\nFirst line: `n`. Then `n` lines: `name roll marks`.\n\nOutput\nPrint each student as `name roll marks`, one per line.",
+    "exampleInput": "3\nCy 3 90\nAsha 1 80\nBob 2 95",
+    "exampleOutput": "Asha 1 80\nBob 2 95\nCy 3 90",
+    "constraints": [
+      "1 <= n <= 50",
+      "Names are unique"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\nCy 3 90\nAsha 1 80\nBob 2 95",
+        "expectedOutput": "Asha 1 80\nBob 2 95\nCy 3 90",
+        "isHidden": false
+      },
+      {
+        "input": "2\nbob 1 1\nBob 2 2",
+        "expectedOutput": "Bob 2 2\nbob 1 1",
+        "isHidden": false
+      },
+      {
+        "input": "1\nZ 1 1",
+        "expectedOutput": "Z 1 1",
+        "isHidden": false
+      },
+      {
+        "input": "4\nd 1 1\nc 2 2\nb 3 3\na 4 4",
+        "expectedOutput": "a 4 4\nb 3 3\nc 2 2\nd 1 1",
+        "isHidden": true
+      },
+      {
+        "input": "3\nab 1 1\na 2 2\nabc 3 3",
+        "expectedOutput": "a 2 2\nab 1 1\nabc 3 3",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 17
+  },
+  {
+    "slug": "struct-league-table",
+    "title": "Football League Table",
+    "category": "structures",
+    "difficulty": "Hard",
+    "description": "Teams play matches. A win gives 3 points, a draw 1 each, a loss 0. Keep a struct per team with points, goals scored and goals conceded. Rank teams by points (high first), then goal difference (high first), then name (alphabetical via `strcmp`).\n\nInput\nFirst line: `m`. Then `m` lines: `teamA goalsA teamB goalsB`. Team names are single words; there are at most 20 distinct teams.\n\nOutput\nOne line per team in rank order: `name points goalDifference`.",
+    "exampleInput": "3\nLions 2 Bears 1\nTigers 0 Lions 0\nBears 3 Tigers 1",
+    "exampleOutput": "Lions 4 1\nBears 3 1\nTigers 1 -2",
+    "constraints": [
+      "1 <= m <= 50",
+      "0 <= goals <= 20",
+      "name has at most 20 characters"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\nLions 2 Bears 1\nTigers 0 Lions 0\nBears 3 Tigers 1",
+        "expectedOutput": "Lions 4 1\nBears 3 1\nTigers 1 -2",
+        "isHidden": false
+      },
+      {
+        "input": "1\nA 1 B 1",
+        "expectedOutput": "A 1 0\nB 1 0",
+        "isHidden": false
+      },
+      {
+        "input": "2\nX 5 Y 0\nY 0 X 0",
+        "expectedOutput": "X 4 5\nY 1 -5",
+        "isHidden": false
+      },
+      {
+        "input": "3\nB 1 A 1\nC 2 A 2\nC 1 B 1",
+        "expectedOutput": "A 2 0\nB 2 0\nC 2 0",
+        "isHidden": true
+      },
+      {
+        "input": "2\nZ 3 Y 0\nX 3 W 0",
+        "expectedOutput": "X 3 3\nZ 3 3\nW 0 -3\nY 0 -3",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 18
+  },
+  {
+    "slug": "struct-date-difference",
+    "title": "Days Between Two Dates",
+    "category": "structures",
+    "difficulty": "Hard",
+    "description": "Define `struct Date { int d, m, y; }`. Compute the number of days from the first date to the second (the second is never earlier). Remember leap years: divisible by 4, except centuries unless divisible by 400.\n\nInput\nOne line: `d1 m1 y1 d2 m2 y2`.\n\nOutput\nPrint the number of days between them.",
+    "exampleInput": "1 1 2020 1 1 2021",
+    "exampleOutput": "366",
+    "constraints": [
+      "Dates are valid, between 1900 and 2100",
+      "The second date is on or after the first"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 1 2020 1 1 2021",
+        "expectedOutput": "366",
+        "isHidden": false
+      },
+      {
+        "input": "28 2 2019 1 3 2019",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "15 5 2000 15 5 2000",
+        "expectedOutput": "0",
+        "isHidden": false
+      },
+      {
+        "input": "28 2 2000 1 3 2000",
+        "expectedOutput": "2",
+        "isHidden": true
+      },
+      {
+        "input": "31 12 1999 1 1 2100",
+        "expectedOutput": "36526",
+        "isHidden": true
+      },
+      {
+        "input": "1 1 1900 31 12 2100",
+        "expectedOutput": "73413",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 19
+  },
+  {
+    "slug": "struct-linked-list",
+    "title": "Linked List of Structs",
+    "category": "structures",
+    "difficulty": "Hard",
+    "description": "Build a singly linked list with `struct Node { int val; struct Node *next; }`. Insert `n` values at the END of the list, then delete the FIRST node holding each of `k` given values (ignore a value that is not present). Free all nodes.\n\nInput\nLine 1: `n`. Line 2: `n` integers. Line 3: `k`. Line 4: `k` integers to delete.\n\nOutput\nPrint the remaining values separated by single spaces, or `Empty` if none are left.",
+    "exampleInput": "5\n1 2 3 4 5\n2\n3 1",
+    "exampleOutput": "2 4 5",
+    "constraints": [
+      "1 <= n <= 50",
+      "1 <= k <= 50",
+      "-1000 <= value <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n1 2 3 4 5\n2\n3 1",
+        "expectedOutput": "2 4 5",
+        "isHidden": false
+      },
+      {
+        "input": "4\n5 5 5 5\n2\n5 5",
+        "expectedOutput": "5 5",
+        "isHidden": false
+      },
+      {
+        "input": "2\n1 2\n1\n9",
+        "expectedOutput": "1 2",
+        "isHidden": false
+      },
+      {
+        "input": "1\n7\n1\n7",
+        "expectedOutput": "Empty",
+        "isHidden": true
+      },
+      {
+        "input": "3\n-1 0 1\n3\n1 0 -1",
+        "expectedOutput": "Empty",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 16,
+    "questionOrder": 20
+  }
+]

@@ -1,0 +1,796 @@
+[
+  {
+    "slug": "count-digits",
+    "title": "Count the Digits",
+    "category": "while-loops",
+    "difficulty": "Easy",
+    "description": "Read a positive integer and print how many digits it has.\n\nHint: keep dividing the number by 10 in a `while` loop and count the steps.\n\nInput: one integer `n`.\nOutput: one integer, the digit count.",
+    "exampleInput": "12345",
+    "exampleOutput": "5",
+    "constraints": [
+      "1 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "12345",
+        "expectedOutput": "5",
+        "isHidden": false
+      },
+      {
+        "input": "7",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "1000000000",
+        "expectedOutput": "10",
+        "isHidden": true
+      },
+      {
+        "input": "99",
+        "expectedOutput": "2",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 1
+  },
+  {
+    "slug": "sum-of-digits",
+    "title": "Sum of Digits",
+    "category": "while-loops",
+    "difficulty": "Easy",
+    "description": "Print the sum of the digits of `n`. Hint: `n % 10` is the last digit, `n / 10` removes it.\n\nInput: one integer `n`.\nOutput: one integer.",
+    "exampleInput": "1234",
+    "exampleOutput": "10",
+    "constraints": [
+      "0 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1234",
+        "expectedOutput": "10",
+        "isHidden": false
+      },
+      {
+        "input": "9",
+        "expectedOutput": "9",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "999999999",
+        "expectedOutput": "81",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 2
+  },
+  {
+    "slug": "reverse-number",
+    "title": "Reverse a Number",
+    "category": "while-loops",
+    "difficulty": "Easy",
+    "description": "Print the digits of `n` in reverse order as a number. Leading zeros of the result are dropped (e.g. 1200 becomes 21).\n\nInput: one integer `n`.\nOutput: the reversed number.",
+    "exampleInput": "1234",
+    "exampleOutput": "4321",
+    "constraints": [
+      "0 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1234",
+        "expectedOutput": "4321",
+        "isHidden": false
+      },
+      {
+        "input": "1200",
+        "expectedOutput": "21",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "1000000000",
+        "expectedOutput": "1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 3
+  },
+  {
+    "slug": "sum-until-zero",
+    "title": "Sum Until Zero",
+    "category": "while-loops",
+    "difficulty": "Easy",
+    "description": "Read integers until `0` is read, then print the sum of all numbers read before the `0`.\n\nInput: integers separated by whitespace, ending with `0`.\nOutput: one integer, the sum.",
+    "exampleInput": "1 2 3 0",
+    "exampleOutput": "6",
+    "constraints": [
+      "At most 1000 numbers before the 0",
+      "-10000 <= each number <= 10000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 2 3 0",
+        "expectedOutput": "6",
+        "isHidden": false
+      },
+      {
+        "input": "5 -2 10 0",
+        "expectedOutput": "13",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "-4 -6 0",
+        "expectedOutput": "-10",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 4
+  },
+  {
+    "slug": "count-halvings",
+    "title": "How Many Times Can You Halve",
+    "category": "while-loops",
+    "difficulty": "Easy",
+    "description": "Starting from `n`, repeatedly divide by 2 (integer division) until the value becomes 0. Print how many divisions were needed.\n\nInput: one integer `n`.\nOutput: one integer.",
+    "exampleInput": "8",
+    "exampleOutput": "4",
+    "constraints": [
+      "1 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "8",
+        "expectedOutput": "4",
+        "isHidden": false
+      },
+      {
+        "input": "10",
+        "expectedOutput": "4",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "1000000000",
+        "expectedOutput": "30",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 5
+  },
+  {
+    "slug": "palindrome-number",
+    "title": "Palindrome Number",
+    "category": "while-loops",
+    "difficulty": "Easy",
+    "description": "A number is a palindrome if it reads the same forwards and backwards.\n\nInput: one integer `n`.\nOutput: `Palindrome` or `Not Palindrome`.",
+    "exampleInput": "12321",
+    "exampleOutput": "Palindrome",
+    "constraints": [
+      "0 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "12321",
+        "expectedOutput": "Palindrome",
+        "isHidden": false
+      },
+      {
+        "input": "123",
+        "expectedOutput": "Not Palindrome",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "Palindrome",
+        "isHidden": false
+      },
+      {
+        "input": "1200",
+        "expectedOutput": "Not Palindrome",
+        "isHidden": true
+      },
+      {
+        "input": "7",
+        "expectedOutput": "Palindrome",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 6
+  },
+  {
+    "slug": "first-digit",
+    "title": "First Digit",
+    "category": "while-loops",
+    "difficulty": "Easy",
+    "description": "Print the first (leftmost) digit of `n`.\n\nInput: one integer `n`.\nOutput: one digit.",
+    "exampleInput": "98765",
+    "exampleOutput": "9",
+    "constraints": [
+      "1 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "98765",
+        "expectedOutput": "9",
+        "isHidden": false
+      },
+      {
+        "input": "5",
+        "expectedOutput": "5",
+        "isHidden": false
+      },
+      {
+        "input": "1000000000",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "10",
+        "expectedOutput": "1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 7
+  },
+  {
+    "slug": "count-even-digits",
+    "title": "Count Even Digits",
+    "category": "while-loops",
+    "difficulty": "Easy",
+    "description": "Count how many digits of `n` are even (0, 2, 4, 6, 8). The number 0 has one digit, which is even.\n\nInput: one integer `n`.\nOutput: one integer.",
+    "exampleInput": "2468",
+    "exampleOutput": "4",
+    "constraints": [
+      "0 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2468",
+        "expectedOutput": "4",
+        "isHidden": false
+      },
+      {
+        "input": "13579",
+        "expectedOutput": "0",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "1000000000",
+        "expectedOutput": "9",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 8
+  },
+  {
+    "slug": "count-until-negative",
+    "title": "Count Until Negative",
+    "category": "while-loops",
+    "difficulty": "Easy",
+    "description": "Read integers until a negative number appears. Print how many non-negative numbers were read before it.\n\nInput: integers separated by whitespace; the last one is negative.\nOutput: one integer.",
+    "exampleInput": "4 8 15 -1",
+    "exampleOutput": "3",
+    "constraints": [
+      "At most 1000 numbers",
+      "The final number is negative"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "4 8 15 -1",
+        "expectedOutput": "3",
+        "isHidden": false
+      },
+      {
+        "input": "0 0 -5",
+        "expectedOutput": "2",
+        "isHidden": false
+      },
+      {
+        "input": "-3",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "1 -2",
+        "expectedOutput": "1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 9
+  },
+  {
+    "slug": "smallest-power-of-two",
+    "title": "Smallest Power of Two",
+    "category": "while-loops",
+    "difficulty": "Easy",
+    "description": "Print the smallest power of 2 that is greater than or equal to `n` (1, 2, 4, 8, ...).\n\nInput: one integer `n`.\nOutput: one integer.",
+    "exampleInput": "5",
+    "exampleOutput": "8",
+    "constraints": [
+      "1 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "8",
+        "isHidden": false
+      },
+      {
+        "input": "16",
+        "expectedOutput": "16",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "1000000000",
+        "expectedOutput": "1073741824",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 10
+  },
+  {
+    "slug": "gcd-of-two",
+    "title": "GCD of Two Numbers",
+    "category": "while-loops",
+    "difficulty": "Medium",
+    "description": "Print the greatest common divisor of `a` and `b` using the Euclidean algorithm: while `b` is not 0, replace `(a, b)` with `(b, a % b)`.\n\nInput: two integers `a` and `b`.\nOutput: one integer.",
+    "exampleInput": "48 18",
+    "exampleOutput": "6",
+    "constraints": [
+      "1 <= a, b <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "48 18",
+        "expectedOutput": "6",
+        "isHidden": false
+      },
+      {
+        "input": "17 5",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "7 7",
+        "expectedOutput": "7",
+        "isHidden": false
+      },
+      {
+        "input": "1000000000 250000000",
+        "expectedOutput": "250000000",
+        "isHidden": true
+      },
+      {
+        "input": "1 999999999",
+        "expectedOutput": "1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 11
+  },
+  {
+    "slug": "lcm-of-two",
+    "title": "LCM of Two Numbers",
+    "category": "while-loops",
+    "difficulty": "Medium",
+    "description": "Print the least common multiple of `a` and `b`. Hint: `lcm = a / gcd * b`.\n\nInput: two integers `a` and `b`.\nOutput: one integer.",
+    "exampleInput": "4 6",
+    "exampleOutput": "12",
+    "constraints": [
+      "1 <= a, b <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "4 6",
+        "expectedOutput": "12",
+        "isHidden": false
+      },
+      {
+        "input": "21 6",
+        "expectedOutput": "42",
+        "isHidden": false
+      },
+      {
+        "input": "5 5",
+        "expectedOutput": "5",
+        "isHidden": false
+      },
+      {
+        "input": "999999937 999999929",
+        "expectedOutput": "999999866000004473",
+        "isHidden": true
+      },
+      {
+        "input": "1 1",
+        "expectedOutput": "1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 12
+  },
+  {
+    "slug": "collatz-steps",
+    "title": "Collatz Steps",
+    "category": "while-loops",
+    "difficulty": "Medium",
+    "description": "Start with `n`. While `n` is not 1: if `n` is even divide it by 2, otherwise set `n = 3n + 1`. Print the number of steps until `n` becomes 1.\n\nInput: one integer `n`.\nOutput: one integer.",
+    "exampleInput": "6",
+    "exampleOutput": "8",
+    "constraints": [
+      "1 <= n <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "6",
+        "expectedOutput": "8",
+        "isHidden": false
+      },
+      {
+        "input": "27",
+        "expectedOutput": "111",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "0",
+        "isHidden": false
+      },
+      {
+        "input": "837799",
+        "expectedOutput": "524",
+        "isHidden": true
+      },
+      {
+        "input": "16",
+        "expectedOutput": "4",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 13
+  },
+  {
+    "slug": "decimal-to-binary",
+    "title": "Decimal to Binary",
+    "category": "while-loops",
+    "difficulty": "Medium",
+    "description": "Print the binary representation of `n` without leading zeros (0 prints `0`).\n\nHint: collect remainders of division by 2, then output them in reverse.\n\nInput: one integer `n`.\nOutput: the binary string.",
+    "exampleInput": "10",
+    "exampleOutput": "1010",
+    "constraints": [
+      "0 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "10",
+        "expectedOutput": "1010",
+        "isHidden": false
+      },
+      {
+        "input": "255",
+        "expectedOutput": "11111111",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "1000000000",
+        "expectedOutput": "111011100110101100101000000000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 14
+  },
+  {
+    "slug": "digital-root",
+    "title": "Digital Root",
+    "category": "while-loops",
+    "difficulty": "Medium",
+    "description": "Repeatedly replace `n` by the sum of its digits until a single digit remains. Print that digit.\n\nInput: one integer `n`.\nOutput: one digit.",
+    "exampleInput": "987",
+    "exampleOutput": "6",
+    "constraints": [
+      "0 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "987",
+        "expectedOutput": "6",
+        "isHidden": false
+      },
+      {
+        "input": "38",
+        "expectedOutput": "2",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": false
+      },
+      {
+        "input": "999999999",
+        "expectedOutput": "9",
+        "isHidden": true
+      },
+      {
+        "input": "5",
+        "expectedOutput": "5",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 15
+  },
+  {
+    "slug": "calculator-menu",
+    "title": "Menu-Driven Counter",
+    "category": "while-loops",
+    "difficulty": "Medium",
+    "description": "Start with a value of 0 and read menu choices until `4` (exit):\n- `1 x`: add `x` to the value\n- `2 x`: subtract `x` from the value\n- `3`: print the current value on its own line\n- `4`: stop.\nIf a choice is not 1-4, print `Invalid choice` and continue.\n\nInput: choices as described (choice 1 and 2 are followed by an integer), ending with `4`.\nOutput: one line per `3` or invalid choice, as described.",
+    "exampleInput": "1 10\n3\n2 4\n3\n4",
+    "exampleOutput": "10\n6",
+    "constraints": [
+      "At most 1000 choices",
+      "-1000 <= x <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 10\n3\n2 4\n3\n4",
+        "expectedOutput": "10\n6",
+        "isHidden": false
+      },
+      {
+        "input": "1 5\n9\n3\n4",
+        "expectedOutput": "Invalid choice\n5",
+        "isHidden": false
+      },
+      {
+        "input": "3\n4",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "2 7\n3\n1 7\n3\n4",
+        "expectedOutput": "-7\n0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 16
+  },
+  {
+    "slug": "armstrong-number-check",
+    "title": "Armstrong Number",
+    "category": "while-loops",
+    "difficulty": "Medium",
+    "description": "A number with `d` digits is an Armstrong number if the sum of each digit raised to the power `d` equals the number (e.g. 1634 = 1^4 + 6^4 + 3^4 + 4^4).\n\nInput: one integer `n`.\nOutput: `Armstrong` or `Not Armstrong`.",
+    "exampleInput": "153",
+    "exampleOutput": "Armstrong",
+    "constraints": [
+      "1 <= n <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "153",
+        "expectedOutput": "Armstrong",
+        "isHidden": false
+      },
+      {
+        "input": "154",
+        "expectedOutput": "Not Armstrong",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "Armstrong",
+        "isHidden": false
+      },
+      {
+        "input": "1634",
+        "expectedOutput": "Armstrong",
+        "isHidden": true
+      },
+      {
+        "input": "548834",
+        "expectedOutput": "Armstrong",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 17
+  },
+  {
+    "slug": "happy-number",
+    "title": "Happy Number",
+    "category": "while-loops",
+    "difficulty": "Hard",
+    "description": "Repeatedly replace `n` by the sum of the squares of its digits. If you reach 1 the number is happy; otherwise the sequence falls into a cycle (every unhappy number reaches 4 at some point).\n\nInput: one integer `n`.\nOutput: `Happy` or `Unhappy`.",
+    "exampleInput": "19",
+    "exampleOutput": "Happy",
+    "constraints": [
+      "1 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "19",
+        "expectedOutput": "Happy",
+        "isHidden": false
+      },
+      {
+        "input": "2",
+        "expectedOutput": "Unhappy",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "Happy",
+        "isHidden": false
+      },
+      {
+        "input": "7",
+        "expectedOutput": "Happy",
+        "isHidden": true
+      },
+      {
+        "input": "999999999",
+        "expectedOutput": "Unhappy",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 18
+  },
+  {
+    "slug": "decimal-to-base",
+    "title": "Convert to Any Base",
+    "category": "while-loops",
+    "difficulty": "Hard",
+    "description": "Convert `n` to base `b` (2 to 16). Use digits `0-9` and uppercase `A-F`. Print `0` for 0. Hint: store remainders in a char array and print it backwards.\n\nInput: two integers `n` and `b`.\nOutput: the number written in base `b`.",
+    "exampleInput": "255 16",
+    "exampleOutput": "FF",
+    "constraints": [
+      "0 <= n <= 1000000000",
+      "2 <= b <= 16"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "255 16",
+        "expectedOutput": "FF",
+        "isHidden": false
+      },
+      {
+        "input": "10 2",
+        "expectedOutput": "1010",
+        "isHidden": false
+      },
+      {
+        "input": "0 7",
+        "expectedOutput": "0",
+        "isHidden": false
+      },
+      {
+        "input": "1000000000 16",
+        "expectedOutput": "3B9ACA00",
+        "isHidden": true
+      },
+      {
+        "input": "100 8",
+        "expectedOutput": "144",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 19
+  },
+  {
+    "slug": "longest-collatz-under-n",
+    "title": "Longest Collatz Chain",
+    "category": "while-loops",
+    "difficulty": "Hard",
+    "description": "For each starting number from 1 to `n`, count the Collatz steps to reach 1 (even: divide by 2; odd: `3x + 1`). Print the starting number with the most steps; if tied, print the smallest. Also print the step count.\n\nInput: one integer `n`.\nOutput: one line `start steps`.",
+    "exampleInput": "10",
+    "exampleOutput": "9 19",
+    "constraints": [
+      "1 <= n <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "10",
+        "expectedOutput": "9 19",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1 0",
+        "isHidden": false
+      },
+      {
+        "input": "1000",
+        "expectedOutput": "871 178",
+        "isHidden": false
+      },
+      {
+        "input": "100000",
+        "expectedOutput": "77031 350",
+        "isHidden": true
+      },
+      {
+        "input": "27",
+        "expectedOutput": "27 111",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 8,
+    "questionOrder": 20
+  }
+]

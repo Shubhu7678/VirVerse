@@ -1,0 +1,789 @@
+[
+  {
+    "slug": "print-1-to-n",
+    "title": "Print Numbers from 1 to N",
+    "category": "for-loops",
+    "difficulty": "Easy",
+    "description": "Print every integer from 1 to `n`, one per line.\n\nHint: `for (int i = 1; i <= n; i++)`.\n\nInput: one integer `n`.\nOutput: `n` lines, the numbers 1 to n in order.",
+    "exampleInput": "5",
+    "exampleOutput": "1\n2\n3\n4\n5",
+    "constraints": [
+      "1 <= n <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "1\n2\n3\n4\n5",
+        "isHidden": false
+      },
+      {
+        "input": "3",
+        "expectedOutput": "1\n2\n3",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "20",
+        "expectedOutput": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 1
+  },
+  {
+    "slug": "sum-first-n",
+    "title": "Sum of First N Numbers",
+    "category": "for-loops",
+    "difficulty": "Easy",
+    "description": "Print the sum `1 + 2 + ... + n`.\n\nInput: one integer `n`.\nOutput: a single integer, the sum.",
+    "exampleInput": "5",
+    "exampleOutput": "15",
+    "constraints": [
+      "1 <= n <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "15",
+        "isHidden": false
+      },
+      {
+        "input": "10",
+        "expectedOutput": "55",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "100000",
+        "expectedOutput": "5000050000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 2
+  },
+  {
+    "slug": "factorial",
+    "title": "Factorial of a Number",
+    "category": "for-loops",
+    "difficulty": "Easy",
+    "description": "Read a non-negative integer `n` and print its factorial.\n\nThe factorial of `n` is `1 * 2 * 3 * ... * n`, and the factorial of 0 is 1.\n\nInput: one integer `n`.\nOutput: a single integer, `n!`.",
+    "exampleInput": "5",
+    "exampleOutput": "120",
+    "constraints": [
+      "0 <= n <= 12 (the result fits in an `int`)."
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "120",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "12",
+        "expectedOutput": "479001600",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 3
+  },
+  {
+    "slug": "multiplication-table",
+    "title": "Multiplication Table",
+    "category": "for-loops",
+    "difficulty": "Easy",
+    "description": "Print the multiplication table of `n` from 1 to 10.\n\nInput: one integer `n`.\nOutput: 10 lines; line `i` is exactly `n x i = result` (for example `5 x 2 = 10`).",
+    "exampleInput": "5",
+    "exampleOutput": "5 x 1 = 5\n5 x 2 = 10\n5 x 3 = 15\n5 x 4 = 20\n5 x 5 = 25\n5 x 6 = 30\n5 x 7 = 35\n5 x 8 = 40\n5 x 9 = 45\n5 x 10 = 50",
+    "constraints": [
+      "-1000 <= n <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "5 x 1 = 5\n5 x 2 = 10\n5 x 3 = 15\n5 x 4 = 20\n5 x 5 = 25\n5 x 6 = 30\n5 x 7 = 35\n5 x 8 = 40\n5 x 9 = 45\n5 x 10 = 50",
+        "isHidden": false
+      },
+      {
+        "input": "12",
+        "expectedOutput": "12 x 1 = 12\n12 x 2 = 24\n12 x 3 = 36\n12 x 4 = 48\n12 x 5 = 60\n12 x 6 = 72\n12 x 7 = 84\n12 x 8 = 96\n12 x 9 = 108\n12 x 10 = 120",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0 x 1 = 0\n0 x 2 = 0\n0 x 3 = 0\n0 x 4 = 0\n0 x 5 = 0\n0 x 6 = 0\n0 x 7 = 0\n0 x 8 = 0\n0 x 9 = 0\n0 x 10 = 0",
+        "isHidden": true
+      },
+      {
+        "input": "-3",
+        "expectedOutput": "-3 x 1 = -3\n-3 x 2 = -6\n-3 x 3 = -9\n-3 x 4 = -12\n-3 x 5 = -15\n-3 x 6 = -18\n-3 x 7 = -21\n-3 x 8 = -24\n-3 x 9 = -27\n-3 x 10 = -30",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 4
+  },
+  {
+    "slug": "even-numbers-up-to-n",
+    "title": "Even Numbers up to N",
+    "category": "for-loops",
+    "difficulty": "Easy",
+    "description": "Print all even numbers from 1 to `n` on one line, separated by single spaces. If there are none, print nothing.\n\nInput: one integer `n`.\nOutput: the even numbers in increasing order, separated by single spaces (no trailing space).",
+    "exampleInput": "10",
+    "exampleOutput": "2 4 6 8 10",
+    "constraints": [
+      "1 <= n <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "10",
+        "expectedOutput": "2 4 6 8 10",
+        "isHidden": false
+      },
+      {
+        "input": "7",
+        "expectedOutput": "2 4 6",
+        "isHidden": false
+      },
+      {
+        "input": "4",
+        "expectedOutput": "2 4",
+        "isHidden": true
+      },
+      {
+        "input": "2",
+        "expectedOutput": "2",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 5
+  },
+  {
+    "slug": "sum-of-n-numbers",
+    "title": "Sum of N Given Numbers",
+    "category": "for-loops",
+    "difficulty": "Easy",
+    "description": "Read `n`, then read `n` integers and print their sum.\n\nInput: the first integer is `n`, followed by `n` integers.\nOutput: one integer, the sum.",
+    "exampleInput": "3\n1 2 3",
+    "exampleOutput": "6",
+    "constraints": [
+      "1 <= n <= 1000",
+      "-1000000 <= each number <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\n1 2 3",
+        "expectedOutput": "6",
+        "isHidden": false
+      },
+      {
+        "input": "4\n10 -5 7 2",
+        "expectedOutput": "14",
+        "isHidden": false
+      },
+      {
+        "input": "1\n-8",
+        "expectedOutput": "-8",
+        "isHidden": true
+      },
+      {
+        "input": "5\n-1 -2 -3 -4 -5",
+        "expectedOutput": "-15",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 6
+  },
+  {
+    "slug": "power-of-number",
+    "title": "Power of a Number",
+    "category": "for-loops",
+    "difficulty": "Easy",
+    "description": "Compute `base` raised to the power `exp` using a loop (do not use `pow`).\n\nInput: two integers `base` and `exp`.\nOutput: one integer, `base^exp`.",
+    "exampleInput": "2 10",
+    "exampleOutput": "1024",
+    "constraints": [
+      "-10 <= base <= 10",
+      "0 <= exp <= 15",
+      "The result fits in `long long`."
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2 10",
+        "expectedOutput": "1024",
+        "isHidden": false
+      },
+      {
+        "input": "3 4",
+        "expectedOutput": "81",
+        "isHidden": false
+      },
+      {
+        "input": "5 0",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "-2 15",
+        "expectedOutput": "-32768",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 7
+  },
+  {
+    "slug": "count-multiples",
+    "title": "Count Multiples",
+    "category": "for-loops",
+    "difficulty": "Easy",
+    "description": "Count how many numbers between 1 and `n` (inclusive) are divisible by `k`.\n\nInput: two integers `n` and `k`.\nOutput: one integer, the count.",
+    "exampleInput": "10 3",
+    "exampleOutput": "3",
+    "constraints": [
+      "1 <= n <= 1000000",
+      "1 <= k <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "10 3",
+        "expectedOutput": "3",
+        "isHidden": false
+      },
+      {
+        "input": "100 7",
+        "expectedOutput": "14",
+        "isHidden": false
+      },
+      {
+        "input": "5 10",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "1000000 1",
+        "expectedOutput": "1000000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 8
+  },
+  {
+    "slug": "sum-of-squares",
+    "title": "Sum of Squares",
+    "category": "for-loops",
+    "difficulty": "Easy",
+    "description": "Print `1*1 + 2*2 + ... + n*n`.\n\nInput: one integer `n`.\nOutput: one integer, the sum of squares.",
+    "exampleInput": "3",
+    "exampleOutput": "14",
+    "constraints": [
+      "1 <= n <= 10000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3",
+        "expectedOutput": "14",
+        "isHidden": false
+      },
+      {
+        "input": "10",
+        "expectedOutput": "385",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "10000",
+        "expectedOutput": "333383335000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 9
+  },
+  {
+    "slug": "countdown",
+    "title": "Countdown",
+    "category": "for-loops",
+    "difficulty": "Easy",
+    "description": "Count down from `n` to 1, then print `Liftoff!`.\n\nInput: one integer `n`.\nOutput: lines `n`, `n-1`, ..., `1`, each on its own line, followed by the line `Liftoff!`.",
+    "exampleInput": "3",
+    "exampleOutput": "3\n2\n1\nLiftoff!",
+    "constraints": [
+      "1 <= n <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3",
+        "expectedOutput": "3\n2\n1\nLiftoff!",
+        "isHidden": false
+      },
+      {
+        "input": "5",
+        "expectedOutput": "5\n4\n3\n2\n1\nLiftoff!",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1\nLiftoff!",
+        "isHidden": true
+      },
+      {
+        "input": "10",
+        "expectedOutput": "10\n9\n8\n7\n6\n5\n4\n3\n2\n1\nLiftoff!",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 10
+  },
+  {
+    "slug": "prime-check-for",
+    "title": "Prime or Not",
+    "category": "for-loops",
+    "difficulty": "Medium",
+    "description": "Decide whether `n` is prime (a number greater than 1 with no divisors other than 1 and itself).\n\nHint: test divisors from 2 while `i * i <= n`.\n\nInput: one integer `n`.\nOutput: `Prime` or `Not Prime`.",
+    "exampleInput": "7",
+    "exampleOutput": "Prime",
+    "constraints": [
+      "1 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "7",
+        "expectedOutput": "Prime",
+        "isHidden": false
+      },
+      {
+        "input": "15",
+        "expectedOutput": "Not Prime",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "Not Prime",
+        "isHidden": false
+      },
+      {
+        "input": "999999937",
+        "expectedOutput": "Prime",
+        "isHidden": false
+      },
+      {
+        "input": "2",
+        "expectedOutput": "Prime",
+        "isHidden": true
+      },
+      {
+        "input": "1000000000",
+        "expectedOutput": "Not Prime",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 11
+  },
+  {
+    "slug": "fibonacci-series",
+    "title": "Fibonacci Series",
+    "category": "for-loops",
+    "difficulty": "Medium",
+    "description": "Print the first `n` Fibonacci numbers starting 0, 1, 1, 2, 3, 5, ... Each number is the sum of the previous two.\n\nInput: one integer `n`.\nOutput: `n` numbers on one line separated by single spaces (no trailing space).",
+    "exampleInput": "7",
+    "exampleOutput": "0 1 1 2 3 5 8",
+    "constraints": [
+      "1 <= n <= 50"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "7",
+        "expectedOutput": "0 1 1 2 3 5 8",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "0",
+        "isHidden": false
+      },
+      {
+        "input": "2",
+        "expectedOutput": "0 1",
+        "isHidden": true
+      },
+      {
+        "input": "50",
+        "expectedOutput": "0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 17711 28657 46368 75025 121393 196418 317811 514229 832040 1346269 2178309 3524578 5702887 9227465 14930352 24157817 39088169 63245986 102334155 165580141 267914296 433494437 701408733 1134903170 1836311903 2971215073 4807526976 7778742049",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 12
+  },
+  {
+    "slug": "count-divisors",
+    "title": "Count Divisors",
+    "category": "for-loops",
+    "difficulty": "Medium",
+    "description": "Count how many positive integers divide `n` exactly.\n\nInput: one integer `n`.\nOutput: one integer, the number of divisors.",
+    "exampleInput": "12",
+    "exampleOutput": "6",
+    "constraints": [
+      "1 <= n <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "12",
+        "expectedOutput": "6",
+        "isHidden": false
+      },
+      {
+        "input": "7",
+        "expectedOutput": "2",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "720720",
+        "expectedOutput": "240",
+        "isHidden": true
+      },
+      {
+        "input": "1000000",
+        "expectedOutput": "49",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 13
+  },
+  {
+    "slug": "max-and-min",
+    "title": "Largest and Smallest",
+    "category": "for-loops",
+    "difficulty": "Medium",
+    "description": "Read `n` integers and print the largest and the smallest.\n\nInput: `n`, then `n` integers.\nOutput: one line `max min` separated by a single space.",
+    "exampleInput": "5\n3 9 -2 7 4",
+    "exampleOutput": "9 -2",
+    "constraints": [
+      "1 <= n <= 1000",
+      "-1000000 <= each number <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n3 9 -2 7 4",
+        "expectedOutput": "9 -2",
+        "isHidden": false
+      },
+      {
+        "input": "3\n1 1 1",
+        "expectedOutput": "1 1",
+        "isHidden": false
+      },
+      {
+        "input": "1\n-5",
+        "expectedOutput": "-5 -5",
+        "isHidden": true
+      },
+      {
+        "input": "4\n-10 -20 -3 -7",
+        "expectedOutput": "-3 -20",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 14
+  },
+  {
+    "slug": "perfect-number",
+    "title": "Perfect Number",
+    "category": "for-loops",
+    "difficulty": "Medium",
+    "description": "A number is perfect if it equals the sum of its proper divisors (divisors smaller than itself). For example 6 = 1 + 2 + 3.\n\nInput: one integer `n`.\nOutput: `Perfect` or `Not Perfect`.",
+    "exampleInput": "6",
+    "exampleOutput": "Perfect",
+    "constraints": [
+      "1 <= n <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "6",
+        "expectedOutput": "Perfect",
+        "isHidden": false
+      },
+      {
+        "input": "12",
+        "expectedOutput": "Not Perfect",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "Not Perfect",
+        "isHidden": false
+      },
+      {
+        "input": "28",
+        "expectedOutput": "Perfect",
+        "isHidden": true
+      },
+      {
+        "input": "8128",
+        "expectedOutput": "Perfect",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 15
+  },
+  {
+    "slug": "count-sign-types",
+    "title": "Positive, Negative and Zero",
+    "category": "for-loops",
+    "difficulty": "Medium",
+    "description": "Read `n` integers and count how many are positive, negative and zero.\n\nInput: `n`, then `n` integers.\nOutput: one line: `positive negative zero` as three counts separated by single spaces.",
+    "exampleInput": "6\n1 -2 0 5 0 -7",
+    "exampleOutput": "2 2 2",
+    "constraints": [
+      "1 <= n <= 1000",
+      "-1000 <= each number <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "6\n1 -2 0 5 0 -7",
+        "expectedOutput": "2 2 2",
+        "isHidden": false
+      },
+      {
+        "input": "3\n4 5 6",
+        "expectedOutput": "3 0 0",
+        "isHidden": false
+      },
+      {
+        "input": "1\n0",
+        "expectedOutput": "0 0 1",
+        "isHidden": true
+      },
+      {
+        "input": "4\n-1 -1 -1 -1",
+        "expectedOutput": "0 4 0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 16
+  },
+  {
+    "slug": "count-primes-in-range",
+    "title": "Primes in a Range",
+    "category": "for-loops",
+    "difficulty": "Medium",
+    "description": "Count the prime numbers in the inclusive range `[a, b]`.\n\nInput: two integers `a` and `b`.\nOutput: one integer, the number of primes.",
+    "exampleInput": "1 10",
+    "exampleOutput": "4",
+    "constraints": [
+      "1 <= a <= b <= 20000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 10",
+        "expectedOutput": "4",
+        "isHidden": false
+      },
+      {
+        "input": "10 50",
+        "expectedOutput": "11",
+        "isHidden": false
+      },
+      {
+        "input": "1 1",
+        "expectedOutput": "0",
+        "isHidden": false
+      },
+      {
+        "input": "1 20000",
+        "expectedOutput": "2262",
+        "isHidden": true
+      },
+      {
+        "input": "14 16",
+        "expectedOutput": "0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 17
+  },
+  {
+    "slug": "armstrong-numbers-in-range",
+    "title": "Armstrong Numbers in a Range",
+    "category": "for-loops",
+    "difficulty": "Hard",
+    "description": "A 3-digit number is an Armstrong number if the sum of the cubes of its digits equals the number (e.g. 153 = 1 + 125 + 27). Print all Armstrong numbers between `a` and `b` inclusive, both 3-digit numbers.\n\nInput: two integers `a` and `b`.\nOutput: the Armstrong numbers in increasing order, one per line. If none, print `None`.",
+    "exampleInput": "100 999",
+    "exampleOutput": "153\n370\n371\n407",
+    "constraints": [
+      "100 <= a <= b <= 999"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "100 999",
+        "expectedOutput": "153\n370\n371\n407",
+        "isHidden": false
+      },
+      {
+        "input": "150 160",
+        "expectedOutput": "153",
+        "isHidden": false
+      },
+      {
+        "input": "100 152",
+        "expectedOutput": "None",
+        "isHidden": false
+      },
+      {
+        "input": "372 406",
+        "expectedOutput": "None",
+        "isHidden": true
+      },
+      {
+        "input": "200 300",
+        "expectedOutput": "None",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 18
+  },
+  {
+    "slug": "pascals-triangle",
+    "title": "Pascal's Triangle",
+    "category": "for-loops",
+    "difficulty": "Hard",
+    "description": "Print the first `n` rows of Pascal's triangle. Each row starts and ends with 1; every other entry is the sum of the two entries above it. Hint: entry `C(r,k)` can be built from the previous one with `c = c * (r - k) / (k + 1)`.\n\nInput: one integer `n`.\nOutput: `n` lines; row `r` (starting at 0) holds `r+1` numbers separated by single spaces.",
+    "exampleInput": "5",
+    "exampleOutput": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1",
+    "constraints": [
+      "1 <= n <= 15"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "2",
+        "expectedOutput": "1\n1 1",
+        "isHidden": false
+      },
+      {
+        "input": "10",
+        "expectedOutput": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1\n1 5 10 10 5 1\n1 6 15 20 15 6 1\n1 7 21 35 35 21 7 1\n1 8 28 56 70 56 28 8 1\n1 9 36 84 126 126 84 36 9 1",
+        "isHidden": true
+      },
+      {
+        "input": "15",
+        "expectedOutput": "1\n1 1\n1 2 1\n1 3 3 1\n1 4 6 4 1\n1 5 10 10 5 1\n1 6 15 20 15 6 1\n1 7 21 35 35 21 7 1\n1 8 28 56 70 56 28 8 1\n1 9 36 84 126 126 84 36 9 1\n1 10 45 120 210 252 210 120 45 10 1\n1 11 55 165 330 462 462 330 165 55 11 1\n1 12 66 220 495 792 924 792 495 220 66 12 1\n1 13 78 286 715 1287 1716 1716 1287 715 286 78 13 1\n1 14 91 364 1001 2002 3003 3432 3003 2002 1001 364 91 14 1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 19
+  },
+  {
+    "slug": "count-pairs-divisible-sum",
+    "title": "Pairs with Sum Divisible by K",
+    "category": "for-loops",
+    "difficulty": "Hard",
+    "description": "Count the pairs `(i, j)` with `1 <= i < j <= n` such that `i + j` is divisible by `k`.\n\nHint: use a loop inside a loop.\n\nInput: two integers `n` and `k`.\nOutput: one integer, the number of pairs.",
+    "exampleInput": "5 3",
+    "exampleOutput": "4",
+    "constraints": [
+      "2 <= n <= 2000",
+      "1 <= k <= 4000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5 3",
+        "expectedOutput": "4",
+        "isHidden": false
+      },
+      {
+        "input": "10 5",
+        "expectedOutput": "9",
+        "isHidden": false
+      },
+      {
+        "input": "2 1",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "2000 7",
+        "expectedOutput": "285572",
+        "isHidden": true
+      },
+      {
+        "input": "2 4",
+        "expectedOutput": "0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 7,
+    "questionOrder": 20
+  }
+]

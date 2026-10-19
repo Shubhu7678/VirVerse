@@ -1,0 +1,875 @@
+[
+  {
+    "slug": "fn-square",
+    "title": "Square of a Number",
+    "category": "functions",
+    "difficulty": "Easy",
+    "description": "A function packs a small job under a name so you can reuse it.\nDefine `int square(int n)` that returns `n * n`, and call it from `main`.\n\nInput: one integer `n`.\nOutput: the square of `n` on one line.",
+    "exampleInput": "5",
+    "exampleOutput": "25",
+    "constraints": [
+      "-1000 <= n <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\nint square(int n) {\n    // TODO: return the square of n\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%d\\n\", square(n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "25",
+        "isHidden": false
+      },
+      {
+        "input": "-3",
+        "expectedOutput": "9",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "1000",
+        "expectedOutput": "1000000",
+        "isHidden": true
+      },
+      {
+        "input": "-1000",
+        "expectedOutput": "1000000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 1
+  },
+  {
+    "slug": "fn-max-of-two",
+    "title": "Larger of Two Numbers",
+    "category": "functions",
+    "difficulty": "Easy",
+    "description": "Define `int maxOf(int a, int b)` that returns the larger of its two parameters.\n\nInput: two integers `a` and `b` separated by a space.\nOutput: the larger value on one line.",
+    "exampleInput": "3 9",
+    "exampleOutput": "9",
+    "constraints": [
+      "-100000 <= a, b <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\nint maxOf(int a, int b) {\n    // TODO: return the larger value\n    return 0;\n}\n\nint main() {\n    int a, b;\n    scanf(\"%d %d\", &a, &b);\n    printf(\"%d\\n\", maxOf(a, b));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3 9",
+        "expectedOutput": "9",
+        "isHidden": false
+      },
+      {
+        "input": "10 -2",
+        "expectedOutput": "10",
+        "isHidden": false
+      },
+      {
+        "input": "7 7",
+        "expectedOutput": "7",
+        "isHidden": true
+      },
+      {
+        "input": "-5 -8",
+        "expectedOutput": "-5",
+        "isHidden": true
+      },
+      {
+        "input": "-100000 100000",
+        "expectedOutput": "100000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 2
+  },
+  {
+    "slug": "fn-print-stars",
+    "title": "Print a Row of Stars",
+    "category": "functions",
+    "difficulty": "Easy",
+    "description": "A `void` function does work but returns nothing.\nDefine `void printStars(int n)` that prints `n` asterisks followed by a newline.\n\nInput: one integer `n`.\nOutput: a single line with `n` stars.",
+    "exampleInput": "5",
+    "exampleOutput": "*****",
+    "constraints": [
+      "1 <= n <= 50"
+    ],
+    "starterCode": "#include <stdio.h>\nvoid printStars(int n) {\n    // TODO: print n stars and a newline\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printStars(n);\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "*****",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "*",
+        "isHidden": false
+      },
+      {
+        "input": "2",
+        "expectedOutput": "**",
+        "isHidden": true
+      },
+      {
+        "input": "50",
+        "expectedOutput": "**************************************************",
+        "isHidden": true
+      },
+      {
+        "input": "12",
+        "expectedOutput": "************",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 3
+  },
+  {
+    "slug": "fn-is-even",
+    "title": "Even or Odd Function",
+    "category": "functions",
+    "difficulty": "Easy",
+    "description": "Define `int isEven(int n)` that returns 1 if `n` is even and 0 otherwise. Remember negative numbers: use `n % 2 == 0`.\n\nInput: one integer `n`.\nOutput: `Even` if isEven returns 1, otherwise `Odd`.",
+    "exampleInput": "4",
+    "exampleOutput": "Even",
+    "constraints": [
+      "-1000000 <= n <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\nint isEven(int n) {\n    // TODO: return 1 for even, 0 for odd\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    if (isEven(n)) printf(\"Even\\n\");\n    else printf(\"Odd\\n\");\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "4",
+        "expectedOutput": "Even",
+        "isHidden": false
+      },
+      {
+        "input": "7",
+        "expectedOutput": "Odd",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "Even",
+        "isHidden": true
+      },
+      {
+        "input": "-3",
+        "expectedOutput": "Odd",
+        "isHidden": true
+      },
+      {
+        "input": "-1000000",
+        "expectedOutput": "Even",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 4
+  },
+  {
+    "slug": "fn-sum-to-n",
+    "title": "Sum from 1 to N",
+    "category": "functions",
+    "difficulty": "Easy",
+    "description": "Define `long long sumTo(int n)` that returns 1 + 2 + ... + n using a loop. For `n = 0` the sum is 0.\n\nInput: one integer `n`.\nOutput: the sum on one line.",
+    "exampleInput": "10",
+    "exampleOutput": "55",
+    "constraints": [
+      "0 <= n <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\nlong long sumTo(int n) {\n    // TODO: add up 1..n\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%lld\\n\", sumTo(n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "10",
+        "expectedOutput": "55",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "100000",
+        "expectedOutput": "5000050000",
+        "isHidden": true
+      },
+      {
+        "input": "57",
+        "expectedOutput": "1653",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 5
+  },
+  {
+    "slug": "fn-factorial",
+    "title": "Factorial Function",
+    "category": "functions",
+    "difficulty": "Easy",
+    "description": "The factorial of n is 1 * 2 * ... * n, and 0! = 1.\nDefine `long long factorial(int n)` using a loop.\n\nInput: one integer `n`.\nOutput: n! on one line.",
+    "exampleInput": "5",
+    "exampleOutput": "120",
+    "constraints": [
+      "0 <= n <= 20"
+    ],
+    "starterCode": "#include <stdio.h>\nlong long factorial(int n) {\n    // TODO: multiply 1..n\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%lld\\n\", factorial(n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "120",
+        "isHidden": false
+      },
+      {
+        "input": "10",
+        "expectedOutput": "3628800",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "20",
+        "expectedOutput": "2432902008176640000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 6
+  },
+  {
+    "slug": "fn-array-sum",
+    "title": "Sum of an Array",
+    "category": "functions",
+    "difficulty": "Easy",
+    "description": "Arrays are passed to functions together with their size.\nDefine `int arraySum(int arr[], int n)` returning the sum of the first `n` elements.\n\nInput: first `n`, then `n` integers.\nOutput: their sum on one line.",
+    "exampleInput": "5\n1 2 3 4 5",
+    "exampleOutput": "15",
+    "constraints": [
+      "1 <= n <= 100",
+      "-1000 <= each element <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\nint arraySum(int arr[], int n) {\n    // TODO: add up the elements\n    return 0;\n}\n\nint main() {\n    int n, a[100];\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &a[i]);\n    printf(\"%d\\n\", arraySum(a, n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n1 2 3 4 5",
+        "expectedOutput": "15",
+        "isHidden": false
+      },
+      {
+        "input": "3\n-1 -2 -3",
+        "expectedOutput": "-6",
+        "isHidden": false
+      },
+      {
+        "input": "1\n0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "2\n1000 -1000",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "4\n10 20 30 40",
+        "expectedOutput": "100",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 7
+  },
+  {
+    "slug": "fn-absolute-value",
+    "title": "Absolute Value",
+    "category": "functions",
+    "difficulty": "Easy",
+    "description": "Define `int absolute(int n)` that returns `n` if it is non-negative, otherwise `-n`. Do not use the library `abs`.\n\nInput: one integer `n`.\nOutput: the absolute value.",
+    "exampleInput": "-7",
+    "exampleOutput": "7",
+    "constraints": [
+      "-1000000 <= n <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\nint absolute(int n) {\n    // TODO\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%d\\n\", absolute(n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "-7",
+        "expectedOutput": "7",
+        "isHidden": false
+      },
+      {
+        "input": "12",
+        "expectedOutput": "12",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "-1000000",
+        "expectedOutput": "1000000",
+        "isHidden": true
+      },
+      {
+        "input": "1000000",
+        "expectedOutput": "1000000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 8
+  },
+  {
+    "slug": "fn-count-digits",
+    "title": "Count the Digits",
+    "category": "functions",
+    "difficulty": "Easy",
+    "description": "Define `int countDigits(int n)` that returns how many digits the non-negative number `n` has. The number 0 has 1 digit.\nHint: keep dividing by 10.\n\nInput: one integer `n`.\nOutput: the digit count.",
+    "exampleInput": "12345",
+    "exampleOutput": "5",
+    "constraints": [
+      "0 <= n <= 2000000000"
+    ],
+    "starterCode": "#include <stdio.h>\nint countDigits(int n) {\n    // TODO: count digits (0 has one digit)\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%d\\n\", countDigits(n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "12345",
+        "expectedOutput": "5",
+        "isHidden": false
+      },
+      {
+        "input": "7",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "10",
+        "expectedOutput": "2",
+        "isHidden": true
+      },
+      {
+        "input": "2000000000",
+        "expectedOutput": "10",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 9
+  },
+  {
+    "slug": "fn-is-prime",
+    "title": "Prime Checker",
+    "category": "functions",
+    "difficulty": "Easy",
+    "description": "A prime is a number greater than 1 with no divisors other than 1 and itself.\nDefine `int isPrime(int n)` returning 1 for prime, else 0.\n\nInput: one integer `n`.\nOutput: `Prime` or `Not Prime`.",
+    "exampleInput": "7",
+    "exampleOutput": "Prime",
+    "constraints": [
+      "-100 <= n <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\nint isPrime(int n) {\n    // TODO: return 1 if n is prime, else 0\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(isPrime(n) ? \"Prime\\n\" : \"Not Prime\\n\");\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "7",
+        "expectedOutput": "Prime",
+        "isHidden": false
+      },
+      {
+        "input": "12",
+        "expectedOutput": "Not Prime",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "Not Prime",
+        "isHidden": true
+      },
+      {
+        "input": "2",
+        "expectedOutput": "Prime",
+        "isHidden": true
+      },
+      {
+        "input": "-5",
+        "expectedOutput": "Not Prime",
+        "isHidden": true
+      },
+      {
+        "input": "999983",
+        "expectedOutput": "Prime",
+        "isHidden": true
+      },
+      {
+        "input": "1000000",
+        "expectedOutput": "Not Prime",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 10
+  },
+  {
+    "slug": "fn-gcd-lcm",
+    "title": "GCD and LCM",
+    "category": "functions",
+    "difficulty": "Medium",
+    "description": "Define `int gcd(int a, int b)` (Euclid: repeat `a, b = b, a % b` until b is 0) and `long long lcm(int a, int b)` which uses gcd (lcm = a / gcd * b).\n\nInput: two positive integers `a` and `b`.\nOutput: gcd and lcm separated by a single space.",
+    "exampleInput": "12 18",
+    "exampleOutput": "6 36",
+    "constraints": [
+      "1 <= a, b <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\nint gcd(int a, int b) {\n    // TODO\n    return 0;\n}\nlong long lcm(int a, int b) {\n    // TODO: use gcd\n    return 0;\n}\n\nint main() {\n    int a, b;\n    scanf(\"%d %d\", &a, &b);\n    printf(\"%d %lld\\n\", gcd(a, b), lcm(a, b));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "12 18",
+        "expectedOutput": "6 36",
+        "isHidden": false
+      },
+      {
+        "input": "7 13",
+        "expectedOutput": "1 91",
+        "isHidden": false
+      },
+      {
+        "input": "1 1",
+        "expectedOutput": "1 1",
+        "isHidden": true
+      },
+      {
+        "input": "1000000 999999",
+        "expectedOutput": "1 999999000000",
+        "isHidden": true
+      },
+      {
+        "input": "100 100",
+        "expectedOutput": "100 100",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 11
+  },
+  {
+    "slug": "fn-power-loop",
+    "title": "Power Function",
+    "category": "functions",
+    "difficulty": "Medium",
+    "description": "Define `long long power(int base, int exp)` that returns base raised to exp using a loop (no `pow`). Anything to the power 0 is 1.\n\nInput: `base` and `exp` separated by a space.\nOutput: the result.",
+    "exampleInput": "2 10",
+    "exampleOutput": "1024",
+    "constraints": [
+      "0 <= base <= 10",
+      "0 <= exp <= 18",
+      "The result fits in long long"
+    ],
+    "starterCode": "#include <stdio.h>\nlong long power(int base, int exp) {\n    // TODO\n    return 0;\n}\n\nint main() {\n    int b, e;\n    scanf(\"%d %d\", &b, &e);\n    printf(\"%lld\\n\", power(b, e));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2 10",
+        "expectedOutput": "1024",
+        "isHidden": false
+      },
+      {
+        "input": "3 4",
+        "expectedOutput": "81",
+        "isHidden": false
+      },
+      {
+        "input": "5 0",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "0 0",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "0 5",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "10 18",
+        "expectedOutput": "1000000000000000000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 12
+  },
+  {
+    "slug": "fn-static-counter",
+    "title": "Static Call Counter",
+    "category": "functions",
+    "difficulty": "Medium",
+    "description": "A `static` local variable keeps its value between calls.\nDefine `int nextId(void)` that holds `static int id = 0;`, increments it, and returns it. Call it `n` times.\n\nInput: one integer `n`.\nOutput: the returned values, one per line (1 to n).",
+    "exampleInput": "3",
+    "exampleOutput": "1\n2\n3",
+    "constraints": [
+      "1 <= n <= 50"
+    ],
+    "starterCode": "#include <stdio.h>\nint nextId(void) {\n    // TODO: use a static variable\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) printf(\"%d\\n\", nextId());\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3",
+        "expectedOutput": "1\n2\n3",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "2",
+        "expectedOutput": "1\n2",
+        "isHidden": true
+      },
+      {
+        "input": "10",
+        "expectedOutput": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10",
+        "isHidden": true
+      },
+      {
+        "input": "50",
+        "expectedOutput": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n46\n47\n48\n49\n50",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 13
+  },
+  {
+    "slug": "fn-reverse-array",
+    "title": "Reverse an Array in Place",
+    "category": "functions",
+    "difficulty": "Medium",
+    "description": "Arrays passed to functions are shared with the caller, so changes persist.\nDefine `void reverseArray(int arr[], int n)` that reverses the array in place by swapping ends.\n\nInput: `n`, then `n` integers.\nOutput: the reversed array on one line, separated by single spaces.",
+    "exampleInput": "5\n1 2 3 4 5",
+    "exampleOutput": "5 4 3 2 1",
+    "constraints": [
+      "1 <= n <= 100",
+      "-1000 <= each element <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\nvoid reverseArray(int arr[], int n) {\n    // TODO: swap elements from both ends\n}\n\nint main() {\n    int n, a[100];\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &a[i]);\n    reverseArray(a, n);\n    for (int i = 0; i < n; i++) printf(i ? \" %d\" : \"%d\", a[i]);\n    printf(\"\\n\");\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n1 2 3 4 5",
+        "expectedOutput": "5 4 3 2 1",
+        "isHidden": false
+      },
+      {
+        "input": "4\n10 20 30 40",
+        "expectedOutput": "40 30 20 10",
+        "isHidden": false
+      },
+      {
+        "input": "1\n9",
+        "expectedOutput": "9",
+        "isHidden": true
+      },
+      {
+        "input": "2\n-1 1",
+        "expectedOutput": "1 -1",
+        "isHidden": true
+      },
+      {
+        "input": "6\n0 0 1 1 2 2",
+        "expectedOutput": "2 2 1 1 0 0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 14
+  },
+  {
+    "slug": "fn-compose",
+    "title": "Function Composition",
+    "category": "functions",
+    "difficulty": "Medium",
+    "description": "Define `long long f(long long x)` returning `2*x + 1`, and `long long g(long long x)` returning `x*x`. Then compute the compositions g(f(x)) and f(g(x)) by calling one function with the result of the other.\n\nInput: one integer `x`.\nOutput: g(f(x)) and f(g(x)) separated by a single space.",
+    "exampleInput": "3",
+    "exampleOutput": "49 19",
+    "constraints": [
+      "-10000 <= x <= 10000"
+    ],
+    "starterCode": "#include <stdio.h>\nlong long f(long long x) {\n    // TODO: 2*x + 1\n    return 0;\n}\nlong long g(long long x) {\n    // TODO: x*x\n    return 0;\n}\n\nint main() {\n    long long x;\n    scanf(\"%lld\", &x);\n    printf(\"%lld %lld\\n\", g(f(x)), f(g(x)));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3",
+        "expectedOutput": "49 19",
+        "isHidden": false
+      },
+      {
+        "input": "-2",
+        "expectedOutput": "9 9",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "1 1",
+        "isHidden": true
+      },
+      {
+        "input": "10000",
+        "expectedOutput": "400040001 200000001",
+        "isHidden": true
+      },
+      {
+        "input": "-10000",
+        "expectedOutput": "399960001 200000001",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 15
+  },
+  {
+    "slug": "fn-primes-in-range",
+    "title": "Primes in a Range",
+    "category": "functions",
+    "difficulty": "Medium",
+    "description": "Write a helper `int isPrime(int n)` and a function `int countPrimes(int a, int b)` that uses it to count primes in the inclusive range [a, b].\n\nInput: two integers `a` and `b` with a <= b.\nOutput: the number of primes, then a space, then the sum of those primes.",
+    "exampleInput": "1 10",
+    "exampleOutput": "4 17",
+    "constraints": [
+      "0 <= a <= b <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\nint isPrime(int n) {\n    // TODO\n    return 0;\n}\nint countPrimes(int a, int b) {\n    // TODO: use isPrime\n    return 0;\n}\n\nint main() {\n    int a, b;\n    scanf(\"%d %d\", &a, &b);\n    long long sum = 0;\n    for (int i = a; i <= b; i++) if (isPrime(i)) sum += i;\n    printf(\"%d %lld\\n\", countPrimes(a, b), sum);\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 10",
+        "expectedOutput": "4 17",
+        "isHidden": false
+      },
+      {
+        "input": "10 20",
+        "expectedOutput": "4 60",
+        "isHidden": false
+      },
+      {
+        "input": "0 1",
+        "expectedOutput": "0 0",
+        "isHidden": true
+      },
+      {
+        "input": "14 16",
+        "expectedOutput": "0 0",
+        "isHidden": true
+      },
+      {
+        "input": "1 100000",
+        "expectedOutput": "9592 454396537",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 16
+  },
+  {
+    "slug": "fn-perfect-numbers",
+    "title": "Perfect Numbers up to N",
+    "category": "functions",
+    "difficulty": "Medium",
+    "description": "A perfect number equals the sum of its proper divisors (6 = 1+2+3). Define `int isPerfect(int n)` returning 1 or 0, and use it to find all perfect numbers from 1 to `n`.\n\nInput: one integer `n`.\nOutput: each perfect number on its own line in increasing order, or `None` if there is none.",
+    "exampleInput": "30",
+    "exampleOutput": "6\n28",
+    "constraints": [
+      "1 <= n <= 10000"
+    ],
+    "starterCode": "#include <stdio.h>\nint isPerfect(int n) {\n    // TODO: sum proper divisors and compare\n    return 0;\n}\n\nint main() {\n    int n, found = 0;\n    scanf(\"%d\", &n);\n    for (int i = 1; i <= n; i++)\n        if (isPerfect(i)) { printf(\"%d\\n\", i); found = 1; }\n    if (!found) printf(\"None\\n\");\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "30",
+        "expectedOutput": "6\n28",
+        "isHidden": false
+      },
+      {
+        "input": "10000",
+        "expectedOutput": "6\n28\n496\n8128",
+        "isHidden": false
+      },
+      {
+        "input": "5",
+        "expectedOutput": "None",
+        "isHidden": true
+      },
+      {
+        "input": "1",
+        "expectedOutput": "None",
+        "isHidden": true
+      },
+      {
+        "input": "6",
+        "expectedOutput": "6",
+        "isHidden": true
+      },
+      {
+        "input": "500",
+        "expectedOutput": "6\n28\n496",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 17
+  },
+  {
+    "slug": "fn-merge-sorted",
+    "title": "Merge Two Sorted Arrays",
+    "category": "functions",
+    "difficulty": "Hard",
+    "description": "Define `void mergeSorted(int a[], int n, int b[], int m, int out[])` that merges two ascending arrays into `out` (length n+m), still ascending. Walk both arrays with two indices, always copying the smaller current element; then copy leftovers. Duplicates are kept.\n\nInput: `n` then `n` integers, then `m` then `m` integers (each array already sorted ascending).\nOutput: the merged array on one line separated by single spaces.",
+    "exampleInput": "3\n1 3 5\n3\n2 4 6",
+    "exampleOutput": "1 2 3 4 5 6",
+    "constraints": [
+      "1 <= n, m <= 50",
+      "-1000 <= each element <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\nvoid mergeSorted(int a[], int n, int b[], int m, int out[]) {\n    // TODO: merge using two indices\n}\n\nint main() {\n    int n, m, a[50], b[50], out[100];\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &a[i]);\n    scanf(\"%d\", &m);\n    for (int i = 0; i < m; i++) scanf(\"%d\", &b[i]);\n    mergeSorted(a, n, b, m, out);\n    for (int i = 0; i < n + m; i++) printf(i ? \" %d\" : \"%d\", out[i]);\n    printf(\"\\n\");\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\n1 3 5\n3\n2 4 6",
+        "expectedOutput": "1 2 3 4 5 6",
+        "isHidden": false
+      },
+      {
+        "input": "2\n1 2\n3\n3 4 5",
+        "expectedOutput": "1 2 3 4 5",
+        "isHidden": false
+      },
+      {
+        "input": "1\n5\n1\n5",
+        "expectedOutput": "5 5",
+        "isHidden": true
+      },
+      {
+        "input": "3\n-5 0 5\n2\n-10 10",
+        "expectedOutput": "-10 -5 0 5 10",
+        "isHidden": true
+      },
+      {
+        "input": "4\n1 1 1 1\n2\n1 2",
+        "expectedOutput": "1 1 1 1 1 2",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 18
+  },
+  {
+    "slug": "fn-mod-power",
+    "title": "Fast Modular Power",
+    "category": "functions",
+    "difficulty": "Hard",
+    "description": "Computing base^exp directly overflows, and a plain loop is too slow for huge exponents. Define `long long powMod(long long base, long long exp, long long mod)` using repeated squaring: while exp > 0, if exp is odd multiply result by base (mod), then square base (mod) and halve exp. Always reduce with `% mod`.\n\nInput: `base`, `exp`, `mod` separated by spaces.\nOutput: (base^exp) % mod.",
+    "exampleInput": "2 10 1000",
+    "exampleOutput": "24",
+    "constraints": [
+      "0 <= base <= 1000000000",
+      "0 <= exp <= 1000000000000",
+      "1 <= mod <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\nlong long powMod(long long base, long long exp, long long mod) {\n    // TODO: repeated squaring\n    return 0;\n}\n\nint main() {\n    long long b, e, m;\n    scanf(\"%lld %lld %lld\", &b, &e, &m);\n    printf(\"%lld\\n\", powMod(b, e, m));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2 10 1000",
+        "expectedOutput": "24",
+        "isHidden": false
+      },
+      {
+        "input": "3 200 13",
+        "expectedOutput": "9",
+        "isHidden": false
+      },
+      {
+        "input": "5 0 7",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "7 5 1",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "123456789 1000000000000 999999937",
+        "expectedOutput": "576011916",
+        "isHidden": true
+      },
+      {
+        "input": "0 0 1000000000",
+        "expectedOutput": "1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 19
+  },
+  {
+    "slug": "fn-matrix-multiply",
+    "title": "Matrix Multiplication Function",
+    "category": "functions",
+    "difficulty": "Hard",
+    "description": "Define `void multiply(int n, int a[][5], int b[][5], int c[][5])` that stores the product of two n x n matrices in `c`: c[i][j] = sum over k of a[i][k] * b[k][j]. A 2D array parameter must state its column count.\n\nInput: `n`, then matrix A (n rows of n integers), then matrix B.\nOutput: matrix C, one row per line, values separated by single spaces.",
+    "exampleInput": "2\n1 2\n3 4\n5 6\n7 8",
+    "exampleOutput": "19 22\n43 50",
+    "constraints": [
+      "1 <= n <= 5",
+      "-100 <= each element <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\nvoid multiply(int n, int a[][5], int b[][5], int c[][5]) {\n    // TODO: triple loop\n}\n\nint main() {\n    int n, a[5][5], b[5][5], c[5][5];\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) for (int j = 0; j < n; j++) scanf(\"%d\", &a[i][j]);\n    for (int i = 0; i < n; i++) for (int j = 0; j < n; j++) scanf(\"%d\", &b[i][j]);\n    multiply(n, a, b, c);\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) printf(j ? \" %d\" : \"%d\", c[i][j]);\n        printf(\"\\n\");\n    }\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2\n1 2\n3 4\n5 6\n7 8",
+        "expectedOutput": "19 22\n43 50",
+        "isHidden": false
+      },
+      {
+        "input": "2\n1 0\n0 1\n9 8\n7 6",
+        "expectedOutput": "9 8\n7 6",
+        "isHidden": false
+      },
+      {
+        "input": "1\n7\n-3",
+        "expectedOutput": "-21",
+        "isHidden": true
+      },
+      {
+        "input": "3\n1 2 3\n4 5 6\n7 8 9\n0 0 1\n0 1 0\n1 0 0",
+        "expectedOutput": "3 2 1\n6 5 4\n9 8 7",
+        "isHidden": true
+      },
+      {
+        "input": "2\n-1 -2\n3 4\n0 0\n0 0",
+        "expectedOutput": "0 0\n0 0",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 13,
+    "questionOrder": 20
+  }
+]

@@ -1,0 +1,849 @@
+[
+  {
+    "slug": "add-two-numbers",
+    "title": "Add Two Numbers",
+    "category": "input-output",
+    "difficulty": "Easy",
+    "description": "Read two integers from the input and print their sum.\n\nHint: use `scanf(\"%d\", &a);` to read an integer.\n\nInput: two integers `a` and `b` separated by a space.\nOutput: a single integer, the sum of `a` and `b`.",
+    "exampleInput": "3 5",
+    "exampleOutput": "8",
+    "constraints": [
+      "-10000 <= a, b <= 10000",
+      "Both numbers are separated by a space."
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3 5",
+        "expectedOutput": "8",
+        "isHidden": false
+      },
+      {
+        "input": "-4 10",
+        "expectedOutput": "6",
+        "isHidden": false
+      },
+      {
+        "input": "0 0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "-10000 -10000",
+        "expectedOutput": "-20000",
+        "isHidden": true
+      },
+      {
+        "input": "10000 9999",
+        "expectedOutput": "19999",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 1
+  },
+  {
+    "slug": "io-greet-by-name",
+    "title": "Greet a Student by Name",
+    "category": "input-output",
+    "difficulty": "Easy",
+    "description": "Read a single word (a name) and print a greeting.\n\nHint: use `%s` with a `char` array to read a word.\n\nInput: one word with no spaces.\nOutput: `Hello, NAME!` where NAME is the word read.",
+    "exampleInput": "Alice",
+    "exampleOutput": "Hello, Alice!",
+    "constraints": [
+      "The name has 1 to 50 letters and no spaces."
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "Alice",
+        "expectedOutput": "Hello, Alice!",
+        "isHidden": false
+      },
+      {
+        "input": "Bob",
+        "expectedOutput": "Hello, Bob!",
+        "isHidden": false
+      },
+      {
+        "input": "X",
+        "expectedOutput": "Hello, X!",
+        "isHidden": true
+      },
+      {
+        "input": "Shubham",
+        "expectedOutput": "Hello, Shubham!",
+        "isHidden": true
+      },
+      {
+        "input": "Zoroastrian",
+        "expectedOutput": "Hello, Zoroastrian!",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 2
+  },
+  {
+    "slug": "print-three-lines",
+    "title": "Print Three Numbers on Separate Lines",
+    "category": "input-output",
+    "difficulty": "Easy",
+    "description": "Read three integers and print each one on its own line, in the same order.\n\nInput: three integers separated by spaces.\nOutput: three lines, one integer per line.",
+    "exampleInput": "1 2 3",
+    "exampleOutput": "1\n2\n3",
+    "constraints": [
+      "-1000 <= each number <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 2 3",
+        "expectedOutput": "1\n2\n3",
+        "isHidden": false
+      },
+      {
+        "input": "-5 0 5",
+        "expectedOutput": "-5\n0\n5",
+        "isHidden": false
+      },
+      {
+        "input": "0 0 0",
+        "expectedOutput": "0\n0\n0",
+        "isHidden": true
+      },
+      {
+        "input": "-1000 1000 -1000",
+        "expectedOutput": "-1000\n1000\n-1000",
+        "isHidden": true
+      },
+      {
+        "input": "7 7 7",
+        "expectedOutput": "7\n7\n7",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 3
+  },
+  {
+    "slug": "reverse-print-order",
+    "title": "Print in Reverse Order",
+    "category": "input-output",
+    "difficulty": "Easy",
+    "description": "Read three integers and print them in reverse order on one line, separated by single spaces.\n\nInput: three integers `a b c`.\nOutput: `c b a` on one line.",
+    "exampleInput": "1 2 3",
+    "exampleOutput": "3 2 1",
+    "constraints": [
+      "-1000 <= each number <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 2 3",
+        "expectedOutput": "3 2 1",
+        "isHidden": false
+      },
+      {
+        "input": "10 -20 30",
+        "expectedOutput": "30 -20 10",
+        "isHidden": false
+      },
+      {
+        "input": "0 0 1",
+        "expectedOutput": "1 0 0",
+        "isHidden": true
+      },
+      {
+        "input": "-1000 0 1000",
+        "expectedOutput": "1000 0 -1000",
+        "isHidden": true
+      },
+      {
+        "input": "5 5 5",
+        "expectedOutput": "5 5 5",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 4
+  },
+  {
+    "slug": "print-float-two-decimals",
+    "title": "Print a Decimal with Two Places",
+    "category": "input-output",
+    "difficulty": "Easy",
+    "description": "Read a real number and print it rounded to exactly 2 digits after the decimal point.\n\nHint: use `double` and `%lf` for reading, `%.2f` for printing.\n\nInput: one real number.\nOutput: the number with exactly 2 digits after the decimal point.",
+    "exampleInput": "3.14159",
+    "exampleOutput": "3.14",
+    "constraints": [
+      "-1000.0 <= x <= 1000.0"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3.14159",
+        "expectedOutput": "3.14",
+        "isHidden": false
+      },
+      {
+        "input": "2.5",
+        "expectedOutput": "2.50",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0.00",
+        "isHidden": true
+      },
+      {
+        "input": "-7.123",
+        "expectedOutput": "-7.12",
+        "isHidden": true
+      },
+      {
+        "input": "999.999",
+        "expectedOutput": "1000.00",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 5
+  },
+  {
+    "slug": "char-to-ascii",
+    "title": "Character to ASCII Code",
+    "category": "input-output",
+    "difficulty": "Easy",
+    "description": "Read one character and print its ASCII code as an integer.\n\nHint: a `char` printed with `%d` shows its numeric code.\n\nInput: one visible character (letter, digit, or symbol).\nOutput: its ASCII code.",
+    "exampleInput": "A",
+    "exampleOutput": "65",
+    "constraints": [
+      "The character is a printable, non-space ASCII character."
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "A",
+        "expectedOutput": "65",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "97",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "48",
+        "isHidden": true
+      },
+      {
+        "input": "~",
+        "expectedOutput": "126",
+        "isHidden": true
+      },
+      {
+        "input": "!",
+        "expectedOutput": "33",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 6
+  },
+  {
+    "slug": "ascii-to-char",
+    "title": "ASCII Code to Character",
+    "category": "input-output",
+    "difficulty": "Easy",
+    "description": "Read an integer ASCII code and print the character it represents.\n\nInput: one integer.\nOutput: the matching character.",
+    "exampleInput": "65",
+    "exampleOutput": "A",
+    "constraints": [
+      "33 <= code <= 126"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "65",
+        "expectedOutput": "A",
+        "isHidden": false
+      },
+      {
+        "input": "97",
+        "expectedOutput": "a",
+        "isHidden": false
+      },
+      {
+        "input": "48",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "126",
+        "expectedOutput": "~",
+        "isHidden": true
+      },
+      {
+        "input": "33",
+        "expectedOutput": "!",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 7
+  },
+  {
+    "slug": "print-pipe-separated",
+    "title": "Pipe Separated Values",
+    "category": "input-output",
+    "difficulty": "Easy",
+    "description": "Read two integers `a` and `b` and print them as `a | b` (a space, a pipe, a space between them).\n\nInput: two integers.\nOutput: one line in the form `a | b`.",
+    "exampleInput": "3 4",
+    "exampleOutput": "3 | 4",
+    "constraints": [
+      "-1000 <= a, b <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3 4",
+        "expectedOutput": "3 | 4",
+        "isHidden": false
+      },
+      {
+        "input": "-1 20",
+        "expectedOutput": "-1 | 20",
+        "isHidden": false
+      },
+      {
+        "input": "0 0",
+        "expectedOutput": "0 | 0",
+        "isHidden": true
+      },
+      {
+        "input": "-1000 1000",
+        "expectedOutput": "-1000 | 1000",
+        "isHidden": true
+      },
+      {
+        "input": "123 456",
+        "expectedOutput": "123 | 456",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 8
+  },
+  {
+    "slug": "width-padded-number",
+    "title": "Right-Aligned Number",
+    "category": "input-output",
+    "difficulty": "Easy",
+    "description": "Read an integer and print it right-aligned in a field of width 6 (padded with spaces on the left).\n\nHint: `%6d`.\n\nInput: one integer.\nOutput: the integer padded to width 6. The line starts with spaces when the number is short.",
+    "exampleInput": "42",
+    "exampleOutput": "    42",
+    "constraints": [
+      "-99999 <= n <= 999999"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "42",
+        "expectedOutput": "    42",
+        "isHidden": false
+      },
+      {
+        "input": "-7",
+        "expectedOutput": "    -7",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "     0",
+        "isHidden": true
+      },
+      {
+        "input": "999999",
+        "expectedOutput": "999999",
+        "isHidden": true
+      },
+      {
+        "input": "-99999",
+        "expectedOutput": "-99999",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 9
+  },
+  {
+    "slug": "echo-line-with-spaces",
+    "title": "Echo a Whole Line",
+    "category": "input-output",
+    "difficulty": "Easy",
+    "description": "Read one whole line of text (it may contain spaces) and print it back after the prefix `You said: `.\n\nHint: `scanf(\"%s\")` stops at spaces; use `fgets` instead.\n\nInput: one line of text.\nOutput: `You said: ` followed by the line.",
+    "exampleInput": "hello world\n",
+    "exampleOutput": "You said: hello world",
+    "constraints": [
+      "The line has at most 80 characters."
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "hello world\n",
+        "expectedOutput": "You said: hello world",
+        "isHidden": false
+      },
+      {
+        "input": "C is fun\n",
+        "expectedOutput": "You said: C is fun",
+        "isHidden": false
+      },
+      {
+        "input": "single\n",
+        "expectedOutput": "You said: single",
+        "isHidden": true
+      },
+      {
+        "input": "a b  c d\n",
+        "expectedOutput": "You said: a b  c d",
+        "isHidden": true
+      },
+      {
+        "input": "1 + 1 = 2\n",
+        "expectedOutput": "You said: 1 + 1 = 2",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 10
+  },
+  {
+    "slug": "average-of-three",
+    "title": "Average of Three Numbers",
+    "category": "input-output",
+    "difficulty": "Medium",
+    "description": "Read three integers and print their average with exactly 2 digits after the decimal point.\n\nInput: three integers.\nOutput: the average, e.g. `4.00`.",
+    "exampleInput": "1 2 4",
+    "exampleOutput": "2.33",
+    "constraints": [
+      "-1000 <= each number <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 2 4",
+        "expectedOutput": "2.33",
+        "isHidden": false
+      },
+      {
+        "input": "10 20 30",
+        "expectedOutput": "20.00",
+        "isHidden": false
+      },
+      {
+        "input": "0 0 0",
+        "expectedOutput": "0.00",
+        "isHidden": true
+      },
+      {
+        "input": "-5 -6 -8",
+        "expectedOutput": "-6.33",
+        "isHidden": true
+      },
+      {
+        "input": "1000 1000 999",
+        "expectedOutput": "999.67",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 11
+  },
+  {
+    "slug": "zero-padded-clock",
+    "title": "Digital Clock Format",
+    "category": "input-output",
+    "difficulty": "Medium",
+    "description": "Read hours and minutes and print them like a digital clock, `HH:MM`, with each part padded with a leading zero to 2 digits.\n\nHint: `%02d`.\n\nInput: two integers `h m`.\nOutput: `HH:MM`.",
+    "exampleInput": "9 5",
+    "exampleOutput": "09:05",
+    "constraints": [
+      "0 <= h <= 23",
+      "0 <= m <= 59"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "9 5",
+        "expectedOutput": "09:05",
+        "isHidden": false
+      },
+      {
+        "input": "12 30",
+        "expectedOutput": "12:30",
+        "isHidden": false
+      },
+      {
+        "input": "0 0",
+        "expectedOutput": "00:00",
+        "isHidden": true
+      },
+      {
+        "input": "23 59",
+        "expectedOutput": "23:59",
+        "isHidden": true
+      },
+      {
+        "input": "7 0",
+        "expectedOutput": "07:00",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 12
+  },
+  {
+    "slug": "number-in-bases",
+    "title": "Decimal, Octal and Hexadecimal",
+    "category": "input-output",
+    "difficulty": "Medium",
+    "description": "Read a non-negative integer and print it in three forms on three lines: decimal, octal, and lowercase hexadecimal (no prefixes).\n\nHint: `%d`, `%o`, `%x`.\n\nInput: one integer.\nOutput: three lines.",
+    "exampleInput": "255",
+    "exampleOutput": "255\n377\nff",
+    "constraints": [
+      "0 <= n <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "255",
+        "expectedOutput": "255\n377\nff",
+        "isHidden": false
+      },
+      {
+        "input": "8",
+        "expectedOutput": "8\n10\n8",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0\n0\n0",
+        "isHidden": true
+      },
+      {
+        "input": "1000000",
+        "expectedOutput": "1000000\n3641100\nf4240",
+        "isHidden": true
+      },
+      {
+        "input": "4095",
+        "expectedOutput": "4095\n7777\nfff",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 13
+  },
+  {
+    "slug": "read-comma-separated",
+    "title": "Comma Separated Pair",
+    "category": "input-output",
+    "difficulty": "Medium",
+    "description": "The input has two integers separated by a comma, like `12,7`. Read them and print their sum and product on separate lines.\n\nHint: put the comma in the format string: `scanf(\"%d,%d\", ...)`.\n\nInput: `a,b`.\nOutput: first line `a+b`, second line `a*b`.",
+    "exampleInput": "12,7",
+    "exampleOutput": "19\n84",
+    "constraints": [
+      "-1000 <= a, b <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "12,7",
+        "expectedOutput": "19\n84",
+        "isHidden": false
+      },
+      {
+        "input": "-3,4",
+        "expectedOutput": "1\n-12",
+        "isHidden": false
+      },
+      {
+        "input": "0,0",
+        "expectedOutput": "0\n0",
+        "isHidden": true
+      },
+      {
+        "input": "-1000,1000",
+        "expectedOutput": "0\n-1000000",
+        "isHidden": true
+      },
+      {
+        "input": "1000,1000",
+        "expectedOutput": "2000\n1000000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 14
+  },
+  {
+    "slug": "reformat-date",
+    "title": "Reformat a Date",
+    "category": "input-output",
+    "difficulty": "Medium",
+    "description": "A date is given as `DD/MM/YYYY`. Print it as `YYYY-MM-DD`, keeping leading zeros.\n\nHint: read the three numbers with `scanf(\"%d/%d/%d\", ...)` and print with `%02d`/`%04d`.\n\nInput: one date `DD/MM/YYYY`.\nOutput: the date as `YYYY-MM-DD`.",
+    "exampleInput": "05/03/2024",
+    "exampleOutput": "2024-03-05",
+    "constraints": [
+      "Valid dates between years 1000 and 9999."
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "05/03/2024",
+        "expectedOutput": "2024-03-05",
+        "isHidden": false
+      },
+      {
+        "input": "31/12/1999",
+        "expectedOutput": "1999-12-31",
+        "isHidden": false
+      },
+      {
+        "input": "01/01/1000",
+        "expectedOutput": "1000-01-01",
+        "isHidden": true
+      },
+      {
+        "input": "29/02/2020",
+        "expectedOutput": "2020-02-29",
+        "isHidden": true
+      },
+      {
+        "input": "10/10/9999",
+        "expectedOutput": "9999-10-10",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 15
+  },
+  {
+    "slug": "full-name-and-age",
+    "title": "Full Name and Age",
+    "category": "input-output",
+    "difficulty": "Medium",
+    "description": "The first line is a full name (may contain spaces). The second line is an integer age. Print `NAME is AGE years old.`\n\nHint: read the name with `fgets`, remove the newline, then use `scanf` for the age.\n\nInput: line 1 the name, line 2 the age.\nOutput: one sentence as shown.",
+    "exampleInput": "Ada Lovelace\n36\n",
+    "exampleOutput": "Ada Lovelace is 36 years old.",
+    "constraints": [
+      "Name has at most 60 characters.",
+      "0 <= age <= 120"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "Ada Lovelace\n36\n",
+        "expectedOutput": "Ada Lovelace is 36 years old.",
+        "isHidden": false
+      },
+      {
+        "input": "Linus Torvalds\n55\n",
+        "expectedOutput": "Linus Torvalds is 55 years old.",
+        "isHidden": false
+      },
+      {
+        "input": "Bo\n0\n",
+        "expectedOutput": "Bo is 0 years old.",
+        "isHidden": true
+      },
+      {
+        "input": "Mary Jane Watson Parker\n120\n",
+        "expectedOutput": "Mary Jane Watson Parker is 120 years old.",
+        "isHidden": true
+      },
+      {
+        "input": "A B\n7\n",
+        "expectedOutput": "A B is 7 years old.",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 16
+  },
+  {
+    "slug": "simple-receipt",
+    "title": "Simple Receipt",
+    "category": "input-output",
+    "difficulty": "Medium",
+    "description": "Read an item name (one word), a unit price (decimal) and a quantity (integer). Print a receipt with two lines:\n`Item: NAME` and `Total: T` where T is price times quantity with exactly 2 digits after the decimal point.\n\nInput: `name price quantity`.\nOutput: the two lines.",
+    "exampleInput": "Pen 2.50 4",
+    "exampleOutput": "Item: Pen\nTotal: 10.00",
+    "constraints": [
+      "0.5 <= price <= 1000.0 (at most 2 decimals)",
+      "1 <= quantity <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "Pen 2.50 4",
+        "expectedOutput": "Item: Pen\nTotal: 10.00",
+        "isHidden": false
+      },
+      {
+        "input": "Book 199.99 3",
+        "expectedOutput": "Item: Book\nTotal: 599.97",
+        "isHidden": false
+      },
+      {
+        "input": "Gum 0.50 1",
+        "expectedOutput": "Item: Gum\nTotal: 0.50",
+        "isHidden": true
+      },
+      {
+        "input": "TV 999.99 100",
+        "expectedOutput": "Item: TV\nTotal: 99999.00",
+        "isHidden": true
+      },
+      {
+        "input": "Milk 1.25 8",
+        "expectedOutput": "Item: Milk\nTotal: 10.00",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 17
+  },
+  {
+    "slug": "sum-until-end-of-input",
+    "title": "Sum Until End of Input",
+    "category": "input-output",
+    "difficulty": "Hard",
+    "description": "The input contains any number of integers (possibly none) separated by spaces or newlines. Read until there is no more input. Print the count of numbers on the first line and their sum on the second line.\n\nHint: `scanf` returns how many items it read; loop while it returns 1.\n\nInput: zero or more integers.\nOutput: count, then sum (use `long long`).",
+    "exampleInput": "1 2 3 4\n",
+    "exampleOutput": "4\n10",
+    "constraints": [
+      "0 <= count <= 100",
+      "-1000000 <= each number <= 1000000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1 2 3 4\n",
+        "expectedOutput": "4\n10",
+        "isHidden": false
+      },
+      {
+        "input": "10\n-20\n30\n",
+        "expectedOutput": "3\n20",
+        "isHidden": false
+      },
+      {
+        "input": "",
+        "expectedOutput": "0\n0",
+        "isHidden": true
+      },
+      {
+        "input": "-1000000 1000000 5\n",
+        "expectedOutput": "3\n5",
+        "isHidden": true
+      },
+      {
+        "input": "7\n",
+        "expectedOutput": "1\n7",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 18
+  },
+  {
+    "slug": "parse-student-record",
+    "title": "Parse a Student Record",
+    "category": "input-output",
+    "difficulty": "Hard",
+    "description": "A record is written as `name,age,score` where the name may contain spaces, e.g. `Mary Ann,20,88.5`. Print three lines: `Name: NAME`, `Age: AGE`, `Score: S` where S has exactly 1 digit after the decimal point.\n\nHint: `%[^,]` reads text up to the next comma.\n\nInput: one record on one line.\nOutput: three lines.",
+    "exampleInput": "Mary Ann,20,88.5\n",
+    "exampleOutput": "Name: Mary Ann\nAge: 20\nScore: 88.5",
+    "constraints": [
+      "Name has at most 40 characters and no commas.",
+      "0 <= score <= 100 (one decimal)"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "Mary Ann,20,88.5\n",
+        "expectedOutput": "Name: Mary Ann\nAge: 20\nScore: 88.5",
+        "isHidden": false
+      },
+      {
+        "input": "Bob,18,100.0\n",
+        "expectedOutput": "Name: Bob\nAge: 18\nScore: 100.0",
+        "isHidden": false
+      },
+      {
+        "input": "Li,0,0.0\n",
+        "expectedOutput": "Name: Li\nAge: 0\nScore: 0.0",
+        "isHidden": true
+      },
+      {
+        "input": "John Ronald Reuel,99,45.3\n",
+        "expectedOutput": "Name: John Ronald Reuel\nAge: 99\nScore: 45.3",
+        "isHidden": true
+      },
+      {
+        "input": "Z,5,7.7\n",
+        "expectedOutput": "Name: Z\nAge: 5\nScore: 7.7",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 19
+  },
+  {
+    "slug": "right-aligned-column",
+    "title": "Right-Aligned Column with Total",
+    "category": "input-output",
+    "difficulty": "Hard",
+    "description": "Read `n` followed by `n` integers. Print each integer right-aligned in a field of width 8, one per line. Then print a line of 8 dashes `--------`, and finally the sum right-aligned in width 8.\n\nHint: `%8d`. Negative numbers also count their `-` sign toward the width.\n\nInput: `n`, then `n` integers.\nOutput: n lines, the dash line, and the total line.",
+    "exampleInput": "3\n10 200 3000\n",
+    "exampleOutput": "      10\n     200\n    3000\n--------\n    3210",
+    "constraints": [
+      "1 <= n <= 10",
+      "-100000 <= each number <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\n\nint main() {\n    // Write your code here\n\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3\n10 200 3000\n",
+        "expectedOutput": "      10\n     200\n    3000\n--------\n    3210",
+        "isHidden": false
+      },
+      {
+        "input": "2\n-5 5\n",
+        "expectedOutput": "      -5\n       5\n--------\n       0",
+        "isHidden": false
+      },
+      {
+        "input": "1\n0\n",
+        "expectedOutput": "       0\n--------\n       0",
+        "isHidden": true
+      },
+      {
+        "input": "4\n-100000 100000 99999 -1\n",
+        "expectedOutput": " -100000\n  100000\n   99999\n      -1\n--------\n   99998",
+        "isHidden": true
+      },
+      {
+        "input": "5\n1 2 3 4 5\n",
+        "expectedOutput": "       1\n       2\n       3\n       4\n       5\n--------\n      15",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 3,
+    "questionOrder": 20
+  }
+]

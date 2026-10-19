@@ -1,0 +1,870 @@
+[
+  {
+    "slug": "rec-factorial",
+    "title": "Recursive Factorial",
+    "category": "recursion",
+    "difficulty": "Easy",
+    "description": "A recursive function solves a problem by calling itself on a smaller one, with a base case to stop.\nDefine `long long fact(int n)`: fact(0) = 1, otherwise n * fact(n-1). Your function must call itself (no loops for the main work).\n\nInput: one integer `n`.\nOutput: n! on one line.",
+    "exampleInput": "5",
+    "exampleOutput": "120",
+    "constraints": [
+      "0 <= n <= 20"
+    ],
+    "starterCode": "#include <stdio.h>\nlong long fact(int n) {\n    // TODO: base case, then recursive case\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%lld\\n\", fact(n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "120",
+        "isHidden": false
+      },
+      {
+        "input": "10",
+        "expectedOutput": "3628800",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "20",
+        "expectedOutput": "2432902008176640000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 1
+  },
+  {
+    "slug": "rec-sum-to-n",
+    "title": "Recursive Sum to N",
+    "category": "recursion",
+    "difficulty": "Easy",
+    "description": "Define `int sumTo(int n)` returning 1 + 2 + ... + n recursively: sumTo(0) = 0, sumTo(n) = n + sumTo(n-1). Your function must call itself (no loops for the main work).\n\nInput: one integer `n`.\nOutput: the sum.",
+    "exampleInput": "5",
+    "exampleOutput": "15",
+    "constraints": [
+      "0 <= n <= 5000"
+    ],
+    "starterCode": "#include <stdio.h>\nint sumTo(int n) {\n    // TODO\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%d\\n\", sumTo(n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5",
+        "expectedOutput": "15",
+        "isHidden": false
+      },
+      {
+        "input": "100",
+        "expectedOutput": "5050",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "5000",
+        "expectedOutput": "12502500",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 2
+  },
+  {
+    "slug": "rec-fibonacci",
+    "title": "Fibonacci Number",
+    "category": "recursion",
+    "difficulty": "Easy",
+    "description": "The Fibonacci sequence starts 0, 1, 1, 2, 3, 5, ... where fib(0)=0, fib(1)=1, fib(n)=fib(n-1)+fib(n-2).\nDefine `int fib(int n)` recursively.\n\nInput: one integer `n`.\nOutput: fib(n).",
+    "exampleInput": "6",
+    "exampleOutput": "8",
+    "constraints": [
+      "0 <= n <= 25"
+    ],
+    "starterCode": "#include <stdio.h>\nint fib(int n) {\n    // TODO: two base cases, two recursive calls\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%d\\n\", fib(n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "6",
+        "expectedOutput": "8",
+        "isHidden": false
+      },
+      {
+        "input": "10",
+        "expectedOutput": "55",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "25",
+        "expectedOutput": "75025",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 3
+  },
+  {
+    "slug": "rec-power",
+    "title": "Recursive Power",
+    "category": "recursion",
+    "difficulty": "Easy",
+    "description": "Define `long long power(int base, int exp)` where power(b, 0) = 1 and power(b, e) = b * power(b, e-1). Your function must call itself (no loops for the main work).\n\nInput: `base` and `exp` separated by a space.\nOutput: base raised to exp.",
+    "exampleInput": "2 10",
+    "exampleOutput": "1024",
+    "constraints": [
+      "0 <= base <= 10",
+      "0 <= exp <= 18"
+    ],
+    "starterCode": "#include <stdio.h>\nlong long power(int base, int exp) {\n    // TODO\n    return 0;\n}\n\nint main() {\n    int b, e;\n    scanf(\"%d %d\", &b, &e);\n    printf(\"%lld\\n\", power(b, e));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "2 10",
+        "expectedOutput": "1024",
+        "isHidden": false
+      },
+      {
+        "input": "3 5",
+        "expectedOutput": "243",
+        "isHidden": false
+      },
+      {
+        "input": "7 0",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "0 0",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "10 18",
+        "expectedOutput": "1000000000000000000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 4
+  },
+  {
+    "slug": "rec-sum-of-digits",
+    "title": "Sum of Digits (Recursive)",
+    "category": "recursion",
+    "difficulty": "Easy",
+    "description": "The last digit of n is `n % 10` and the rest is `n / 10`.\nDefine `int digitSum(int n)`: if n is 0 return 0, else last digit + digitSum(n / 10).\n\nInput: one non-negative integer `n`.\nOutput: the sum of its digits.",
+    "exampleInput": "1234",
+    "exampleOutput": "10",
+    "constraints": [
+      "0 <= n <= 2000000000"
+    ],
+    "starterCode": "#include <stdio.h>\nint digitSum(int n) {\n    // TODO\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%d\\n\", digitSum(n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1234",
+        "expectedOutput": "10",
+        "isHidden": false
+      },
+      {
+        "input": "999",
+        "expectedOutput": "27",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "1000000000",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "2000000000",
+        "expectedOutput": "2",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 5
+  },
+  {
+    "slug": "rec-count-digits",
+    "title": "Count Digits (Recursive)",
+    "category": "recursion",
+    "difficulty": "Easy",
+    "description": "Define `int countDigits(int n)` that counts the digits of a non-negative number recursively. Numbers below 10 have exactly 1 digit (including 0); otherwise it is 1 + countDigits(n / 10).\n\nInput: one integer `n`.\nOutput: its number of digits.",
+    "exampleInput": "12345",
+    "exampleOutput": "5",
+    "constraints": [
+      "0 <= n <= 2000000000"
+    ],
+    "starterCode": "#include <stdio.h>\nint countDigits(int n) {\n    // TODO\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%d\\n\", countDigits(n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "12345",
+        "expectedOutput": "5",
+        "isHidden": false
+      },
+      {
+        "input": "9",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "10",
+        "expectedOutput": "2",
+        "isHidden": true
+      },
+      {
+        "input": "2000000000",
+        "expectedOutput": "10",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 6
+  },
+  {
+    "slug": "rec-countdown",
+    "title": "Countdown and Count Up",
+    "category": "recursion",
+    "difficulty": "Easy",
+    "description": "Where you put a print relative to the recursive call changes the order!\nDefine `void countdown(int n)` which, for n >= 1, prints n on its own line, calls itself with n-1, and then prints n again on its own line after the call returns. For n = 0 it does nothing.\nHint: printing before the call gives the descending part, after the call the ascending part.\n\nInput: one integer `n`.\nOutput: for n=3 the lines 3 2 1 1 2 3 (one number per line).",
+    "exampleInput": "3",
+    "exampleOutput": "3\n2\n1\n1\n2\n3",
+    "constraints": [
+      "1 <= n <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\nvoid countdown(int n) {\n    // TODO: print n and a newline before and after the recursive call\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    countdown(n);\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3",
+        "expectedOutput": "3\n2\n1\n1\n2\n3",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1\n1",
+        "isHidden": false
+      },
+      {
+        "input": "2",
+        "expectedOutput": "2\n1\n1\n2",
+        "isHidden": true
+      },
+      {
+        "input": "5",
+        "expectedOutput": "5\n4\n3\n2\n1\n1\n2\n3\n4\n5",
+        "isHidden": true
+      },
+      {
+        "input": "10",
+        "expectedOutput": "10\n9\n8\n7\n6\n5\n4\n3\n2\n1\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 7
+  },
+  {
+    "slug": "rec-array-sum",
+    "title": "Recursive Array Sum",
+    "category": "recursion",
+    "difficulty": "Easy",
+    "description": "Define `int arraySum(int arr[], int n)` that returns the sum of the first `n` elements recursively: the sum of 0 elements is 0, otherwise arr[n-1] + arraySum(arr, n-1).\n\nInput: `n`, then `n` integers.\nOutput: their sum.",
+    "exampleInput": "5\n1 2 3 4 5",
+    "exampleOutput": "15",
+    "constraints": [
+      "0 <= n <= 100",
+      "-1000 <= each element <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\nint arraySum(int arr[], int n) {\n    // TODO\n    return 0;\n}\n\nint main() {\n    int n, a[100];\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &a[i]);\n    printf(\"%d\\n\", arraySum(a, n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n1 2 3 4 5",
+        "expectedOutput": "15",
+        "isHidden": false
+      },
+      {
+        "input": "3\n-4 4 10",
+        "expectedOutput": "10",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "1\n-7",
+        "expectedOutput": "-7",
+        "isHidden": true
+      },
+      {
+        "input": "4\n1000 1000 -1000 5",
+        "expectedOutput": "1005",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 8
+  },
+  {
+    "slug": "rec-gcd",
+    "title": "Recursive GCD",
+    "category": "recursion",
+    "difficulty": "Easy",
+    "description": "Euclid's algorithm: gcd(a, 0) = a, otherwise gcd(a, b) = gcd(b, a % b).\nDefine `int gcd(int a, int b)` recursively.\n\nInput: two non-negative integers `a` and `b`, not both zero.\nOutput: their greatest common divisor.",
+    "exampleInput": "12 18",
+    "exampleOutput": "6",
+    "constraints": [
+      "0 <= a, b <= 1000000000",
+      "a and b are not both 0"
+    ],
+    "starterCode": "#include <stdio.h>\nint gcd(int a, int b) {\n    // TODO\n    return 0;\n}\n\nint main() {\n    int a, b;\n    scanf(\"%d %d\", &a, &b);\n    printf(\"%d\\n\", gcd(a, b));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "12 18",
+        "expectedOutput": "6",
+        "isHidden": false
+      },
+      {
+        "input": "17 5",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "0 9",
+        "expectedOutput": "9",
+        "isHidden": true
+      },
+      {
+        "input": "1000000000 250000000",
+        "expectedOutput": "250000000",
+        "isHidden": true
+      },
+      {
+        "input": "7 7",
+        "expectedOutput": "7",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 9
+  },
+  {
+    "slug": "rec-string-length",
+    "title": "Recursive String Length",
+    "category": "recursion",
+    "difficulty": "Easy",
+    "description": "Without `strlen`, define `int length(const char *s)`: if `*s` is the terminator `'\\0'` return 0, otherwise 1 + length(s + 1).\n\nInput: one word without spaces.\nOutput: its length.",
+    "exampleInput": "hello",
+    "exampleOutput": "5",
+    "constraints": [
+      "1 <= length <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\nint length(const char *s) {\n    // TODO\n    return 0;\n}\n\nint main() {\n    char s[101];\n    scanf(\"%100s\", s);\n    printf(\"%d\\n\", length(s));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "hello",
+        "expectedOutput": "5",
+        "isHidden": false
+      },
+      {
+        "input": "VirVerse",
+        "expectedOutput": "8",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "programming",
+        "expectedOutput": "11",
+        "isHidden": true
+      },
+      {
+        "input": "abcdefghijklmnopqrstuvwxyz",
+        "expectedOutput": "26",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 10
+  },
+  {
+    "slug": "rec-reverse-number",
+    "title": "Reverse a Number",
+    "category": "recursion",
+    "difficulty": "Medium",
+    "description": "Define `long long reverseNum(long long n, long long acc)` that builds the reversed number: if n is 0 return acc, else reverseNum(n / 10, acc * 10 + n % 10). Call it with acc = 0. Trailing zeros of n become leading zeros and vanish (120 -> 21).\n\nInput: one non-negative integer `n`.\nOutput: the reversed number.",
+    "exampleInput": "12345",
+    "exampleOutput": "54321",
+    "constraints": [
+      "0 <= n <= 999999999999"
+    ],
+    "starterCode": "#include <stdio.h>\nlong long reverseNum(long long n, long long acc) {\n    // TODO\n    return 0;\n}\n\nint main() {\n    long long n;\n    scanf(\"%lld\", &n);\n    printf(\"%lld\\n\", reverseNum(n, 0));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "12345",
+        "expectedOutput": "54321",
+        "isHidden": false
+      },
+      {
+        "input": "120",
+        "expectedOutput": "21",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "7",
+        "expectedOutput": "7",
+        "isHidden": true
+      },
+      {
+        "input": "999999999999",
+        "expectedOutput": "999999999999",
+        "isHidden": true
+      },
+      {
+        "input": "100000000000",
+        "expectedOutput": "1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 11
+  },
+  {
+    "slug": "rec-palindrome-string",
+    "title": "Palindrome Check",
+    "category": "recursion",
+    "difficulty": "Medium",
+    "description": "A palindrome reads the same forwards and backwards. Define `int isPal(const char *s, int left, int right)`: if left >= right return 1; if s[left] != s[right] return 0; otherwise check the inside isPal(s, left+1, right-1).\n\nInput: one word without spaces (case-sensitive).\nOutput: `Yes` if it is a palindrome, otherwise `No`.",
+    "exampleInput": "level",
+    "exampleOutput": "Yes",
+    "constraints": [
+      "1 <= length <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\nint isPal(const char *s, int left, int right) {\n    // TODO\n    return 0;\n}\n\nint main() {\n    char s[101];\n    int n = 0;\n    scanf(\"%100s\", s);\n    while (s[n] != '\\0') n++;\n    printf(isPal(s, 0, n - 1) ? \"Yes\\n\" : \"No\\n\");\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "level",
+        "expectedOutput": "Yes",
+        "isHidden": false
+      },
+      {
+        "input": "hello",
+        "expectedOutput": "No",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "Yes",
+        "isHidden": true
+      },
+      {
+        "input": "abba",
+        "expectedOutput": "Yes",
+        "isHidden": true
+      },
+      {
+        "input": "Aba",
+        "expectedOutput": "No",
+        "isHidden": true
+      },
+      {
+        "input": "racecar",
+        "expectedOutput": "Yes",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 12
+  },
+  {
+    "slug": "rec-binary-conversion",
+    "title": "Decimal to Binary",
+    "category": "recursion",
+    "difficulty": "Medium",
+    "description": "Define `void toBinary(int n)` that prints the binary form of n with no newline: if n > 1, first call toBinary(n / 2); then print `n % 2`. The number 0 prints `0`.\n\nInput: one non-negative integer `n`.\nOutput: its binary representation (main prints the newline).",
+    "exampleInput": "10",
+    "exampleOutput": "1010",
+    "constraints": [
+      "0 <= n <= 1000000000"
+    ],
+    "starterCode": "#include <stdio.h>\nvoid toBinary(int n) {\n    // TODO: recurse on n / 2 first, then print the bit\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    toBinary(n);\n    printf(\"\\n\");\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "10",
+        "expectedOutput": "1010",
+        "isHidden": false
+      },
+      {
+        "input": "5",
+        "expectedOutput": "101",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "1000000000",
+        "expectedOutput": "111011100110101100101000000000",
+        "isHidden": true
+      },
+      {
+        "input": "255",
+        "expectedOutput": "11111111",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 13
+  },
+  {
+    "slug": "rec-hanoi-count",
+    "title": "Tower of Hanoi Move Count",
+    "category": "recursion",
+    "difficulty": "Medium",
+    "description": "To move n disks you move n-1 disks aside, move the biggest one, then move n-1 disks back: moves(n) = 2 * moves(n-1) + 1, moves(0) = 0.\nDefine `long long hanoiMoves(int n)` recursively.\n\nInput: one integer `n` (number of disks).\nOutput: the minimum number of moves.",
+    "exampleInput": "3",
+    "exampleOutput": "7",
+    "constraints": [
+      "0 <= n <= 40"
+    ],
+    "starterCode": "#include <stdio.h>\nlong long hanoiMoves(int n) {\n    // TODO\n    return 0;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%lld\\n\", hanoiMoves(n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "3",
+        "expectedOutput": "7",
+        "isHidden": false
+      },
+      {
+        "input": "1",
+        "expectedOutput": "1",
+        "isHidden": false
+      },
+      {
+        "input": "0",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "10",
+        "expectedOutput": "1023",
+        "isHidden": true
+      },
+      {
+        "input": "40",
+        "expectedOutput": "1099511627775",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 14
+  },
+  {
+    "slug": "rec-array-max",
+    "title": "Maximum of an Array (Recursive)",
+    "category": "recursion",
+    "difficulty": "Medium",
+    "description": "Define `int maxOf(int arr[], int n)`: with 1 element it is that element; otherwise it is the larger of arr[n-1] and maxOf(arr, n-1).\n\nInput: `n`, then `n` integers.\nOutput: the maximum value.",
+    "exampleInput": "5\n3 9 2 7 1",
+    "exampleOutput": "9",
+    "constraints": [
+      "1 <= n <= 100",
+      "-100000 <= each element <= 100000"
+    ],
+    "starterCode": "#include <stdio.h>\nint maxOf(int arr[], int n) {\n    // TODO\n    return 0;\n}\n\nint main() {\n    int n, a[100];\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &a[i]);\n    printf(\"%d\\n\", maxOf(a, n));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n3 9 2 7 1",
+        "expectedOutput": "9",
+        "isHidden": false
+      },
+      {
+        "input": "3\n-5 -2 -9",
+        "expectedOutput": "-2",
+        "isHidden": false
+      },
+      {
+        "input": "1\n42",
+        "expectedOutput": "42",
+        "isHidden": true
+      },
+      {
+        "input": "4\n8 8 8 8",
+        "expectedOutput": "8",
+        "isHidden": true
+      },
+      {
+        "input": "6\n100000 -100000 0 5 99999 1",
+        "expectedOutput": "100000",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 15
+  },
+  {
+    "slug": "rec-binary-search",
+    "title": "Recursive Binary Search",
+    "category": "recursion",
+    "difficulty": "Medium",
+    "description": "Define `int search(int arr[], int lo, int hi, int target)` over a sorted ascending array: if lo > hi return -1; look at mid = (lo + hi) / 2; return mid if equal, otherwise search the left or right half recursively. Return the index of the target (all values are distinct).\n\nInput: `n`, then `n` sorted distinct integers, then the `target`.\nOutput: the 0-based index of the target, or -1 if absent.",
+    "exampleInput": "5\n1 3 5 7 9\n7",
+    "exampleOutput": "3",
+    "constraints": [
+      "1 <= n <= 100",
+      "Elements are distinct and sorted ascending"
+    ],
+    "starterCode": "#include <stdio.h>\nint search(int arr[], int lo, int hi, int target) {\n    // TODO\n    return -1;\n}\n\nint main() {\n    int n, t, a[100];\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &a[i]);\n    scanf(\"%d\", &t);\n    printf(\"%d\\n\", search(a, 0, n - 1, t));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "5\n1 3 5 7 9\n7",
+        "expectedOutput": "3",
+        "isHidden": false
+      },
+      {
+        "input": "5\n1 3 5 7 9\n4",
+        "expectedOutput": "-1",
+        "isHidden": false
+      },
+      {
+        "input": "1\n5\n5",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "4\n-10 -3 0 8\n-10",
+        "expectedOutput": "0",
+        "isHidden": true
+      },
+      {
+        "input": "4\n-10 -3 0 8\n8",
+        "expectedOutput": "3",
+        "isHidden": true
+      },
+      {
+        "input": "3\n2 4 6\n100",
+        "expectedOutput": "-1",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 16
+  },
+  {
+    "slug": "rec-reverse-string",
+    "title": "Reverse a String",
+    "category": "recursion",
+    "difficulty": "Medium",
+    "description": "Define `void rev(const char *s)` that prints the characters of s in reverse with no newline: if `*s` is the terminator do nothing; otherwise call rev(s + 1) first, then print `*s`.\n\nInput: one word without spaces.\nOutput: the word reversed.",
+    "exampleInput": "hello",
+    "exampleOutput": "olleh",
+    "constraints": [
+      "1 <= length <= 100"
+    ],
+    "starterCode": "#include <stdio.h>\nvoid rev(const char *s) {\n    // TODO: recurse first, then print\n}\n\nint main() {\n    char s[101];\n    scanf(\"%100s\", s);\n    rev(s);\n    printf(\"\\n\");\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "hello",
+        "expectedOutput": "olleh",
+        "isHidden": false
+      },
+      {
+        "input": "VirVerse",
+        "expectedOutput": "esreVriV",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "a",
+        "isHidden": true
+      },
+      {
+        "input": "abc123",
+        "expectedOutput": "321cba",
+        "isHidden": true
+      },
+      {
+        "input": "Level",
+        "expectedOutput": "leveL",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 17
+  },
+  {
+    "slug": "rec-hanoi-moves",
+    "title": "Tower of Hanoi Moves",
+    "category": "recursion",
+    "difficulty": "Hard",
+    "description": "Print every move needed to solve Tower of Hanoi. Define `void hanoi(int n, char from, char to, char via)`: if n == 0 return; hanoi(n-1, from, via, to); print the move of disk n; hanoi(n-1, via, to, from).\nEach move line has the form `Move disk D from X to Y`.\n\nInput: one integer `n`; the disks start on peg `A`, must end on peg `C`, and `B` is the spare.\nOutput: one move per line in order.",
+    "exampleInput": "1",
+    "exampleOutput": "Move disk 1 from A to C",
+    "constraints": [
+      "1 <= n <= 6"
+    ],
+    "starterCode": "#include <stdio.h>\nvoid hanoi(int n, char from, char to, char via) {\n    // TODO\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    hanoi(n, 'A', 'C', 'B');\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "1",
+        "expectedOutput": "Move disk 1 from A to C",
+        "isHidden": false
+      },
+      {
+        "input": "2",
+        "expectedOutput": "Move disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C",
+        "isHidden": false
+      },
+      {
+        "input": "3",
+        "expectedOutput": "Move disk 1 from A to C\nMove disk 2 from A to B\nMove disk 1 from C to B\nMove disk 3 from A to C\nMove disk 1 from B to A\nMove disk 2 from B to C\nMove disk 1 from A to C",
+        "isHidden": true
+      },
+      {
+        "input": "4",
+        "expectedOutput": "Move disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nMove disk 3 from A to B\nMove disk 1 from C to A\nMove disk 2 from C to B\nMove disk 1 from A to B\nMove disk 4 from A to C\nMove disk 1 from B to C\nMove disk 2 from B to A\nMove disk 1 from C to A\nMove disk 3 from B to C\nMove disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C",
+        "isHidden": true
+      },
+      {
+        "input": "6",
+        "expectedOutput": "Move disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nMove disk 3 from A to B\nMove disk 1 from C to A\nMove disk 2 from C to B\nMove disk 1 from A to B\nMove disk 4 from A to C\nMove disk 1 from B to C\nMove disk 2 from B to A\nMove disk 1 from C to A\nMove disk 3 from B to C\nMove disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nMove disk 5 from A to B\nMove disk 1 from C to A\nMove disk 2 from C to B\nMove disk 1 from A to B\nMove disk 3 from C to A\nMove disk 1 from B to C\nMove disk 2 from B to A\nMove disk 1 from C to A\nMove disk 4 from C to B\nMove disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nMove disk 3 from A to B\nMove disk 1 from C to A\nMove disk 2 from C to B\nMove disk 1 from A to B\nMove disk 6 from A to C\nMove disk 1 from B to C\nMove disk 2 from B to A\nMove disk 1 from C to A\nMove disk 3 from B to C\nMove disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nMove disk 4 from B to A\nMove disk 1 from C to A\nMove disk 2 from C to B\nMove disk 1 from A to B\nMove disk 3 from C to A\nMove disk 1 from B to C\nMove disk 2 from B to A\nMove disk 1 from C to A\nMove disk 5 from B to C\nMove disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C\nMove disk 3 from A to B\nMove disk 1 from C to A\nMove disk 2 from C to B\nMove disk 1 from A to B\nMove disk 4 from A to C\nMove disk 1 from B to C\nMove disk 2 from B to A\nMove disk 1 from C to A\nMove disk 3 from B to C\nMove disk 1 from A to B\nMove disk 2 from A to C\nMove disk 1 from B to C",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 18
+  },
+  {
+    "slug": "rec-permutations",
+    "title": "Permutations of a String",
+    "category": "recursion",
+    "difficulty": "Hard",
+    "description": "Print all arrangements of the letters of a word. The letters are distinct and given in increasing alphabetical order. Build each permutation position by position: for every letter not yet used, mark it used, place it, recurse to the next position, then unmark it (backtracking). Trying letters in order produces permutations in alphabetical order.\nSuggested: `void permute(const char *s, int n, int pos, char *cur, int *used)`.\n\nInput: one word of distinct lowercase letters in sorted order.\nOutput: every permutation, one per line, in alphabetical order.",
+    "exampleInput": "abc",
+    "exampleOutput": "abc\nacb\nbac\nbca\ncab\ncba",
+    "constraints": [
+      "1 <= length <= 5",
+      "Letters are distinct, lowercase, sorted"
+    ],
+    "starterCode": "#include <stdio.h>\nvoid permute(const char *s, int n, int pos, char *cur, int *used) {\n    // TODO: backtracking\n}\n\nint main() {\n    char s[10], cur[10];\n    int used[10] = {0}, n = 0;\n    scanf(\"%9s\", s);\n    while (s[n] != '\\0') n++;\n    permute(s, n, 0, cur, used);\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "abc",
+        "expectedOutput": "abc\nacb\nbac\nbca\ncab\ncba",
+        "isHidden": false
+      },
+      {
+        "input": "ab",
+        "expectedOutput": "ab\nba",
+        "isHidden": false
+      },
+      {
+        "input": "a",
+        "expectedOutput": "a",
+        "isHidden": true
+      },
+      {
+        "input": "abcd",
+        "expectedOutput": "abcd\nabdc\nacbd\nacdb\nadbc\nadcb\nbacd\nbadc\nbcad\nbcda\nbdac\nbdca\ncabd\ncadb\ncbad\ncbda\ncdab\ncdba\ndabc\ndacb\ndbac\ndbca\ndcab\ndcba",
+        "isHidden": true
+      },
+      {
+        "input": "acemz",
+        "expectedOutput": "acemz\nacezm\nacmez\nacmze\naczem\naczme\naecmz\naeczm\naemcz\naemzc\naezcm\naezmc\namcez\namcze\namecz\namezc\namzce\namzec\nazcem\nazcme\nazecm\nazemc\nazmce\nazmec\ncaemz\ncaezm\ncamez\ncamze\ncazem\ncazme\nceamz\nceazm\ncemaz\ncemza\ncezam\ncezma\ncmaez\ncmaze\ncmeaz\ncmeza\ncmzae\ncmzea\nczaem\nczame\nczeam\nczema\nczmae\nczmea\neacmz\neaczm\neamcz\neamzc\neazcm\neazmc\necamz\necazm\necmaz\necmza\neczam\neczma\nemacz\nemazc\nemcaz\nemcza\nemzac\nemzca\nezacm\nezamc\nezcam\nezcma\nezmac\nezmca\nmacez\nmacze\nmaecz\nmaezc\nmazce\nmazec\nmcaez\nmcaze\nmceaz\nmceza\nmczae\nmczea\nmeacz\nmeazc\nmecaz\nmecza\nmezac\nmezca\nmzace\nmzaec\nmzcae\nmzcea\nmzeac\nmzeca\nzacem\nzacme\nzaecm\nzaemc\nzamce\nzamec\nzcaem\nzcame\nzceam\nzcema\nzcmae\nzcmea\nzeacm\nzeamc\nzecam\nzecma\nzemac\nzemca\nzmace\nzmaec\nzmcae\nzmcea\nzmeac\nzmeca",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 19
+  },
+  {
+    "slug": "rec-subset-sum-count",
+    "title": "Count Subsets with Given Sum",
+    "category": "recursion",
+    "difficulty": "Hard",
+    "description": "Given `n` numbers, count the subsets (including the empty one, which has sum 0) whose elements add up to `target`. For each element you either include it or skip it. Define `int count(int arr[], int n, int idx, int remaining)`: at idx == n return 1 if remaining is 0 else 0; otherwise add count(include) and count(skip). Subsets are chosen by position, so equal values at different positions count separately.\n\nInput: `n`, then `n` integers, then the `target`.\nOutput: the number of subsets.",
+    "exampleInput": "4\n1 2 3 4\n5",
+    "exampleOutput": "2",
+    "constraints": [
+      "0 <= n <= 15",
+      "-100 <= each element <= 100",
+      "-1000 <= target <= 1000"
+    ],
+    "starterCode": "#include <stdio.h>\nint count(int arr[], int n, int idx, int remaining) {\n    // TODO: include or skip arr[idx]\n    return 0;\n}\n\nint main() {\n    int n, t, a[15];\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &a[i]);\n    scanf(\"%d\", &t);\n    printf(\"%d\\n\", count(a, n, 0, t));\n    return 0;\n}\n",
+    "testCases": [
+      {
+        "input": "4\n1 2 3 4\n5",
+        "expectedOutput": "2",
+        "isHidden": false
+      },
+      {
+        "input": "3\n2 2 2\n4",
+        "expectedOutput": "3",
+        "isHidden": false
+      },
+      {
+        "input": "0\n0",
+        "expectedOutput": "1",
+        "isHidden": true
+      },
+      {
+        "input": "3\n1 -1 0\n0",
+        "expectedOutput": "4",
+        "isHidden": true
+      },
+      {
+        "input": "15\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15\n30",
+        "expectedOutput": "186",
+        "isHidden": true
+      }
+    ],
+    "topicOrder": 14,
+    "questionOrder": 20
+  }
+]
