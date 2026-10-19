@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { body } from 'express-validator';
-import { execute } from '../controllers/executeController.js';
+import { createInteractiveRunnerTicket, execute } from '../controllers/executeController.js';
 import protect from '../middleware/auth.js';
 import { handleValidation } from '../middleware/validate.js';
 import { MAX_CODE_LENGTH, MAX_STDIN_LENGTH } from '../services/executor/limits.js';
@@ -28,5 +28,6 @@ const rules = [
 ];
 
 router.post('/', protect, runLimiter, rules, handleValidation, execute);
+router.post('/interactive-ticket', protect, runLimiter, createInteractiveRunnerTicket);
 
 export default router;

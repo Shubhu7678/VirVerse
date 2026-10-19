@@ -35,7 +35,7 @@ const baseEnv = (workDir) => ({
   HOME: workDir,
 });
 
-export function compile(workDir, { interactive = false } = {}) {
+export function compile(workDir, { interactive = false, signal } = {}) {
   fs.mkdirSync(path.join(workDir, 'tmp'), { recursive: true });
   const profile = writeProfile(workDir, { allowFork: true });
   return runProcess({
@@ -48,10 +48,11 @@ export function compile(workDir, { interactive = false } = {}) {
     env: baseEnv(workDir),
     timeoutMs: LIMITS.compileTimeoutMs,
     maxOutputBytes: LIMITS.maxCompileOutputBytes,
+    signal,
   });
 }
 
-export async function run(workDir, input) {
+export async function run(workDir, input, { signal } = {}) {
   const profile = writeProfile(workDir, { allowFork: false });
   const cpuSeconds = Math.ceil(LIMITS.runTimeoutMs / 1000) + 1;
   // Each run gets its own empty directory so files created by one test never leak into the next.
@@ -69,6 +70,7 @@ export async function run(workDir, input) {
       timeoutMs: LIMITS.runTimeoutMs,
       maxOutputBytes: LIMITS.maxOutputBytes,
       memoryMb: LIMITS.memoryMb,
+      signal,
     });
   } finally {
     fs.rmSync(runDir, { recursive: true, force: true });

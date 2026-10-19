@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process';
+import { StringDecoder } from 'node:string_decoder';
 
 export function killProcessGroup(child) {
   try {
@@ -33,8 +34,13 @@ export function runProcess({
   maxOutputBytes,
   memoryMb,
   onTimeout,
+  signal,
 }) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(new Error('Execution request was cancelled.'));
+      return;
+    }
     const started = Date.now();
     const child = spawn(command, args, {
       cwd,
@@ -49,23 +55,36 @@ export function runProcess({
     let timedOut = false;
     let memoryExceeded = false;
     let settled = false;
+    let aborted = false;
+    let stopped = false;
+    let outputBytes = 0;
 
     const stop = () => {
+      if (stopped) return;
+      stopped = true;
       killProcessGroup(child);
       onTimeout?.();
     };
+    const abort = () => {
+      aborted = true;
+      stop();
+    };
+    signal?.addEventListener('abort', abort, { once: true });
 
     const collect = (stream, append) => {
-      stream.setEncoding('utf8');
+      const decoder = new StringDecoder('utf8');
       stream.on('data', (chunk) => {
         if (outputExceeded) return;
-        const room = maxOutputBytes - (stdout.length + stderr.length);
-        append(chunk.slice(0, Math.max(room, 0)));
+        const room = Math.max(maxOutputBytes - outputBytes, 0);
+        const accepted = chunk.subarray(0, room);
+        outputBytes += accepted.length;
+        append(decoder.write(accepted));
         if (chunk.length > room) {
           outputExceeded = true;
           stop();
         }
       });
+      stream.on('end', () => append(decoder.end()));
     };
     collect(child.stdout, (c) => (stdout += c));
     collect(child.stderr, (c) => (stderr += c));
@@ -90,6 +109,7 @@ export function runProcess({
     const finish = (result) => {
       if (settled) return;
       settled = true;
+      signal?.removeEventListener('abort', abort);
       clearTimeout(timer);
       if (poller) clearInterval(poller);
       resolve({
@@ -98,6 +118,7 @@ export function runProcess({
         outputExceeded,
         timedOut,
         memoryExceeded,
+        aborted,
         timeMs: Date.now() - started,
         ...result,
       });

@@ -24,7 +24,7 @@ export async function isAvailable() {
 }
 
 // The work dir is mounted into a throwaway container with no network.
-export function compile(workDir, { interactive = false } = {}) {
+export function compile(workDir, { interactive = false, signal } = {}) {
   const name = uniqueName('vv-c');
   return runProcess({
     command: 'docker',
@@ -39,11 +39,12 @@ export function compile(workDir, { interactive = false } = {}) {
     timeoutMs: LIMITS.compileTimeoutMs,
     maxOutputBytes: LIMITS.maxCompileOutputBytes,
     onTimeout: killContainer(name),
+    signal,
   });
 }
 
 // The program runs read-only, memory/CPU/pid limited, with no network.
-export function run(workDir, input) {
+export function run(workDir, input, { signal } = {}) {
   const name = uniqueName('vv-r');
   const mem = `${LIMITS.memoryMb}m`;
   return runProcess({
@@ -62,6 +63,7 @@ export function run(workDir, input) {
     timeoutMs: LIMITS.runTimeoutMs + 1500, // headroom for container start-up
     maxOutputBytes: LIMITS.maxOutputBytes,
     onTimeout: killContainer(name),
+    signal,
   });
 }
 

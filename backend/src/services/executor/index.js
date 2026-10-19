@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import * as docker from './drivers/docker.js';
 import * as macSandbox from './drivers/macSandbox.js';
+import * as remote from './drivers/remote.js';
 import { LIMITS } from './limits.js';
 import { killProcessGroup, processMemoryMb } from './runProcess.js';
 
@@ -15,6 +16,11 @@ async function pickDriver() {
   const wanted = process.env.EXECUTION_DRIVER;
   const production = process.env.NODE_ENV === 'production';
 
+  if (process.env.VERCEL && wanted !== 'remote') return null;
+  if (wanted === 'remote') {
+    if (await remote.isAvailable()) return { name: 'remote', ...remote };
+    return null;
+  }
   if (wanted !== 'local' && (await docker.isAvailable())) return { name: 'docker', ...docker };
   if (wanted !== 'docker' && !production && macSandbox.isAvailable()) return { name: 'local', ...macSandbox };
   return null;
@@ -39,7 +45,10 @@ export class ExecutorError extends Error {
 let active = 0;
 const waiting = [];
 
-function acquire() {
+function acquire(signal) {
+  if (signal?.aborted) {
+    return Promise.reject(new ExecutorError('Execution request was cancelled.', 499));
+  }
   if (active < LIMITS.maxConcurrent) {
     active += 1;
     return Promise.resolve();
@@ -47,13 +56,32 @@ function acquire() {
   if (waiting.length >= LIMITS.maxQueued) {
     return Promise.reject(new ExecutorError('The code runner is busy. Please try again in a moment.'));
   }
-  return new Promise((resolve) => waiting.push(resolve));
+  return new Promise((resolve, reject) => {
+    const waiter = { resolve, reject, signal, abort: null };
+    if (signal) {
+      waiter.abort = () => {
+        const index = waiting.indexOf(waiter);
+        if (index !== -1) waiting.splice(index, 1);
+        reject(new ExecutorError('Execution request was cancelled.', 499));
+      };
+      signal.addEventListener('abort', waiter.abort, { once: true });
+    }
+    waiting.push(waiter);
+  });
 }
 
 function release() {
-  const next = waiting.shift();
-  if (next) next();
-  else active -= 1;
+  while (waiting.length) {
+    const next = waiting.shift();
+    next.signal?.removeEventListener('abort', next.abort);
+    if (next.signal?.aborted) {
+      next.reject(new ExecutorError('Execution request was cancelled.', 499));
+      continue;
+    }
+    next.resolve();
+    return;
+  }
+  active -= 1;
 }
 
 export function classifyRun(run) {
@@ -73,21 +101,34 @@ function cleanCompileOutput(raw, workDir) {
  * Compiles `code` and runs it once for every entry of `inputs` (stdin).
  * Returns { compile: { ok, output }, runs: [...] }; `runs` is empty if compilation fails.
  */
-export async function executeProgram({ code, inputs }) {
+export async function executeProgram({ code, inputs, signal }) {
   const driver = await getDriver();
   if (!driver) {
     throw new ExecutorError(
-      'Code execution is not configured on this server. Build the Docker runner image (see backend/runner/Dockerfile).',
+      'Code execution is not configured. Configure the remote runner or a local Docker runner.',
     );
   }
 
-  await acquire();
-  const workDir = await fs.mkdtemp(path.join(os.tmpdir(), 'virvese-'));
+  if (driver.name === 'remote') {
+    try {
+      return await driver.executeProgram({ code, inputs });
+    } catch (error) {
+      console.error('Remote execution request failed:', error.message);
+      throw new ExecutorError('The remote code runner is temporarily unavailable.', 503);
+    }
+  }
+
+  await acquire(signal);
+  const workRoot = process.env.EXECUTION_WORKDIR || os.tmpdir();
+  let workDir;
   try {
+    await fs.mkdir(workRoot, { recursive: true });
+    workDir = await fs.mkdtemp(path.join(workRoot, 'virvese-'));
     await fs.chmod(workDir, 0o777);
     await fs.writeFile(path.join(workDir, 'main.c'), code);
 
-    const compiled = await driver.compile(workDir);
+    const compiled = await driver.compile(workDir, { signal });
+    if (compiled.aborted) throw new ExecutorError('Execution request was cancelled.', 499);
     if (compiled.spawnError) throw new ExecutorError('Could not start the compiler.');
     const output = cleanCompileOutput(compiled.stdout + compiled.stderr, workDir);
     const ok = compiled.exitCode === 0 && !compiled.timedOut;
@@ -100,24 +141,35 @@ export async function executeProgram({ code, inputs }) {
     await fs.chmod(path.join(workDir, 'main'), 0o755);
     const runs = [];
     for (const input of inputs) {
-      runs.push(await driver.run(workDir, input));
+      const run = await driver.run(workDir, input, { signal });
+      if (run.aborted) throw new ExecutorError('Execution request was cancelled.', 499);
+      runs.push(run);
     }
     return { compile: { ok: true, output }, runs };
   } finally {
     release();
-    await fs.rm(workDir, { recursive: true, force: true });
+    if (workDir) {
+      try {
+        await fs.rm(workDir, { recursive: true, force: true });
+      } catch (error) {
+        console.error('Code runner workspace cleanup failed:', error);
+      }
+    }
   }
 }
 
-export async function startInteractiveProgram({ code, onOutput }) {
+export async function startInteractiveProgram({ code, onOutput, signal }) {
   const driver = await getDriver();
   if (!driver) {
     throw new ExecutorError(
-      'Code execution is not configured on this server. Build the Docker runner image (see backend/runner/Dockerfile).',
+      'Code execution is not configured. Configure the remote runner or a local Docker runner.',
     );
   }
+  if (driver.name === 'remote') {
+    throw new ExecutorError('Interactive runs must connect directly to the configured runner WebSocket.');
+  }
 
-  await acquire();
+  await acquire(signal);
   let workDir;
   let released = false;
   const releaseSlot = () => {
@@ -126,7 +178,9 @@ export async function startInteractiveProgram({ code, onOutput }) {
     release();
   };
   try {
-    workDir = await fs.mkdtemp(path.join(os.tmpdir(), 'virvese-'));
+    const workRoot = process.env.EXECUTION_WORKDIR || os.tmpdir();
+    await fs.mkdir(workRoot, { recursive: true });
+    workDir = await fs.mkdtemp(path.join(workRoot, 'virvese-'));
     await fs.chmod(workDir, 0o777);
     // Pipe-based terminals do not flush printf prompts without a trailing newline.
     await fs.writeFile(
@@ -135,7 +189,8 @@ export async function startInteractiveProgram({ code, onOutput }) {
     );
     await fs.writeFile(path.join(workDir, 'main.c'), code);
 
-    const compiled = await driver.compile(workDir, { interactive: true });
+    const compiled = await driver.compile(workDir, { interactive: true, signal });
+    if (compiled.aborted) throw new ExecutorError('Execution request was cancelled.', 499);
     if (compiled.spawnError) throw new ExecutorError('Could not start the compiler.');
     const output = cleanCompileOutput(compiled.stdout + compiled.stderr, workDir);
     if (compiled.exitCode !== 0 || compiled.timedOut) {
@@ -170,6 +225,9 @@ export async function startInteractiveProgram({ code, onOutput }) {
       killProcessGroup(child);
       void cleanupDriver();
     };
+    const abort = () => stop();
+    signal?.addEventListener('abort', abort, { once: true });
+    if (signal?.aborted) abort();
     const emit = (stream, data) => {
       const chunk = Buffer.isBuffer(data) ? data : Buffer.from(data);
       const available = Math.max(LIMITS.maxOutputBytes - outputBytes, 0);
@@ -208,6 +266,7 @@ export async function startInteractiveProgram({ code, onOutput }) {
     const finish = async ({ exitCode, signal, spawnError = null }) => {
       if (settled) return;
       settled = true;
+      signal?.removeEventListener('abort', abort);
       clearTimeout(timer);
       if (poller) clearInterval(poller);
       try {

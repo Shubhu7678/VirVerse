@@ -1,0 +1,33 @@
+services:
+  execution-runner:
+    build:
+      context: ..
+      dockerfile: runner-service.Dockerfile
+    image: virvese-execution-service:latest
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    mem_limit: 1g
+    cpus: "1.0"
+    pids_limit: 128
+    environment:
+      PORT: "5002"
+      NODE_ENV: production
+      EXECUTION_DRIVER: docker
+      RUNNER_IMAGE: virvese-c-runner:latest
+      RUNNER_SERVICE_SECRET: ${RUNNER_SERVICE_SECRET:?set RUNNER_SERVICE_SECRET}
+      RUNNER_TICKET_SECRET: ${RUNNER_TICKET_SECRET:?set RUNNER_TICKET_SECRET}
+      RUNNER_ALLOWED_ORIGIN: ${RUNNER_ALLOWED_ORIGIN:?set RUNNER_ALLOWED_ORIGIN}
+      EXECUTION_WORKDIR: /srv/virvese/work
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /srv/virvese/work:/srv/virvese/work
+    ports:
+      - "127.0.0.1:5002:5002"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:5002/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
