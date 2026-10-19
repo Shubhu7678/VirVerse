@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { API_BASE_URL } from '../api/client'
 
 const emptyRun = () => ({
   running: false,
@@ -22,8 +23,10 @@ export default function useInteractiveRun() {
 
     completeRef.current = false
     setRun({ ...emptyRun(), running: true })
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const socket = new WebSocket(`${protocol}//${window.location.host}/api/execute/interactive`)
+    const socketUrl = new URL(API_BASE_URL, window.location.origin)
+    socketUrl.protocol = socketUrl.protocol === 'https:' ? 'wss:' : 'ws:'
+    socketUrl.pathname = `${socketUrl.pathname.replace(/\/$/, '')}/execute/interactive`
+    const socket = new WebSocket(socketUrl)
     socketRef.current = socket
 
     socket.addEventListener('open', () => {
