@@ -1,7 +1,9 @@
+import { randomBytes, randomUUID } from 'node:crypto';
 import User from '../models/User.js';
 import Membership from '../models/OrganizationMembership.js';
 import { setAuthCookie, clearAuthCookie } from '../utils/token.js';
-import { DEMO_EMAIL, DEMO_PASSWORD } from '../config/demo.js';
+
+const DEMO_SESSION_MS = 24 * 60 * 60 * 1000;
 
 export async function signup(req, res) {
   const { name, email, password } = req.body;
@@ -21,7 +23,7 @@ export async function login(req, res) {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email }).select('+password');
-  if (!user || !(await user.comparePassword(password))) {
+  if (!user || user.isDemo || !(await user.comparePassword(password))) {
     return res.status(401).json({ message: 'Invalid email or password' });
   }
 
@@ -46,12 +48,20 @@ export async function me(req, res) {
   });
 }
 
-export async function demoCredentials(_req, res) {
-  const user = await User.exists({ email: DEMO_EMAIL, isDemo: true });
-  if (!user) {
-    return res.status(503).json({ message: 'The demo account is not ready yet.' });
-  }
+export async function startDemoSession(_req, res) {
+  const demoExpiresAt = new Date(Date.now() + DEMO_SESSION_MS);
+  const user = await User.create({
+    name: 'Demo Learner',
+    email: `demo-${randomUUID()}@demo.virverse.invalid`,
+    password: randomBytes(32).toString('hex'),
+    isDemo: true,
+    demoExpiresAt,
+  });
 
+  setAuthCookie(res, user._id, {
+    maxAge: DEMO_SESSION_MS,
+    expiresIn: Math.floor(DEMO_SESSION_MS / 1000),
+  });
   res.set('Cache-Control', 'no-store');
-  res.json({ email: DEMO_EMAIL, password: DEMO_PASSWORD });
+  res.status(201).json({ user: user.toSafeObject() });
 }

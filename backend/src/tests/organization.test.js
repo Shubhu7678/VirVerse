@@ -79,6 +79,7 @@ before(async () => {
     email: 'demo@org.test',
     password: 'password1',
     isDemo: true,
+    demoExpiresAt: new Date(Date.now() + 60 * 60 * 1000),
   });
   const demoLogin = await fetch(base + '/api/auth/login', {
     method: 'POST',

@@ -26,7 +26,7 @@ const progressState = (percent) => (percent === 0 ? 'not-started' : percent === 
 export async function listTasks(req, res) {
   const expandedAccess = await hasOrganizationLearningAccess(req.user, req.get('x-org-id'));
   const taskFilter = req.user.isDemo
-    ? { category: CATEGORIES[0].slug, questionOrder: { $lte: 10 } }
+    ? { category: CATEGORIES[0].slug, questionOrder: { $gte: 1, $lte: 10 } }
     : expandedAccess
       ? {}
       : { category: CATEGORIES[0].slug };

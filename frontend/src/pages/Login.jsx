@@ -4,10 +4,10 @@ import AuthLayout from '../components/AuthLayout'
 import Input from '../components/Input'
 import Button from '../components/Button'
 import { useAuth } from '../context/AuthContext'
-import api, { getErrorMessage } from '../api/client'
+import { getErrorMessage } from '../api/client'
 
 export default function Login() {
-  const { login } = useAuth()
+  const { login, startDemo } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const redirectTo = location.state?.from?.pathname || '/dashboard'
@@ -48,15 +48,14 @@ export default function Login() {
     }
   }
 
-  const fillDemoCredentials = async () => {
+  const beginDemo = async () => {
     setServerError('')
     setDemoLoading(true)
     try {
-      const { data } = await api.get('/auth/demo-credentials')
-      setForm({ email: data.email, password: data.password })
-      setErrors({})
+      await startDemo()
+      navigate('/dashboard', { replace: true })
     } catch (err) {
-      setServerError(getErrorMessage(err, 'Could not load demo credentials'))
+      setServerError(getErrorMessage(err, 'Could not start the demo'))
     } finally {
       setDemoLoading(false)
     }
@@ -107,15 +106,15 @@ export default function Login() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-semibold text-slate-800">Want to explore first?</p>
-              <p className="mt-0.5 text-xs text-slate-600">Demo access includes the first 10 C Basics questions.</p>
+              <p className="mt-0.5 text-xs text-slate-600">Start a private demo with the first 10 C Basics questions.</p>
             </div>
             <button
               type="button"
-              onClick={fillDemoCredentials}
+              onClick={beginDemo}
               disabled={demoLoading || loading}
               className="shrink-0 rounded-lg border border-brand-200 bg-white px-3 py-2 text-sm font-semibold text-brand-700 transition hover:border-brand-300 hover:bg-brand-50 focus:outline-none focus:ring-4 focus:ring-brand-100 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {demoLoading ? 'Loading demo…' : 'Fill demo credentials'}
+              {demoLoading ? 'Starting demo…' : 'Try the demo'}
             </button>
           </div>
         </div>

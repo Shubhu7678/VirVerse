@@ -30,6 +30,11 @@ export function AuthProvider({ children }) {
     await loadSession()
   }, [loadSession])
 
+  const startDemo = useCallback(async () => {
+    await api.post('/auth/demo')
+    await loadSession()
+  }, [loadSession])
+
   const signup = useCallback(async (details) => {
     await api.post('/auth/signup', details)
     await loadSession()
@@ -46,8 +51,8 @@ export function AuthProvider({ children }) {
   }, [])
 
   const value = useMemo(
-    () => ({ user, memberships, isSuperAdmin: user?.platformRole === 'super_admin', loading, login, signup, logout, loadSession, updateGamification }),
-    [user, memberships, loading, login, signup, logout, loadSession, updateGamification],
+    () => ({ user, memberships, isSuperAdmin: user?.platformRole === 'super_admin', loading, login, startDemo, signup, logout, loadSession, updateGamification }),
+    [user, memberships, loading, login, startDemo, signup, logout, loadSession, updateGamification],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

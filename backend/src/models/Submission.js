@@ -18,6 +18,7 @@ const submissionSchema = new mongoose.Schema(
     status: { type: String, required: true, enum: SUBMISSION_STATUSES },
     passedCount: { type: Number, default: 0 },
     totalCount: { type: Number, default: 0 },
+    expiresAt: { type: Date, default: null },
   },
   { timestamps: true }
 );
@@ -25,5 +26,6 @@ const submissionSchema = new mongoose.Schema(
 submissionSchema.index({ user: 1, task: 1, status: 1 });
 submissionSchema.index({ user: 1, createdAt: -1 });
 submissionSchema.index({ organization: 1, user: 1, createdAt: -1 });
+submissionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 export default mongoose.model('Submission', submissionSchema);

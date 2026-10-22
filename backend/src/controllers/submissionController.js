@@ -143,6 +143,7 @@ export async function createSubmission(req, res) {
     status,
     passedCount,
     totalCount: task.testCases.length,
+    ...(req.user.isDemo ? { expiresAt: req.user.demoExpiresAt } : {}),
   });
   const reward = status === 'Accepted' ? await awardTaskPoints(req.user._id, task) : null;
 

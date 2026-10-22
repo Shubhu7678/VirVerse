@@ -10,6 +10,9 @@ export default async function protect(req, res, next) {
     const { id } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(id);
     if (!user) return res.status(401).json({ message: 'Not authenticated' });
+    if (user.isDemo && (!user.demoExpiresAt || user.demoExpiresAt <= new Date())) {
+      return res.status(401).json({ message: 'This demo session has expired. Start a new demo to continue.' });
+    }
 
     req.user = user;
     next();

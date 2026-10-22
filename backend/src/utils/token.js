@@ -2,21 +2,21 @@ import jwt from 'jsonwebtoken';
 
 export const COOKIE_NAME = 'token';
 
-const cookieOptions = () => ({
+const cookieOptions = (maxAge = 7 * 24 * 60 * 60 * 1000) => ({
   httpOnly: true,
   sameSite: 'lax',
   secure: process.env.NODE_ENV === 'production',
-  maxAge: 7 * 24 * 60 * 60 * 1000,
+  maxAge,
 });
 
-export function signToken(userId) {
+export function signToken(userId, expiresIn = process.env.JWT_EXPIRES_IN || '7d') {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+    expiresIn,
   });
 }
 
-export function setAuthCookie(res, userId) {
-  res.cookie(COOKIE_NAME, signToken(userId), cookieOptions());
+export function setAuthCookie(res, userId, { maxAge, expiresIn } = {}) {
+  res.cookie(COOKIE_NAME, signToken(userId, expiresIn), cookieOptions(maxAge));
 }
 
 export function clearAuthCookie(res) {
