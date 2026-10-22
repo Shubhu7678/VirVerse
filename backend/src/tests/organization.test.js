@@ -74,6 +74,18 @@ before(async () => {
     cookies[name] = result.headers.get('set-cookie').split(';')[0];
     users[name] = await User.findOne({ email: `${name}@org.test` });
   }
+  await User.create({
+    name: 'Demo User',
+    email: 'demo@org.test',
+    password: 'password1',
+    isDemo: true,
+  });
+  const demoLogin = await fetch(base + '/api/auth/login', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ email: 'demo@org.test', password: 'password1' }),
+  });
+  cookies.demo = demoLogin.headers.get('set-cookie').split(';')[0];
 
   org = await Organization.create({ name: 'North College', slug: 'north-college', status: 'active' });
   secondOrg = await Organization.create({ name: 'South College', slug: 'south-college', status: 'active' });
@@ -92,8 +104,18 @@ before(async () => {
     { user: users.other._id, organization: secondOrg._id, role: 'org_admin' },
   ]);
   await Task.create([
-    { slug: 'test-basics', title: 'Basics', category: 'basics', difficulty: 'Easy', description: 'Basics', exampleOutput: '0', starterCode: 'int main(void){}', testCases: [] },
-    { slug: 'test-variables', title: 'Variables', category: 'variables', difficulty: 'Easy', description: 'Variables', exampleOutput: '0', starterCode: 'int main(void){}', testCases: [] },
+    ...Array.from({ length: 11 }, (_, index) => ({
+      slug: index === 0 ? 'test-basics' : `test-basics-${index + 1}`,
+      title: `Basics ${index + 1}`,
+      category: 'basics',
+      difficulty: 'Easy',
+      description: 'Basics',
+      exampleOutput: '0',
+      starterCode: 'int main(void){}',
+      questionOrder: index + 1,
+      testCases: [],
+    })),
+    { slug: 'test-variables', title: 'Variables', category: 'variables', difficulty: 'Easy', description: 'Variables', exampleOutput: '0', starterCode: 'int main(void){}', questionOrder: 1, testCases: [] },
   ]);
 });
 
@@ -110,6 +132,14 @@ test('standalone users can access only topic one; org members need their selecte
   assert.equal(result.body.categories.find((c) => c.slug === 'variables').locked, true);
   assert.equal((await call('GET', '/api/tasks/test-variables', { user: 'standalone' })).status, 403);
   assert.equal((await call('GET', '/api/tasks/test-basics', { user: 'standalone' })).status, 200);
+
+  result = await call('GET', '/api/tasks', { user: 'demo' });
+  assert.deepEqual(result.body.tasks.map((task) => task.category), ['basics']);
+  assert.equal(result.body.tasks.length, 10);
+  assert.equal(result.body.categories.find((c) => c.slug === 'basics').total, 10);
+  assert.equal((await call('GET', '/api/tasks/test-basics', { user: 'demo' })).status, 200);
+  assert.equal((await call('GET', '/api/tasks/test-basics-11', { user: 'demo' })).status, 403);
+  assert.equal((await call('GET', '/api/tasks/test-variables', { user: 'demo' })).status, 403);
 
   result = await call('GET', '/api/tasks', { user: 'student' });
   assert.deepEqual(result.body.tasks.map((task) => task.category), ['basics']);

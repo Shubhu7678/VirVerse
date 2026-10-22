@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import Membership from '../models/OrganizationMembership.js';
 import { setAuthCookie, clearAuthCookie } from '../utils/token.js';
+import { DEMO_EMAIL, DEMO_PASSWORD } from '../config/demo.js';
 
 export async function signup(req, res) {
   const { name, email, password } = req.body;
@@ -43,4 +44,14 @@ export async function me(req, res) {
       .filter((m) => m.organization)
       .map((m) => ({ organization: m.organization, role: m.role })),
   });
+}
+
+export async function demoCredentials(_req, res) {
+  const user = await User.exists({ email: DEMO_EMAIL, isDemo: true });
+  if (!user) {
+    return res.status(503).json({ message: 'The demo account is not ready yet.' });
+  }
+
+  res.set('Cache-Control', 'no-store');
+  res.json({ email: DEMO_EMAIL, password: DEMO_PASSWORD });
 }

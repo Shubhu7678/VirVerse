@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { body } from 'express-validator';
-import { createSubmission, listSubmissions } from '../controllers/submissionController.js';
+import { createSubmission, listSubmissionActivity, listSubmissions } from '../controllers/submissionController.js';
 import protect from '../middleware/auth.js';
 import { handleValidation } from '../middleware/validate.js';
 import { MAX_CODE_LENGTH } from '../services/executor/limits.js';
@@ -29,6 +29,7 @@ const rules = [
 ];
 
 router.use(protect);
+router.get('/activity', listSubmissionActivity);
 router.get('/', listSubmissions);
 router.post('/', submitLimiter, rules, handleValidation, createSubmission);
 

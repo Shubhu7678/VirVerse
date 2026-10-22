@@ -25,8 +25,13 @@ const progressState = (percent) => (percent === 0 ? 'not-started' : percent === 
 
 export async function listTasks(req, res) {
   const expandedAccess = await hasOrganizationLearningAccess(req.user, req.get('x-org-id'));
+  const taskFilter = req.user.isDemo
+    ? { category: CATEGORIES[0].slug, questionOrder: { $lte: 10 } }
+    : expandedAccess
+      ? {}
+      : { category: CATEGORIES[0].slug };
   const [tasks, statusMap] = await Promise.all([
-    Task.find(expandedAccess ? {} : { category: CATEGORIES[0].slug })
+    Task.find(taskFilter)
       .select('-testCases -description -starterCode').sort({ order: 1 }).lean(),
     getStatusMap(req.user._id),
   ]);
@@ -97,7 +102,10 @@ export async function getTask(req, res) {
   }
 
   const statusMap = await getStatusMap(req.user._id);
-  const next = await Task.findOne({ order: { $gt: task.order } }).sort({ order: 1 }).select('slug').lean();
+  const nextFilter = req.user.isDemo
+    ? { category: CATEGORIES[0].slug, questionOrder: { $gt: task.questionOrder, $lte: 10 } }
+    : { order: { $gt: task.order } };
+  const next = await Task.findOne(nextFilter).sort({ order: 1 }).select('slug').lean();
   const sampleTests = task.testCases
     .filter((tc) => !tc.isHidden)
     .map(({ input, expectedOutput }) => ({ input, expectedOutput }));
@@ -111,14 +119,37 @@ export async function getTask(req, res) {
       category: task.category,
       difficulty: task.difficulty,
       description: task.description,
+      ...(task.category === 'basics' && task.questionOrder <= 20 ? { hint: task.hint } : {}),
       exampleInput: task.exampleInput,
       exampleOutput: task.exampleOutput,
       constraints: task.constraints,
       starterCode: task.starterCode,
       sampleTests,
       hiddenTestCount: task.testCases.length - sampleTests.length,
+      solutionAvailable: task.category === 'basics' && task.questionOrder >= 1 && task.questionOrder <= 20,
       status: statusMap.get(String(task._id))?.status || 'todo',
       nextSlug: next?.slug || null,
     },
   });
+}
+
+export async function getTaskSolution(req, res) {
+  const task = await Task.findOne({ slug: req.params.slug })
+    .select('+solution +solutionNotes')
+    .lean();
+  if (!task) return res.status(404).json({ message: 'Task not found' });
+  if (task.category !== 'basics' || task.questionOrder < 1 || task.questionOrder > 20) {
+    return res.status(404).json({ message: 'A worked solution is not available for this task' });
+  }
+  if (!await canAccessTask(req.user, task, req.get('x-org-id'))) {
+    return res.status(403).json({
+      message: 'This topic is available to learners who are members of an active VirVerse organization.',
+      code: 'ORGANIZATION_MEMBERSHIP_REQUIRED',
+    });
+  }
+  if (!task.solution || !task.solutionNotes) {
+    return res.status(503).json({ message: 'The worked solution is not available yet' });
+  }
+
+  res.json({ solution: task.solution, notes: task.solutionNotes });
 }

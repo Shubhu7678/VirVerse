@@ -4,7 +4,7 @@ import AuthLayout from '../components/AuthLayout'
 import Input from '../components/Input'
 import Button from '../components/Button'
 import { useAuth } from '../context/AuthContext'
-import { getErrorMessage } from '../api/client'
+import api, { getErrorMessage } from '../api/client'
 
 export default function Login() {
   const { login } = useAuth()
@@ -16,6 +16,7 @@ export default function Login() {
   const [errors, setErrors] = useState({})
   const [serverError, setServerError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [demoLoading, setDemoLoading] = useState(false)
 
   const onChange = (e) => {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
@@ -44,6 +45,20 @@ export default function Login() {
       setServerError(getErrorMessage(err, 'Login failed'))
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fillDemoCredentials = async () => {
+    setServerError('')
+    setDemoLoading(true)
+    try {
+      const { data } = await api.get('/auth/demo-credentials')
+      setForm({ email: data.email, password: data.password })
+      setErrors({})
+    } catch (err) {
+      setServerError(getErrorMessage(err, 'Could not load demo credentials'))
+    } finally {
+      setDemoLoading(false)
     }
   }
 
@@ -88,6 +103,22 @@ export default function Login() {
           onChange={onChange}
           error={errors.password}
         />
+        <div className="rounded-xl border border-brand-100 bg-brand-50/70 p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-slate-800">Want to explore first?</p>
+              <p className="mt-0.5 text-xs text-slate-600">Demo access includes the first 10 C Basics questions.</p>
+            </div>
+            <button
+              type="button"
+              onClick={fillDemoCredentials}
+              disabled={demoLoading || loading}
+              className="shrink-0 rounded-lg border border-brand-200 bg-white px-3 py-2 text-sm font-semibold text-brand-700 transition hover:border-brand-300 hover:bg-brand-50 focus:outline-none focus:ring-4 focus:ring-brand-100 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {demoLoading ? 'Loading demo…' : 'Fill demo credentials'}
+            </button>
+          </div>
+        </div>
         <Button type="submit" loading={loading}>
           {loading ? 'Signing in…' : 'Sign in'}
         </Button>

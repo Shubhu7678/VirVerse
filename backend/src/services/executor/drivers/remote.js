@@ -66,12 +66,15 @@ export async function executeProgram({ code, inputs }) {
     throw error;
   }
   const expectedRuns = result.compile?.ok ? inputs.length : 0;
+  const lastRun = Array.isArray(result.runs) ? result.runs.at(-1) : undefined;
+  const stoppedAtLimit = lastRun?.timedOut || lastRun?.outputExceeded || lastRun?.memoryExceeded;
   if (
     typeof result.compile?.ok !== 'boolean'
     || typeof result.compile?.output !== 'string'
     || Buffer.byteLength(result.compile.output) > LIMITS.maxCompileOutputBytes + 128
     || !Array.isArray(result.runs)
-    || result.runs.length !== expectedRuns
+    || result.runs.length > expectedRuns
+    || (result.runs.length !== expectedRuns && !stoppedAtLimit)
     || result.runs.some((run) => (
       typeof run?.stdout !== 'string'
       || typeof run?.stderr !== 'string'

@@ -125,6 +125,10 @@ function buildQuestion(file, topic, q, index) {
       category: topic.slug,
       difficulty: q.difficulty,
       description: q.description,
+      hint: q.hint || '',
+      ...(topic.slug === 'basics'
+        ? { solution: q.solution, solutionNotes: q.solutionNotes || '' }
+        : {}),
       exampleInput: testCases[0].input,
       exampleOutput: testCases[0].expectedOutput,
       constraints: q.constraints,

@@ -5,5 +5,4 @@ dist
 
 # Local environment files
 **/.env*
-.env.example
-!**/.env.example
+**/.env.example

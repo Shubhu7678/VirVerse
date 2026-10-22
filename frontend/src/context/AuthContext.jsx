@@ -41,9 +41,13 @@ export function AuthProvider({ children }) {
     setMemberships([])
   }, [])
 
+  const updateGamification = useCallback(({ points, level }) => {
+    setUser((current) => current ? { ...current, points, level } : current)
+  }, [])
+
   const value = useMemo(
-    () => ({ user, memberships, isSuperAdmin: user?.platformRole === 'super_admin', loading, login, signup, logout, loadSession }),
-    [user, memberships, loading, login, signup, logout, loadSession],
+    () => ({ user, memberships, isSuperAdmin: user?.platformRole === 'super_admin', loading, login, signup, logout, loadSession, updateGamification }),
+    [user, memberships, loading, login, signup, logout, loadSession, updateGamification],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

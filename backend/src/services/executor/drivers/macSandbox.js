@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { spawn } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { runProcess } from '../runProcess.js';
 import { LIMITS } from '../limits.js';
 
@@ -8,9 +8,26 @@ import { LIMITS } from '../limits.js';
 // with networking denied, no writes outside the work dir, and no reads of /Users.
 // It is NOT a replacement for the Docker driver in production.
 const SANDBOX_EXEC = '/usr/bin/sandbox-exec';
+let compilerPath;
+let sdkPath;
 
 export function isAvailable() {
-  return process.platform === 'darwin' && fs.existsSync(SANDBOX_EXEC) && fs.existsSync('/usr/bin/cc');
+  if (process.platform !== 'darwin' || !fs.existsSync(SANDBOX_EXEC) || !fs.existsSync('/usr/bin/xcrun')) {
+    return false;
+  }
+  try {
+    compilerPath = execFileSync('/usr/bin/xcrun', ['--no-cache', '--find', 'clang'], {
+      encoding: 'utf8',
+      env: { ...process.env, PATH: '/usr/bin:/bin' },
+    }).trim();
+    sdkPath = execFileSync('/usr/bin/xcrun', ['--no-cache', '--sdk', 'macosx', '--show-sdk-path'], {
+      encoding: 'utf8',
+      env: { ...process.env, PATH: '/usr/bin:/bin' },
+    }).trim();
+    return Boolean(compilerPath && sdkPath && fs.existsSync(compilerPath) && fs.existsSync(sdkPath));
+  } catch {
+    return false;
+  }
 }
 
 function writeProfile(workDir, { allowFork }) {
@@ -33,6 +50,7 @@ const baseEnv = (workDir) => ({
   PATH: '/usr/bin:/bin',
   TMPDIR: path.join(workDir, 'tmp'),
   HOME: workDir,
+  SDKROOT: sdkPath,
 });
 
 export function compile(workDir, { interactive = false, signal } = {}) {
@@ -42,7 +60,16 @@ export function compile(workDir, { interactive = false, signal } = {}) {
     command: '/bin/sh',
     args: [
       '-c',
-      `ulimit -f ${LIMITS.maxFileSizeKb * 4}; exec ${SANDBOX_EXEC} -f "${profile}" /usr/bin/cc -std=c11 -Wall ${interactive ? '-include interactive.h ' : ''}-o main main.c -lm`,
+      `ulimit -f ${LIMITS.maxFileSizeKb * 4}; exec ${SANDBOX_EXEC} -f "${profile}" "$@"`,
+      'virverse-compiler',
+      compilerPath,
+      '-std=c11',
+      '-Wall',
+      ...(interactive ? ['-include', 'interactive.h'] : []),
+      '-o',
+      'main',
+      'main.c',
+      '-lm',
     ],
     cwd: workDir,
     env: baseEnv(workDir),

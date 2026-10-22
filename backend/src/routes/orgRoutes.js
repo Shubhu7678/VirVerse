@@ -3,6 +3,7 @@ import protect from '../middleware/auth.js';
 import { requireOrg, requirePermission, orgFilter, permissionsFor } from '../middleware/tenancy.js';
 import Membership from '../models/OrganizationMembership.js';
 import AuditLog from '../models/AuditLog.js';
+import User from '../models/User.js';
 import { createDepartment, createCourse, createClass, inviteMember, listPeople, getPersonProfile, assignTeacher, enrollStudent, listClassMembers, getStructure, getSummary, removePerson } from '../controllers/organizationController.js';
 import { questionBank, createAssignment, listAssignments, getAssignment, publishAssignment, updateDraft } from '../controllers/assignmentController.js';
 
@@ -27,6 +28,29 @@ router.get('/active', requireOrg, (req, res) => {
     organization: { id: req.org._id, name: req.org.name, slug: req.org.slug },
     role: req.orgRole,
     permissions: permissionsFor(req.orgRole),
+  });
+});
+
+router.get('/leaderboard', requireOrg, async (req, res) => {
+  const memberships = await Membership.find({ organization: req.org._id, status: 'active' })
+    .select('user')
+    .lean();
+  const users = await User.find({ _id: { $in: memberships.map(({ user }) => user) } })
+    .select('name points level')
+    .sort({ points: -1, level: -1, name: 1 })
+    .lean();
+  const currentRank = users.findIndex(({ _id }) => String(_id) === String(req.user._id)) + 1;
+
+  res.json({
+    total: users.length,
+    currentRank: currentRank || null,
+    entries: users.slice(0, 10).map((user, index) => ({
+      id: user._id,
+      name: user.name,
+      points: user.points ?? 0,
+      level: user.level ?? 1,
+      rank: index + 1,
+    })),
   });
 });
 

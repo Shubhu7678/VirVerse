@@ -144,6 +144,7 @@ export async function executeProgram({ code, inputs, signal }) {
       const run = await driver.run(workDir, input, { signal });
       if (run.aborted) throw new ExecutorError('Execution request was cancelled.', 499);
       runs.push(run);
+      if (run.timedOut || run.outputExceeded || run.memoryExceeded) break;
     }
     return { compile: { ok: true, output }, runs };
   } finally {

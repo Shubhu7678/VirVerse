@@ -140,6 +140,13 @@ test('remote runner authenticates requests and executes batch and interactive C 
   assert.equal(execution.runs[0].stdout.trim(), 'value=42');
   assert.equal(execution.runs[1].stdout.trim(), 'value=-7');
 
+  const timedOutExecution = await remote.executeProgram({
+    code: 'int main(void) { for (;;) {} return 0; }',
+    inputs: ['', ''],
+  });
+  assert.equal(timedOutExecution.runs.length, 1);
+  assert.equal(timedOutExecution.runs[0].timedOut, true);
+
   const compileError = await remote.executeProgram({
     code: 'int main( {',
     inputs: [''],

@@ -13,6 +13,7 @@ import CodeEditor from '../components/ide/CodeEditor'
 import ConsolePanel from '../components/ide/ConsolePanel'
 import ResizeHandle from '../components/ide/ResizeHandle'
 import { rememberTask } from '../utils/lastTask'
+import { useAuth } from '../context/AuthContext'
 
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max)
 const draftKey = (slug) => `virvese:draft:${slug}`
@@ -24,6 +25,7 @@ function Workspace({ task, assignmentId }) {
   const [stdin, setStdin] = useState('')
   const [tab, setTab] = useState('input')
   const { theme, toggle: toggleTheme } = useTheme()
+  const { updateGamification } = useAuth()
 
   const [fontSize, setFontSize] = useState(() => Number(localStorage.getItem('virvese:editor-font')) || 14)
   const [wrap, setWrap] = useState(() => localStorage.getItem('virvese:editor-wrap') === '1')
@@ -108,7 +110,14 @@ function Workspace({ task, assignmentId }) {
       const submission = await submitSolution({ taskSlug: task.slug, code, assignmentId })
       setTest({ submitting: false, submitError: '', submission })
       if (submission.status === 'Accepted') {
-        if (status !== 'completed') setToast(`🎉 Solved “${task.title}”! Your progress has been updated.`)
+        if (submission.reward) {
+          updateGamification({ points: submission.reward.totalPoints, level: submission.reward.level })
+          setToast(submission.reward.levelUp
+            ? `🔥 Level up! You reached level ${submission.reward.level} and earned ${submission.reward.points} points.`
+            : `🔥 +${submission.reward.points} points! You now have ${submission.reward.totalPoints} points.`)
+        } else if (status !== 'completed') {
+          setToast(`🎉 Solved “${task.title}”! Your progress has been updated.`)
+        }
         setStatus('completed')
       }
       else setStatus((s) => (s === 'completed' ? s : 'attempted'))

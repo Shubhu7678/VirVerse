@@ -5,6 +5,7 @@ import { LoadingBlock, ErrorBlock } from '../components/States'
 import TopicCard from '../components/TopicCard'
 import ProgressBar from '../components/ProgressBar'
 import { LAST_TASK_KEY } from '../utils/lastTask'
+import '../styles/topics.css'
 
 export default function Topics() {
   const { data, loading, error } = useAsync(fetchTasks, 'topics')
@@ -23,30 +24,35 @@ export default function Topics() {
   const resume = last && data.tasks.find((t) => t.slug === last.slug && t.status !== 'completed')
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
-      <section className="profile-enter relative isolate overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm">
-        <div className="pointer-events-none absolute -top-28 -right-12 -z-10 size-80 rounded-full bg-brand-100/70 blur-3xl" />
-        <div className="pointer-events-none absolute -right-8 bottom-0 -z-10 size-56 rounded-full bg-violet-100/60 blur-3xl" />
+    <div className="topics-page mx-auto max-w-6xl space-y-7 sm:space-y-8">
+      <section className="topics-hero profile-enter relative isolate overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm">
+        <div className="topics-hero-grid pointer-events-none absolute inset-0 -z-10" />
+        <div className="pointer-events-none absolute -top-28 -right-12 -z-10 size-80 rounded-full bg-brand-100/60 blur-3xl" />
+        <div className="pointer-events-none absolute -right-8 bottom-0 -z-10 size-56 rounded-full bg-violet-100/40 blur-3xl" />
         <div className="flex flex-col gap-6 p-5 sm:p-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold tracking-[0.18em] text-brand-600 uppercase">Your learning roadmap</p>
-            <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">C Programming</h1>
-            <p className="mt-2 text-sm leading-relaxed text-slate-500 sm:text-base">
+            <p className="flex items-center gap-2 text-[11px] font-bold tracking-[0.18em] text-brand-600 uppercase">
+              <span className="size-1.5 rounded-full bg-brand-500 shadow-[0_0_0_3px_var(--color-brand-100)]" />
+              Your learning roadmap
+            </p>
+            <h1 className="mt-3 text-3xl font-bold tracking-[-0.04em] text-slate-900 sm:text-4xl">C Programming</h1>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-500 sm:text-base sm:leading-7">
               Follow a guided path from your first Hello World to building with files. Learn at your pace, one topic at a time.
             </p>
           </div>
           <Link
             to="/playground"
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-200 hover:text-brand-700 hover:shadow-md"
+            className="group inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:text-brand-700 hover:shadow-md focus-visible:outline-brand-500"
           >
-            <span className="font-mono text-brand-600">{'<>'}</span>
+            <span className="font-mono text-brand-600 transition-transform duration-200 group-hover:scale-110">{'<>'}</span>
             Open C Playground
+            <span aria-hidden="true" className="text-slate-400 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-brand-600">↗</span>
           </Link>
         </div>
       </section>
 
       <section className="profile-enter grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]" style={{ animationDelay: '70ms' }}>
-        <div className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-6">
+        <div className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm transition-shadow duration-200 hover:shadow-md sm:p-6">
           <div className="flex flex-wrap items-end justify-between gap-2">
             <div>
               <p className="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Your progress</p>
@@ -59,7 +65,7 @@ export default function Topics() {
         {(resume || continueTask) && (
           <Link
             to={`/tasks/${(resume || continueTask).slug}`}
-            className="group flex items-center gap-4 rounded-3xl bg-linear-to-br from-brand-600 to-violet-600 p-5 text-white shadow-md shadow-brand-900/10 transition duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:min-w-72 sm:p-6"
+            className="group flex items-center gap-4 rounded-3xl bg-linear-to-br from-brand-600 to-violet-600 p-5 text-white shadow-md shadow-brand-900/10 transition duration-300 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-white sm:min-w-72 sm:p-6"
           >
             <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-white/15">
               <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
@@ -76,19 +82,19 @@ export default function Topics() {
       </section>
 
       <section className="profile-enter" style={{ animationDelay: '130ms' }}>
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold tracking-[0.14em] text-brand-600 uppercase">Explore and practice</p>
-            <h2 className="mt-1 text-xl font-bold tracking-tight text-slate-900">Your topics</h2>
+            <p className="text-[11px] font-bold tracking-[0.16em] text-brand-600 uppercase">Explore and practice</p>
+            <h2 className="mt-1.5 text-2xl font-bold tracking-[-0.03em] text-slate-900">Your topics</h2>
           </div>
-          <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm">
+          <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-500 shadow-sm">
             {categories.length} topics
           </span>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {categories.map((topic) => (
-          <TopicCard key={topic.slug} topic={topic} />
-        ))}
+        <div className="topics-card-grid grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {categories.map((topic, index) => (
+            <TopicCard key={topic.slug} topic={topic} index={index} />
+          ))}
         </div>
       </section>
     </div>

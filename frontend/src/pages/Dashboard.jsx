@@ -33,7 +33,7 @@ export default function Dashboard() {
   if (loading) return <LoadingBlock />
   if (error) return <ErrorBlock message={error} />
 
-  const { categories, stats, continueTask } = data
+  const { stats, continueTask } = data
   const recent = (subs.data || []).slice(0, 5)
 
   return (
@@ -72,37 +72,6 @@ export default function Dashboard() {
           <div className="mt-3">
             <ProgressBar percent={stats.percent} label="Overall completion" size="h-1.5" />
           </div>
-        </div>
-      </section>
-
-      <section>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Topic progress</h2>
-          <Link to="/tasks" className="text-sm font-semibold text-brand-600 hover:text-brand-700">
-            View roadmap
-          </Link>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {categories.map((c) => (
-            <Link
-              key={c.slug}
-              to={`/topics/${c.slug}`}
-              className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-brand-500 hover:shadow"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <p className="font-medium">
-                  <span className="mr-2 text-slate-400">{c.order}.</span>
-                  {c.name}
-                </p>
-                <span className="text-xs whitespace-nowrap text-slate-500">
-                  {c.completed}/{c.total}
-                </span>
-              </div>
-              <div className="mt-3">
-                <ProgressBar percent={c.percent} label={`${c.name} progress`} size="h-1.5" />
-              </div>
-            </Link>
-          ))}
         </div>
       </section>
 

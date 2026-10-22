@@ -8,6 +8,7 @@ import Assignment from '../models/Assignment.js';
 import AssignmentTask from '../models/AssignmentTask.js';
 import ClassEnrollment from '../models/ClassEnrollment.js';
 import { hasFeatureAccess } from '../services/subscriptionAccess.js';
+import { awardTaskPoints } from '../services/gamification.js';
 
 // Ignores trailing spaces on each line and trailing blank lines.
 const normalize = (s) =>
@@ -101,6 +102,20 @@ export async function createSubmission(req, res) {
   } else {
     results = task.testCases.map((tc, i) => {
       const run = outcome.runs[i];
+      if (!run) {
+        return {
+          index: i + 1,
+          hidden: tc.isHidden,
+          passed: false,
+          status: 'Not Run',
+          ...(!tc.isHidden && {
+            input: tc.input,
+            expectedOutput: tc.expectedOutput,
+            actualOutput: '',
+            stderr: '',
+          }),
+        };
+      }
       const verdict = judgeCase(tc, run);
       const base = { index: i + 1, hidden: tc.isHidden, passed: verdict === 'Passed', status: verdict };
       // Hidden cases never expose input, expected output or the program's output.
@@ -129,6 +144,7 @@ export async function createSubmission(req, res) {
     passedCount,
     totalCount: task.testCases.length,
   });
+  const reward = status === 'Accepted' ? await awardTaskPoints(req.user._id, task) : null;
 
   res.status(201).json({
     submission: {
@@ -136,6 +152,7 @@ export async function createSubmission(req, res) {
       status,
       passedCount,
       totalCount: task.testCases.length,
+      reward,
       compileOutput,
       results,
       createdAt: submission.createdAt,
@@ -163,5 +180,26 @@ export async function listSubmissions(req, res) {
         createdAt: s.createdAt,
         task: { title: s.task.title, slug: s.task.slug, difficulty: s.task.difficulty, category: s.task.category },
       })),
+  });
+}
+
+export async function listSubmissionActivity(req, res) {
+  const now = new Date();
+  const startDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 371));
+  const endDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+  const activity = await Submission.aggregate([
+    { $match: { user: req.user._id, createdAt: { $gte: startDate, $lt: endDate } } },
+    {
+      $group: {
+        _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'UTC' } },
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { _id: 1 } },
+  ]);
+
+  res.json({
+    asOf: now.toISOString().slice(0, 10),
+    activity: activity.map(({ _id: date, count }) => ({ date, count })),
   });
 }

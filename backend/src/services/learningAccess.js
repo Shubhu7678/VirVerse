@@ -3,6 +3,7 @@ import Organization from '../models/Organization.js';
 import OrganizationSubscription from '../models/OrganizationSubscription.js';
 
 export async function hasOrganizationLearningAccess(user, organizationId) {
+  if (user.isDemo) return false;
   if (user.platformRole === 'super_admin') return true;
   if (!organizationId) return false;
   const membership = await Membership.findOne({
@@ -26,6 +27,9 @@ export async function hasOrganizationLearningAccess(user, organizationId) {
 }
 
 export async function canAccessTask(user, task, organizationId) {
+  if (user.isDemo) {
+    return task.category === 'basics' && task.questionOrder >= 1 && task.questionOrder <= 10;
+  }
   if (task.category === 'basics') return true;
   return hasOrganizationLearningAccess(user, organizationId);
 }

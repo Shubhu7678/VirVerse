@@ -22,6 +22,7 @@ const verdictStyle = {
   'Time Limit Exceeded': warn,
   'Output Limit Exceeded': warn,
   'Memory Limit Exceeded': warn,
+  'Not Run': 'bg-slate-100 text-slate-600 ring-slate-500/20',
 }
 
 function Verdict({ label }) {
@@ -108,7 +109,14 @@ function TestsTab({ submitting, submitError, submission }) {
         <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">🎉 All test cases passed. Task completed!</p>
       )}
       {submission.status !== 'Accepted' && <Hint>{getHint({ status: submission.status, compileOutput: submission.compileOutput })}</Hint>}
-      {submission.compileOutput && <Pre label="Compiler errors" tone="text-red-300">{submission.compileOutput}</Pre>}
+      {submission.compileOutput && (
+        <Pre
+          label={submission.status === 'Compilation Error' ? 'Compiler errors' : 'Compiler warnings'}
+          tone={submission.status === 'Compilation Error' ? 'text-red-300' : 'text-amber-300'}
+        >
+          {submission.compileOutput}
+        </Pre>
+      )}
 
       <ul className="space-y-2">
         {submission.results.map((r) => (

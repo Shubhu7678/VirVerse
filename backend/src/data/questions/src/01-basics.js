@@ -1,8 +1,275 @@
 const q = (slug, title, difficulty, description, constraints, solution, inputs) => ({
-  slug, title, difficulty, description, constraints, solution,
+  slug,
+  title,
+  difficulty,
+  description: description.replace(/\n\nHint: [\s\S]*?(?=\n\n(?:Input|Output)\n)/, ''),
+  hint: hints[slug],
+  solutionNotes: solutionNotes[slug],
+  constraints,
+  solution: workedSolutions[slug] || solution,
   tests: inputs.map((input, i) => (i >= 2 && i >= inputs.length - 3 ? { input, hidden: true } : { input })),
 });
 const H = '#include <stdio.h>\n';
+const workedSolutions = {
+  'hello-world': `#include <stdio.h>
+
+int main(void) {
+    printf("Hello, World!\\n");
+    return 0;
+}`,
+  'print-two-lines': `#include <stdio.h>
+
+int main(void) {
+    printf("Learning C\\nis fun!\\n");
+    return 0;
+}`,
+  'sum-of-two-integers': `#include <stdio.h>
+
+int main(void) {
+    int a, b;
+    scanf("%d %d", &a, &b);
+    printf("%d\\n", a + b);
+    return 0;
+}`,
+  'echo-an-integer': `#include <stdio.h>
+
+int main(void) {
+    int n;
+    scanf("%d", &n);
+    printf("You entered: %d\\n", n);
+    return 0;
+}`,
+  'difference-of-two-numbers': `#include <stdio.h>
+
+int main(void) {
+    int a, b;
+    scanf("%d %d", &a, &b);
+    printf("%d\\n", a - b);
+    return 0;
+}`,
+  'print-a-star-box': `#include <stdio.h>
+
+int main(void) {
+    for (int row = 0; row < 3; row++) {
+        printf("*****\\n");
+    }
+    return 0;
+}`,
+  'greet-by-name': `#include <stdio.h>
+
+int main(void) {
+    char name[50];
+    scanf("%49s", name);
+    printf("Hello, %s!\\n", name);
+    return 0;
+}`,
+  'print-character-twice': `#include <stdio.h>
+
+int main(void) {
+    char character;
+    scanf(" %c", &character);
+    printf("%c%c\\n", character, character);
+    return 0;
+}`,
+  'product-of-three-numbers': `#include <stdio.h>
+
+int main(void) {
+    int a, b, c;
+    scanf("%d %d %d", &a, &b, &c);
+    printf("%d\\n", a * b * c);
+    return 0;
+}`,
+  'reverse-two-numbers': `#include <stdio.h>
+
+int main(void) {
+    int a, b;
+    scanf("%d %d", &a, &b);
+    printf("%d %d\\n", b, a);
+    return 0;
+}`,
+  'average-of-three-numbers': `#include <stdio.h>
+
+int main(void) {
+    int a, b, c;
+    scanf("%d %d %d", &a, &b, &c);
+    printf("%.2f\\n", (a + b + c) / 3.0);
+    return 0;
+}`,
+  'right-triangle-of-stars': `#include <stdio.h>
+
+int main(void) {
+    int n;
+    scanf("%d", &n);
+
+    for (int row = 1; row <= n; row++) {
+        for (int column = 0; column < row; column++) {
+            putchar('*');
+        }
+        putchar('\\n');
+    }
+
+    return 0;
+}`,
+  'seconds-to-hours-minutes-seconds': `#include <stdio.h>
+
+int main(void) {
+    int seconds;
+    scanf("%d", &seconds);
+
+    int hours = seconds / 3600;
+    int minutes = seconds % 3600 / 60;
+    int remainingSeconds = seconds % 60;
+
+    printf("%d hours %d minutes %d seconds\\n",
+           hours, minutes, remainingSeconds);
+    return 0;
+}`,
+  'sum-of-digits-of-three-digit-number': `#include <stdio.h>
+
+int main(void) {
+    int number;
+    scanf("%d", &number);
+
+    int hundreds = number / 100;
+    int tens = number / 10 % 10;
+    int ones = number % 10;
+
+    printf("%d\\n", hundreds + tens + ones);
+    return 0;
+}`,
+  'ascii-code-of-character': `#include <stdio.h>
+
+int main(void) {
+    char character;
+    scanf(" %c", &character);
+
+    printf("%d\\n", character);
+    printf("%c\\n", character + 1);
+    return 0;
+}`,
+  'print-simple-receipt': `#include <stdio.h>
+
+int main(void) {
+    int price, quantity;
+    scanf("%d %d", &price, &quantity);
+
+    int total = price * quantity;
+    printf("Price: %d\\n", price);
+    printf("Quantity: %d\\n", quantity);
+    printf("Total: %d\\n", total);
+    return 0;
+}`,
+  'echo-a-full-line': `#include <stdio.h>
+#include <string.h>
+
+int main(void) {
+    char line[200];
+    if (!fgets(line, sizeof line, stdin)) {
+        return 0;
+    }
+
+    line[strcspn(line, "\\r\\n")] = '\\0';
+    printf("<%s>\\n", line);
+    return 0;
+}`,
+  'add-minutes-to-time': `#include <stdio.h>
+
+int main(void) {
+    int hour, minute, addedMinutes;
+    scanf("%d %d %d", &hour, &minute, &addedMinutes);
+
+    int totalMinutes = (hour * 60 + minute + addedMinutes) % 1440;
+    int newHour = totalMinutes / 60;
+    int newMinute = totalMinutes % 60;
+
+    printf("%02d:%02d\\n", newHour, newMinute);
+    return 0;
+}`,
+  'number-pyramid': `#include <stdio.h>
+
+int main(void) {
+    int n;
+    scanf("%d", &n);
+
+    for (int row = 1; row <= n; row++) {
+        for (int space = 0; space < n - row; space++) {
+            putchar(' ');
+        }
+        for (int number = 1; number <= row; number++) {
+            printf("%d", number);
+        }
+        for (int number = row - 1; number >= 1; number--) {
+            printf("%d", number);
+        }
+        putchar('\\n');
+    }
+
+    return 0;
+}`,
+  'coin-change-count': `#include <stdio.h>
+
+int main(void) {
+    int amount;
+    scanf("%d", &amount);
+
+    int coins[] = {25, 10, 5, 1};
+    int totalCoins = 0;
+
+    for (int i = 0; i < 4; i++) {
+        int count = amount / coins[i];
+        amount %= coins[i];
+        totalCoins += count;
+        printf("%d: %d\\n", coins[i], count);
+    }
+
+    printf("Total: %d\\n", totalCoins);
+    return 0;
+}`,
+};
+const hints = {
+  'hello-world': 'Use `printf` with a string literal. Include the newline in the printed text.',
+  'print-two-lines': 'You can print both pieces in one `printf` using `\\n`, or use two print calls.',
+  'sum-of-two-integers': 'Read both values with `scanf`, then add the two variables.',
+  'echo-an-integer': 'Read one integer into a variable, then print the label and value with `%d`.',
+  'difference-of-two-numbers': 'Keep the input order: subtract the second value from the first.',
+  'print-a-star-box': 'Print the same five-star row three times; a short loop can repeat it.',
+  'greet-by-name': 'Store the word in a character array, then use `%s` in your greeting.',
+  'print-character-twice': 'Read one character with `%c` and pass it to two `%c` placeholders.',
+  'product-of-three-numbers': 'Read three integers and multiply all three values together.',
+  'reverse-two-numbers': 'Read both values, then print the second variable before the first.',
+  'average-of-three-numbers': 'Add the values, divide by `3.0` to keep a fractional result, and format to two decimals.',
+  'right-triangle-of-stars': 'Use an outer loop for rows and an inner loop that prints as many stars as the row number.',
+  'seconds-to-hours-minutes-seconds': 'Extract hours with division by 3600; use remainders to get the remaining minutes and seconds.',
+  'sum-of-digits-of-three-digit-number': 'Use division and remainder: hundreds are `n / 100`, tens are `n / 10 % 10`, and ones are `n % 10`.',
+  'ascii-code-of-character': 'A `char` can be printed as a number with `%d`; adding one gives the next ASCII character.',
+  'print-simple-receipt': 'Read price and quantity, calculate their product, then print each labeled line in the requested order.',
+  'echo-a-full-line': '`fgets` reads spaces too. Remove its trailing newline before wrapping the text in angle brackets.',
+  'add-minutes-to-time': 'Convert the time to total minutes, add the offset, wrap with `% 1440`, then split into hours and minutes.',
+  'number-pyramid': 'For each row, print leading spaces, count upward from 1, then count back down to 1.',
+  'coin-change-count': 'Process coin values from largest to smallest. For each value, use division for its count and remainder for what is left.',
+};
+const solutionNotes = {
+  'hello-world': 'Include `stdio.h` for `printf`. Print the exact requested text and a newline with `\\n`.',
+  'print-two-lines': 'A newline escape separates the two lines. Keep spelling, punctuation, and capitalization exact.',
+  'sum-of-two-integers': 'Read both integers with `scanf`, add them, and print the sum followed by a newline.',
+  'echo-an-integer': 'Read one integer into `n`, then use `%d` to insert it after the required label.',
+  'difference-of-two-numbers': 'Read `a` and `b` in order. The requested result is `a - b`, not the reverse.',
+  'print-a-star-box': 'The loop repeats the same five-star row three times, printing a newline after each row.',
+  'greet-by-name': 'The character array stores the input word. `%s` prints it between the fixed greeting text.',
+  'print-character-twice': 'The leading space in the `%c` scan format skips whitespace. Two `%c` placeholders print the character twice.',
+  'product-of-three-numbers': 'Read all three integers and multiply them. The stated bounds keep the product within an `int`.',
+  'reverse-two-numbers': 'Both inputs are read normally; the output format prints `b` first and `a` second.',
+  'average-of-three-numbers': 'Adding the integers gives the numerator. Dividing by `3.0` performs floating-point division, and `%.2f` prints two decimal places.',
+  'right-triangle-of-stars': 'The outer loop selects each row. The inner loop prints one star per row number, then a newline ends that row.',
+  'seconds-to-hours-minutes-seconds': 'Integer division by 3600 gives hours. Remainders remove full hours and minutes to get each remaining part.',
+  'sum-of-digits-of-three-digit-number': 'Integer division extracts the hundreds digit; `%` isolates the tens and ones digits. Add the three values.',
+  'ascii-code-of-character': 'A character is promoted to an integer for `%d`. Adding one produces the next character for `%c`.',
+  'print-simple-receipt': 'Multiply price by quantity for the total. Print all three lines with their exact labels and order.',
+  'echo-a-full-line': '`fgets` reads spaces and the newline. `strcspn` finds the line ending so it can be removed before printing.',
+  'add-minutes-to-time': 'Represent the time as minutes since midnight, add `k`, and wrap within a day using `% 1440`. Divide and take the remainder to format hours and minutes.',
+  'number-pyramid': 'Each row starts with its padding, then prints an ascending sequence and a descending sequence without repeating the peak.',
+  'coin-change-count': 'For each denomination, division gives how many coins fit. Keep the remainder for the next denomination and accumulate the total.',
+};
 
 export default [
   q('hello-world', 'Hello World', 'Easy',

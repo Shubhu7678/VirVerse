@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { useTheme } from '../context/ThemeContext'
+import { PALETTES, useTheme } from '../context/ThemeContext'
 import { Logo } from './AuthLayout'
 import Icon, { icons } from './Icon'
 import InvitationInbox from './InvitationInbox'
@@ -147,8 +147,9 @@ function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
 export default function DashboardLayout() {
   const { user, logout, isSuperAdmin } = useAuth()
   const { memberships, activeOrganization, selectOrganization } = useOrg()
-  const { theme, toggle } = useTheme()
+  const { theme, toggle, palette, setPalette } = useTheme()
   const [open, setOpen] = useState(false)
+  const [paletteMenuOpen, setPaletteMenuOpen] = useState(false)
   const location = useLocation()
   const orgRole = activeOrganization?.role
   const orgNav = orgRole === 'org_admin'
@@ -235,6 +236,40 @@ export default function DashboardLayout() {
 
           <div className="flex items-center gap-2 sm:gap-3">
             <InvitationInbox />
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setPaletteMenuOpen((current) => !current)}
+                className="flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700"
+                aria-label="Choose color palette"
+                aria-expanded={paletteMenuOpen}
+                aria-haspopup="true"
+                title="Color palette"
+              >
+                <span className="size-4 rounded-full border-2 border-white shadow-[0_0_0_1px_var(--color-slate-300)]" style={{ backgroundColor: PALETTES.find(({ id }) => id === palette)?.color }} />
+              </button>
+              {paletteMenuOpen && (
+                <div role="group" aria-label="Color palettes" className="absolute top-full right-0 z-40 mt-2 w-52 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+                  <p className="px-3 py-2 text-[10px] font-bold tracking-[0.14em] text-slate-400 uppercase">Choose a color</p>
+                  {PALETTES.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      aria-pressed={palette === option.id}
+                      onClick={() => {
+                        setPalette(option.id)
+                        setPaletteMenuOpen(false)
+                      }}
+                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                    >
+                      <span className="size-4 rounded-full" style={{ backgroundColor: option.color }} />
+                      <span className="flex-1">{option.name}</span>
+                      {palette === option.id && <span className="text-xs font-bold text-brand-600" aria-hidden="true">✓</span>}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <button
               onClick={toggle}
               className="flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700"
