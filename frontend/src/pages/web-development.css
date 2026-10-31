@@ -1,0 +1,89 @@
+.html-workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.html-editor-pane {
+  height: 360px;
+}
+
+.html-preview-pane {
+  height: 340px;
+}
+
+.html-progress-fill {
+  transition: width 350ms ease;
+}
+
+.html-catalog {
+  animation: html-catalog-enter 220ms ease-out both;
+}
+
+.html-catalog-progress {
+  min-width: 14rem;
+}
+
+.html-course-card,
+.html-topic-card {
+  transform-origin: center;
+}
+
+.html-lesson-dropdown {
+  animation: html-catalog-enter 220ms ease-out both;
+}
+
+.html-topic-card {
+  animation: html-card-enter 220ms ease-out both;
+}
+
+.html-catalog li:nth-child(2) .html-topic-card { animation-delay: 25ms; }
+.html-catalog li:nth-child(3) .html-topic-card { animation-delay: 50ms; }
+.html-catalog li:nth-child(4) .html-topic-card { animation-delay: 75ms; }
+.html-catalog li:nth-child(5) .html-topic-card { animation-delay: 100ms; }
+.html-catalog li:nth-child(6) .html-topic-card { animation-delay: 125ms; }
+
+.html-completion-check {
+  animation: html-complete 240ms ease-out;
+}
+
+@keyframes html-complete {
+  0% { transform: scale(0.8); }
+  65% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+@keyframes html-catalog-enter {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes html-card-enter {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (min-width: 64rem) {
+  .html-workspace-grid {
+    grid-template-columns: minmax(0, var(--editor-width)) 4px minmax(0, 1fr);
+    height: 560px;
+  }
+
+  .html-editor-pane,
+  .html-preview-pane {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .html-preview-pane iframe {
+    height: calc(100% - 2.25rem);
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .html-completion-check,
+  .html-catalog,
+  .html-lesson-dropdown,
+  .html-topic-card { animation-duration: 0.01ms; animation-delay: 0ms; }
+  .html-progress-fill { transition-duration: 0.01ms; }
+}

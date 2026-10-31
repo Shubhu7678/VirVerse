@@ -21,7 +21,7 @@ const options = {
   smoothScrolling: true,
 }
 
-export default function CodeEditor({ value, onChange, theme, onRun, fontSize = 14, wordWrap = false }) {
+export default function CodeEditor({ value, onChange, theme, onRun, language = 'c', fontSize = 14, wordWrap = false }) {
   // Monaco commands are registered once, so keep the latest handler in a ref.
   const runRef = useRef(onRun)
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function CodeEditor({ value, onChange, theme, onRun, fontSize = 1
   return (
     <Editor
       height="100%"
-      language="c"
+      language={language}
       theme={theme === 'dark' ? 'vs-dark' : 'vs'}
       value={value}
       onChange={(v) => onChange(v ?? '')}

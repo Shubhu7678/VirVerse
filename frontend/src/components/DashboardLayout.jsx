@@ -61,6 +61,11 @@ function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
     || location.pathname === '/playground'
   const [programmingState, setProgrammingState] = useState({ pathname: location.pathname, open: programmingActive })
   const programmingOpen = programmingState.pathname === location.pathname ? programmingState.open : programmingActive
+  const webDevelopmentActive = location.pathname.startsWith('/web-development/')
+  const [webDevelopmentState, setWebDevelopmentState] = useState({ pathname: location.pathname, open: webDevelopmentActive })
+  const webDevelopmentOpen = webDevelopmentState.pathname === location.pathname
+    ? webDevelopmentState.open
+    : webDevelopmentActive
   const userName = user?.name?.trim() || 'Learner'
   const initials = userName.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase()
 
@@ -123,6 +128,57 @@ function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
             </div>
           </div>
         </li>
+        <li className="mt-2">
+          <button
+            type="button"
+            aria-expanded={webDevelopmentOpen}
+            aria-controls="web-development-navigation"
+            onClick={() => setWebDevelopmentState({ pathname: location.pathname, open: !webDevelopmentOpen })}
+            className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors ${
+              webDevelopmentActive ? 'bg-brand-50 text-brand-700' : 'text-slate-700 hover:bg-slate-100'
+            }`}
+          >
+            <Icon d={icons.globe} className="size-5 shrink-0 text-slate-500 transition-colors group-hover:text-brand-600" />
+            <span className="flex-1 text-left">Web Development</span>
+            <svg viewBox="0 0 20 20" className={`size-4 text-slate-400 transition-transform duration-300 ${webDevelopmentOpen ? 'rotate-180' : ''}`} fill="currentColor" aria-hidden="true">
+              <path fillRule="evenodd" d="M5.22 7.47a.75.75 0 011.06 0L10 11.19l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 8.53a.75.75 0 010-1.06z" clipRule="evenodd" />
+            </svg>
+          </button>
+          <div
+            id="web-development-navigation"
+            className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${webDevelopmentOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+          >
+            <div className="min-h-0 overflow-hidden">
+              <ul className="mt-1 space-y-0.5 border-l border-slate-200 ml-[21px]">
+                <li>
+                  <NavLink
+                    to="/web-development/html"
+                    end
+                    className={({ isActive }) => `flex items-center gap-2 rounded-xl py-2.5 pr-3 pl-11 text-[13px] font-semibold transition-all duration-200 ${
+                      isActive ? 'bg-brand-50/80 text-brand-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    }`}
+                    onClick={close}
+                  >
+                    <Icon d={icons.globe} className="size-4 shrink-0" />
+                    <span className="min-w-0 flex-1 truncate">HTML</span>
+                  </NavLink>
+                </li>
+                {[
+                  { label: 'CSS', icon: icons.css },
+                  { label: 'JavaScript', icon: icons.javascript },
+                ].map((item) => (
+                  <li key={item.label}>
+                    <div className="flex items-center gap-2 rounded-xl py-2.5 pr-2 pl-11 text-[13px] text-slate-400" aria-disabled="true">
+                      <Icon d={item.icon} className="size-4 shrink-0" />
+                      <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                      <span className="shrink-0 rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-slate-500">Coming Soon</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </li>
         <NavItems items={nav.slice(2)} close={close} />
         <NavItems items={[{ label: 'Profile', to: '/profile', icon: icons.profile }]} close={close} />
       </ul>
@@ -177,7 +233,7 @@ export default function DashboardLayout() {
   const activeItem = allItems
     .filter((item) => location.pathname === item.to.split('?')[0] || (item.to !== '/dashboard' && item.to !== '/tasks' && location.pathname.startsWith(`${item.to.split('?')[0]}/`)))
     .sort((a, b) => b.to.length - a.to.length)[0]
-  const pageTitle = activeItem?.label ?? 'VirVese'
+  const pageTitle = activeItem?.label ?? 'VirVerse'
   const activeMemberships = memberships.filter((membership) => membership.organization?.status === 'active')
   const closeMenu = () => setOpen(false)
   const sidebar = <Sidebar user={user} logout={logout} orgNav={orgNav} isSuperAdmin={isSuperAdmin} close={closeMenu} />
@@ -210,7 +266,7 @@ export default function DashboardLayout() {
           </button>
 
           <div className="min-w-0 flex-1">
-            <p className="hidden text-[10px] font-semibold tracking-[0.16em] text-slate-400 uppercase sm:block">VirVese workspace</p>
+            <p className="hidden text-[10px] font-semibold tracking-[0.16em] text-slate-400 uppercase sm:block">VirVerse workspace</p>
             <h1 className="truncate text-sm font-bold text-slate-900 sm:mt-0.5 sm:text-base">{pageTitle}</h1>
           </div>
 

@@ -26,6 +26,8 @@ import OrganizationAssignments from './pages/organization/Assignments'
 // The IDE page bundles Monaco, so load it only when a task is opened.
 const TaskDetail = lazy(() => import('./pages/TaskDetail'))
 const Playground = lazy(() => import('./pages/Playground'))
+const WebDevelopment = lazy(() => import('./pages/WebDevelopment'))
+const HtmlCatalog = lazy(() => import('./pages/HtmlCatalog'))
 
 export default function App() {
   return (
@@ -53,6 +55,9 @@ export default function App() {
               <Route path="/organization/assignments/:id" element={<OrganizationAssignments />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/tasks" element={<Topics />} />
+              <Route path="/web-development/html" element={<Suspense fallback={<LoadingBlock label="Opening HTML courses…" />}><HtmlCatalog view="overview" /></Suspense>} />
+              <Route path="/web-development/html-basics" element={<Suspense fallback={<LoadingBlock label="Opening HTML lessons…" />}><HtmlCatalog view="topics" /></Suspense>} />
+              <Route path="/web-development/html-basics/:taskId" element={<Suspense fallback={<LoadingBlock label="Opening HTML lesson…" />}><WebDevelopment /></Suspense>} />
               <Route path="/topics/:category" element={<TopicDetail />} />
               <Route path="/practice" element={<Tasks view="all" />} />
               <Route

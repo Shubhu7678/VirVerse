@@ -12,6 +12,7 @@ import submissionRoutes from './routes/submissionRoutes.js';
 import orgRoutes from './routes/orgRoutes.js';
 import platformRoutes from './routes/platformRoutes.js';
 import invitationRoutes from './routes/invitationRoutes.js';
+import webDevelopmentRoutes from './routes/webDevelopmentRoutes.js';
 import { attachInteractiveExecution } from './services/executor/interactiveSocket.js';
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/api/submissions', submissionRoutes);
 app.use('/api/orgs', orgRoutes);
 app.use('/api/platform', platformRoutes);
 app.use('/api/invitations', invitationRoutes);
+app.use('/api/web-development', webDevelopmentRoutes);
 
 app.use((_req, res) => res.status(404).json({ message: 'Route not found' }));
 
