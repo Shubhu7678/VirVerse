@@ -15,7 +15,7 @@ const uniqueName = (prefix) => `${prefix}-${Date.now()}-${Math.random().toString
 export async function isAvailable() {
   const r = await runProcess({
     command: 'docker',
-    args: ['image', 'inspect', IMAGE],
+    args: ['image', 'inspect', '--format', '{{.Id}}', IMAGE],
     env,
     timeoutMs: 5000,
     maxOutputBytes: 1024,
