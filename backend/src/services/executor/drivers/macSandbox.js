@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { realpathSync } from 'node:fs';
 import path from 'node:path';
 import { execFileSync, spawn } from 'node:child_process';
 import { runProcess } from '../runProcess.js';
@@ -30,11 +31,12 @@ export function isAvailable() {
   }
 }
 
-function writeProfile(workDir, { allowFork }) {
+function writeProfile(workDir, { allowFork, allowReadPaths = [] }) {
   const real = fs.realpathSync(workDir);
   const rules = [
     '(version 1)',
     '(allow default)',
+    ...allowReadPaths.map((readPath) => `(allow file-read* (subpath "${readPath}"))`),
     '(deny network*)',
     '(deny file-read* (subpath "/Users"))',
     '(deny file-write*)',
@@ -90,6 +92,75 @@ export async function run(workDir, input, { signal } = {}) {
       args: [
         '-c',
         `ulimit -t ${cpuSeconds}; ulimit -f ${LIMITS.maxFileSizeKb}; ulimit -n 64; exec ${SANDBOX_EXEC} -f "${profile}" ../main`,
+      ],
+      cwd: runDir,
+      env: baseEnv(workDir),
+      input,
+      timeoutMs: LIMITS.runTimeoutMs,
+      maxOutputBytes: LIMITS.maxOutputBytes,
+      memoryMb: LIMITS.memoryMb,
+      signal,
+    });
+  } finally {
+    fs.rmSync(runDir, { recursive: true, force: true });
+  }
+}
+
+export async function runJavaScript(workDir, code, input, { signal } = {}) {
+  const nodePath = realpathSync(process.execPath);
+  const nodeDirectory = path.dirname(nodePath);
+  const profile = writeProfile(workDir, {
+    allowFork: false,
+    allowReadPaths: [nodeDirectory],
+  });
+  const cpuSeconds = Math.ceil(LIMITS.runTimeoutMs / 1000) + 1;
+  const runDir = fs.mkdtempSync(path.join(workDir, 'run-'));
+  try {
+    return await runProcess({
+      command: '/bin/sh',
+      args: [
+        '-c',
+        `ulimit -t ${cpuSeconds}; ulimit -f ${LIMITS.maxFileSizeKb}; ulimit -n 64; exec "${SANDBOX_EXEC}" -f "${profile}" "$@"`,
+        'virvese-javascript',
+        nodePath,
+        '--permission',
+        `--max-old-space-size=${Math.max(32, LIMITS.memoryMb - 64)}`,
+        '--disable-proto=throw',
+        '-e',
+        "eval(Buffer.from(process.argv[1], 'base64').toString('utf8'))",
+        Buffer.from(code).toString('base64'),
+      ],
+      cwd: runDir,
+      env: baseEnv(workDir),
+      input,
+      timeoutMs: LIMITS.runTimeoutMs,
+      maxOutputBytes: LIMITS.maxOutputBytes,
+      memoryMb: LIMITS.memoryMb,
+      signal,
+    });
+  } finally {
+    fs.rmSync(runDir, { recursive: true, force: true });
+  }
+}
+
+export async function runPython(workDir, code, input, { signal } = {}) {
+  const pythonPath = realpathSync('/usr/bin/python3');
+  const profile = writeProfile(workDir, { allowFork: false });
+  const cpuSeconds = Math.ceil(LIMITS.runTimeoutMs / 1000) + 1;
+  const runDir = fs.mkdtempSync(path.join(workDir, 'run-'));
+  try {
+    return await runProcess({
+      command: '/bin/sh',
+      args: [
+        '-c',
+        `ulimit -t ${cpuSeconds}; ulimit -f ${LIMITS.maxFileSizeKb}; ulimit -n 64; exec "${SANDBOX_EXEC}" -f "${profile}" "$@"`,
+        'virvese-python',
+        pythonPath,
+        '-I',
+        '-S',
+        '-B',
+        '-c',
+        code,
       ],
       cwd: runDir,
       env: baseEnv(workDir),

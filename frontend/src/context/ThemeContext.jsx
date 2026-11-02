@@ -8,7 +8,7 @@ const ThemeContext = createContext(null)
 export const PALETTES = [
   { id: 'violet', name: 'Violet', color: '#6366f1' },
   { id: 'blue', name: 'Ocean blue', color: '#3b82f6' },
-  { id: 'emerald', name: 'Emerald', color: '#10b981' },
+  { id: 'emerald', name: 'VirVerse teal', color: '#54d6b3' },
   { id: 'orange', name: 'Sunset orange', color: '#f97316' },
   { id: 'rose', name: 'Ruby rose', color: '#f43f5e' },
 ]
@@ -25,9 +25,9 @@ function readInitial() {
 function readInitialPalette() {
   try {
     const saved = localStorage.getItem(PALETTE_KEY)
-    return PALETTES.some(({ id }) => id === saved) ? saved : 'violet'
+    return PALETTES.some(({ id }) => id === saved) ? saved : 'emerald'
   } catch {
-    return 'violet'
+    return 'emerald'
   }
 }
 

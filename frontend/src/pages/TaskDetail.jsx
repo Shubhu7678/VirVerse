@@ -13,7 +13,9 @@ import CodeEditor from '../components/ide/CodeEditor'
 import ConsolePanel from '../components/ide/ConsolePanel'
 import ResizeHandle from '../components/ide/ResizeHandle'
 import { rememberTask } from '../utils/lastTask'
+import { taskPath, topicPath } from '../utils/languageRoutes'
 import { useAuth } from '../context/AuthContext'
+import './task-detail.css'
 
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max)
 const draftKey = (slug) => `virvese:draft:${slug}`
@@ -68,7 +70,7 @@ function Workspace({ task, assignmentId }) {
   const [status, setStatus] = useState(task.status)
   const busyRef = useRef(false)
 
-  const [split, setSplit] = useState(0.4)
+  const [split, setSplit] = useState(0.34)
   const [consoleSize, setConsoleSize] = useState(0.38)
   const layoutRef = useRef(null)
   const rightRef = useRef(null)
@@ -92,14 +94,14 @@ function Workspace({ task, assignmentId }) {
     setTab('output')
     setRun({ running: true, runError: '', result: null })
     try {
-      const result = await runCode({ code, stdin })
+      const result = await runCode({ code, stdin, language: task.language })
       setRun({ running: false, runError: '', result })
     } catch (err) {
       setRun({ running: false, runError: getErrorMessage(err, 'Could not run your code'), result: null })
     } finally {
       busyRef.current = false
     }
-  }, [code, stdin])
+  }, [code, stdin, task.language])
 
   const handleSubmit = async () => {
     if (busyRef.current) return
@@ -129,106 +131,123 @@ function Workspace({ task, assignmentId }) {
   }
 
   return (
-    <div
-      ref={layoutRef}
-      style={{ '--left': `${split * 100}%` }}
-      className="flex flex-col bg-white lg:h-[calc(100vh-4rem)] lg:flex-row"
-    >
-      <section className="border-b border-slate-200 lg:w-(--left) lg:shrink-0 lg:overflow-y-auto lg:border-b-0">
-        <div className="border-b border-slate-100 px-5 pt-4">
-          <Link to={`/topics/${task.category}`} className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800">
+    <div className="task-workspace">
+      <header className="task-workspace-header">
+        <div className="task-workspace-breadcrumb">
+          <Link to={topicPath(task.language, task.category)} aria-label="Back to topic">
             <Icon d={icons.back} className="size-4" />
-            Back to topic
           </Link>
+          <span>Topics</span>
+          <Icon d={icons.arrow} className="size-3.5 task-breadcrumb-chevron" />
+          <span className="task-breadcrumb-category">{task.category.replaceAll('-', ' ')}</span>
+          <Icon d={icons.arrow} className="size-3.5 task-breadcrumb-chevron" />
+          <strong>{task.title}</strong>
         </div>
-        <ProblemPanel task={task} status={status} />
-      </section>
-
-      <ResizeHandle
-        direction="horizontal"
-        containerRef={layoutRef}
-        onChange={(r) => setSplit(clamp(r, 0.25, 0.65))}
-      />
-
-      <section
-        ref={rightRef}
-        style={{ '--console': `${consoleSize * 100}%` }}
-        className="flex min-w-0 flex-col lg:flex-1"
-      >
-        <div className="flex shrink-0 items-center justify-between border-b border-slate-200 bg-slate-50 px-3 py-2">
-          <span className="font-mono text-sm text-slate-600">main.c</span>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center overflow-hidden rounded-md border border-slate-300 bg-white" role="group" aria-label="Editor font size">
-              <button onClick={() => changeFont(-1)} disabled={fontSize <= 10} aria-label="Decrease font size" className="px-2 py-1 text-xs text-slate-600 hover:bg-slate-100 disabled:opacity-40">A−</button>
-              <span className="px-1 text-xs text-slate-500" aria-live="polite">{fontSize}</span>
-              <button onClick={() => changeFont(1)} disabled={fontSize >= 24} aria-label="Increase font size" className="px-2 py-1 text-xs text-slate-600 hover:bg-slate-100 disabled:opacity-40">A+</button>
-            </div>
-            <button
-              onClick={toggleWrap}
-              aria-pressed={wrap}
-              className={`rounded-md border px-2.5 py-1 text-xs font-medium transition ${wrap ? 'border-brand-500 bg-brand-50 text-brand-700' : 'border-slate-300 bg-white text-slate-600 hover:bg-slate-100'}`}
-            >
-              Wrap
-            </button>
-            <button
-              onClick={copyCode}
-              className="rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-100"
-            >
-              {copied ? 'Copied ✓' : 'Copy'}
-            </button>
-            <button
-              onClick={toggleTheme}
-              className="rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-100"
-            >
-              {theme === 'dark' ? '☀ Light' : '🌙 Dark'}
-            </button>
-            <button
-              onClick={resetCode}
-              className="rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-100"
-            >
-              Reset Code
-            </button>
+        <div className="task-workspace-progress">
+          <div className="task-progress-label">
+            <span>Question {String(task.questionOrder || 1).padStart(2, '0')}</span>
+            <span>{status === 'completed' ? 'Completed' : status === 'attempted' ? 'In progress' : 'Ready to solve'}</span>
+          </div>
+          <div
+            className="task-progress-track"
+            role="progressbar"
+            aria-label="Question completion"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={status === 'completed' ? 100 : 0}
+          >
+            <span style={{ width: status === 'completed' ? '100%' : '0%' }} />
           </div>
         </div>
+      </header>
 
-        <div className="h-[400px] min-h-[400px] lg:h-auto lg:min-h-[200px] lg:flex-1">
-          <CodeEditor value={code} onChange={updateCode} theme={theme} onRun={handleRun} fontSize={fontSize} wordWrap={wrap} />
-        </div>
-
-        <div className="flex shrink-0 items-center gap-3 border-t border-slate-200 bg-slate-50 px-3 py-2.5">
-          <Button type="button" onClick={handleRun} loading={run.running} disabled={busy} className="w-auto!">
-            {run.running ? 'Running…' : '▶ Run Code'}
-          </Button>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={busy}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:ring-4 focus:ring-emerald-100 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {test.submitting ? 'Submitting…' : 'Submit'}
-          </button>
-          {status === 'completed' && task.nextSlug && (
-            <button
-              type="button"
-              onClick={() => navigate(`/tasks/${task.nextSlug}`)}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-brand-500 px-4 py-2.5 text-sm font-semibold text-brand-600 transition hover:bg-brand-50"
-            >
-              Next Question →
-            </button>
-          )}
-          <span className="ml-auto hidden text-xs text-slate-400 sm:inline">{isMac ? '⌘' : 'Ctrl'} + Enter to run</span>
-        </div>
+      <div className="task-workspace-body" ref={layoutRef} style={{ '--left': `${split * 100}%` }}>
+        <section className="task-problem-pane">
+          <ProblemPanel task={task} status={status} />
+        </section>
 
         <ResizeHandle
-          direction="vertical"
-          containerRef={rightRef}
-          onChange={(r) => setConsoleSize(clamp(r, 0.15, 0.7))}
+          direction="horizontal"
+          containerRef={layoutRef}
+          onChange={(r) => setSplit(clamp(r, 0.25, 0.55))}
         />
 
-        <div className="h-72 shrink-0 border-t border-slate-200 lg:h-(--console) lg:border-t-0">
-          <ConsolePanel tab={tab} setTab={setTab} stdin={stdin} setStdin={setStdin} run={run} test={test} />
-        </div>
-      </section>
+        <section
+          ref={rightRef}
+          style={{ '--console': `${consoleSize * 100}%` }}
+          className="task-editor-pane"
+        >
+          <div className="task-editor-toolbar">
+            <div className="task-file-tab"><span /> main.{task.language === 'javascript' ? 'js' : task.language === 'python' ? 'py' : 'c'} <i /></div>
+            <div className="task-editor-tools">
+              <div className="task-editor-font-control" role="group" aria-label="Editor font size">
+                <button onClick={() => changeFont(-1)} disabled={fontSize <= 10} aria-label="Decrease font size">A−</button>
+                <span aria-live="polite">{fontSize}</span>
+                <button onClick={() => changeFont(1)} disabled={fontSize >= 24} aria-label="Increase font size">A+</button>
+              </div>
+              <button
+                onClick={toggleWrap}
+                aria-pressed={wrap}
+                className={`task-editor-control ${wrap ? 'is-active' : ''}`}
+              >
+                ↵ <span>Wrap</span>
+              </button>
+              <button onClick={copyCode} className="task-editor-control">
+                <span>{copied ? 'Copied ✓' : 'Copy'}</span>
+              </button>
+              <button onClick={toggleTheme} className="task-editor-control">
+                <span>{theme === 'dark' ? '☀ Light' : '🌙 Dark'}</span>
+              </button>
+              <button onClick={resetCode} className="task-editor-control">
+                <span>Reset</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="task-editor-canvas">
+            <CodeEditor
+              value={code}
+              onChange={updateCode}
+              theme={theme}
+              onRun={handleRun}
+              language={task.language === 'c' ? 'c' : task.language}
+              fontSize={fontSize}
+              wordWrap={wrap}
+            />
+          </div>
+
+          <div className="task-action-bar">
+            <div className="task-run-actions">
+              <Button type="button" onClick={handleRun} loading={run.running} disabled={busy} className="task-run-button">
+                {run.running ? 'Running…' : '▶ Run Code'}
+              </Button>
+              <button type="button" onClick={handleSubmit} disabled={busy} className="task-submit-button">
+                {test.submitting ? 'Submitting…' : '✓ Submit'}
+              </button>
+              {status === 'completed' && task.nextSlug && (
+                <button
+                  type="button"
+                  onClick={() => navigate(taskPath(task.language, task.nextSlug))}
+                  className="task-next-button"
+                >
+                  Next Question →
+                </button>
+              )}
+            </div>
+            <span className="task-run-shortcut">{isMac ? '⌘' : 'Ctrl'} + Enter to run</span>
+          </div>
+
+          <ResizeHandle
+            direction="vertical"
+            containerRef={rightRef}
+            onChange={(r) => setConsoleSize(clamp(r, 0.15, 0.7))}
+          />
+
+          <div className="task-console-pane">
+            <ConsolePanel tab={tab} setTab={setTab} stdin={stdin} setStdin={setStdin} run={run} test={test} />
+          </div>
+        </section>
+      </div>
       {toast && (
         <div role="status" className="animate-pop fixed right-4 bottom-4 z-50 max-w-sm rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 shadow-lg">
           {toast}
@@ -238,7 +257,7 @@ function Workspace({ task, assignmentId }) {
   )
 }
 
-export default function TaskDetail() {
+export default function TaskDetail({ language = 'c' }) {
   const { slug } = useParams()
   const [searchParams] = useSearchParams()
   const assignmentId = searchParams.get('assignmentId')
@@ -249,7 +268,7 @@ export default function TaskDetail() {
     return (
       <div className="mx-auto max-w-3xl space-y-4">
         <ErrorBlock message={error} />
-        <Link to="/tasks" className="text-sm font-semibold text-brand-600">
+        <Link to={language === 'c' ? '/tasks' : `/${language}`} className="text-sm font-semibold text-brand-600">
           ← Back to tasks
         </Link>
       </div>

@@ -101,7 +101,10 @@ function cleanCompileOutput(raw, workDir) {
  * Compiles `code` and runs it once for every entry of `inputs` (stdin).
  * Returns { compile: { ok, output }, runs: [...] }; `runs` is empty if compilation fails.
  */
-export async function executeProgram({ code, inputs, signal }) {
+export async function executeProgram({ code, inputs, language = 'c', signal }) {
+  if (!['c', 'javascript', 'python'].includes(language)) {
+    throw new ExecutorError('Unsupported programming language.', 400);
+  }
   const driver = await getDriver();
   if (!driver) {
     throw new ExecutorError(
@@ -111,7 +114,7 @@ export async function executeProgram({ code, inputs, signal }) {
 
   if (driver.name === 'remote') {
     try {
-      return await driver.executeProgram({ code, inputs });
+      return await driver.executeProgram({ code, inputs, language });
     } catch (error) {
       console.error('Remote execution request failed:', error.message);
       throw new ExecutorError('The remote code runner is temporarily unavailable.', 503);
@@ -125,6 +128,21 @@ export async function executeProgram({ code, inputs, signal }) {
     await fs.mkdir(workRoot, { recursive: true });
     workDir = await fs.mkdtemp(path.join(workRoot, 'virvese-'));
     await fs.chmod(workDir, 0o777);
+    if (language !== 'c') {
+      const runLanguage = language === 'javascript' ? driver.runJavaScript : driver.runPython;
+      if (typeof runLanguage !== 'function') {
+        throw new ExecutorError(`The selected code runner does not support ${language}.`);
+      }
+      const runs = [];
+      for (const input of inputs) {
+        const run = await runLanguage(workDir, code, input, { signal });
+        if (run.aborted) throw new ExecutorError('Execution request was cancelled.', 499);
+        runs.push(run);
+        if (run.timedOut || run.outputExceeded || run.memoryExceeded) break;
+      }
+      return { compile: { ok: true, output: '' }, runs };
+    }
+
     await fs.writeFile(path.join(workDir, 'main.c'), code);
 
     const compiled = await driver.compile(workDir, { signal });

@@ -67,6 +67,51 @@ export function run(workDir, input, { signal } = {}) {
   });
 }
 
+export function runJavaScript(workDir, code, input, { signal } = {}) {
+  const name = uniqueName('vv-js');
+  const mem = `${LIMITS.memoryMb}m`;
+  return runProcess({
+    command: 'docker',
+    args: [
+      'run', ...baseFlags, '-i', '--name', name,
+      '--memory', mem, '--memory-swap', mem, '--cpus', '0.5',
+      '--pids-limit', '16', '--read-only', '--tmpfs', '/tmp:size=8m',
+      '--ulimit', `fsize=${LIMITS.maxFileSizeKb * 1024}`, '--ulimit', 'nofile=64',
+      IMAGE, 'node', '--permission',
+      `--max-old-space-size=${Math.max(32, LIMITS.memoryMb - 64)}`, '--disable-proto=throw',
+      '-e', "eval(Buffer.from(process.argv[1], 'base64').toString('utf8'))",
+      Buffer.from(code).toString('base64'),
+    ],
+    env: { ...env, NODE_OPTIONS: '' },
+    input,
+    timeoutMs: LIMITS.runTimeoutMs + 1500,
+    maxOutputBytes: LIMITS.maxOutputBytes,
+    onTimeout: killContainer(name),
+    signal,
+  });
+}
+
+export function runPython(workDir, code, input, { signal } = {}) {
+  const name = uniqueName('vv-py');
+  const mem = `${LIMITS.memoryMb}m`;
+  return runProcess({
+    command: 'docker',
+    args: [
+      'run', ...baseFlags, '-i', '--name', name,
+      '--memory', mem, '--memory-swap', mem, '--cpus', '0.5',
+      '--pids-limit', '16', '--read-only', '--tmpfs', '/tmp:size=8m',
+      '--ulimit', `fsize=${LIMITS.maxFileSizeKb * 1024}`, '--ulimit', 'nofile=64',
+      IMAGE, 'python3', '-I', '-S', '-B', '-c', code,
+    ],
+    env,
+    input,
+    timeoutMs: LIMITS.runTimeoutMs + 1500,
+    maxOutputBytes: LIMITS.maxOutputBytes,
+    onTimeout: killContainer(name),
+    signal,
+  });
+}
+
 export function startInteractive(workDir) {
   const name = uniqueName('vv-i');
   const mem = `${LIMITS.memoryMb}m`;

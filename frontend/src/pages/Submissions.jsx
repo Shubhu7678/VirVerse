@@ -3,6 +3,7 @@ import { fetchSubmissions } from '../api/execute'
 import useAsync from '../hooks/useAsync'
 import { LoadingBlock, ErrorBlock, EmptyState } from '../components/States'
 import { DifficultyBadge } from '../components/Badges'
+import { taskPath } from '../utils/languageRoutes'
 
 export default function Submissions() {
   const { data, loading, error } = useAsync(fetchSubmissions, 'submissions')
@@ -25,7 +26,7 @@ export default function Submissions() {
         <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
           {data.map((s) => (
             <li key={s.id} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-5 py-3 text-sm">
-              <Link to={`/tasks/${s.task.slug}`} className="min-w-40 flex-1 font-medium hover:text-brand-600">
+              <Link to={taskPath(s.task.language || 'c', s.task.slug)} className="min-w-40 flex-1 font-medium hover:text-brand-600">
                 {s.task.title}
               </Link>
               <DifficultyBadge level={s.task.difficulty} />

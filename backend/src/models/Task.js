@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import { CATEGORY_SLUGS } from '../config/categories.js';
+import { JAVASCRIPT_CATEGORIES } from '../config/javascriptCategories.js';
+import { PYTHON_CATEGORIES } from '../config/pythonCategories.js';
 
 const testCaseSchema = new mongoose.Schema(
   {
@@ -15,7 +17,16 @@ const taskSchema = new mongoose.Schema(
   {
     slug: { type: String, required: true, unique: true, trim: true },
     title: { type: String, required: true, trim: true },
-    category: { type: String, required: true, enum: CATEGORY_SLUGS },
+    language: { type: String, enum: ['c', 'javascript', 'python'], default: 'c', index: true },
+    category: {
+      type: String,
+      required: true,
+      enum: [
+        ...CATEGORY_SLUGS,
+        ...JAVASCRIPT_CATEGORIES.map((category) => category.slug),
+        ...PYTHON_CATEGORIES.map((category) => category.slug),
+      ],
+    },
     difficulty: { type: String, required: true, enum: ['Easy', 'Medium', 'Hard'] },
     description: { type: String, required: true },
     hint: { type: String, default: '' },
@@ -33,6 +44,6 @@ const taskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-taskSchema.index({ category: 1, order: 1 });
+taskSchema.index({ language: 1, category: 1, order: 1 });
 
 export default mongoose.model('Task', taskSchema);

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { DifficultyBadge } from './Badges'
 import { EmptyState } from './States'
+import { taskPath } from '../utils/languageRoutes'
 
 const rank = { Easy: 1, Medium: 2, Hard: 3 }
 const pageSize = 12
@@ -40,7 +41,10 @@ const field =
  * Searchable, filterable question table.
  * `fixedStatus` hides the status filter for pages that already scope by status (My Tasks / Completed).
  */
-export default function QuestionList({ tasks, topicNames, showTopic = false, fixedStatus = null, emptyState }) {
+export default function QuestionList({
+  tasks, topicNames, showTopic = false, fixedStatus = null, emptyState, variant, language = 'c',
+}) {
+  const themed = variant === 'practice' || variant === 'tasks'
   const [search, setSearch] = useState('')
   const [difficulty, setDifficulty] = useState('all')
   const [status, setStatus] = useState('all')
@@ -85,8 +89,8 @@ export default function QuestionList({ tasks, topicNames, showTopic = false, fix
   if (tasks.length === 0) return emptyState
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5">
+    <div className={`question-list space-y-4 ${themed ? 'practice-question-list' : ''}`}>
+      <div className="question-filters rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5">
         <div className="flex flex-col gap-3 lg:flex-row">
           <input
             type="search"
@@ -140,7 +144,7 @@ export default function QuestionList({ tasks, topicNames, showTopic = false, fix
             <option value="title">Title A–Z</option>
           </select>
         </div>
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
+        <div className="question-summary mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
           <p className="text-xs text-slate-500" aria-live="polite">
             <span className="font-semibold text-slate-800">{completedCount} of {tasks.length}</span> completed
             <span className="mx-2 text-slate-300">·</span>
@@ -168,30 +172,36 @@ export default function QuestionList({ tasks, topicNames, showTopic = false, fix
           {pageTasks.map((t, index) => (
             <article
               key={t.id}
-              className="group flex min-w-0 flex-col rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lg hover:shadow-brand-900/5 sm:p-5"
+              className={`question-card group flex min-w-0 flex-col rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lg hover:shadow-brand-900/5 sm:p-5 ${themed ? 'practice-question-card' : ''}`}
               style={{ animationDelay: `${Math.min(index, 12) * 30}ms` }}
             >
-              <div className="flex items-center justify-between gap-3">
+              {variant === 'practice' && (
+                <div className="practice-question-art" aria-hidden="true">
+                  <span>{['</>', '☰', '＋', '›_', '◎', '☆', '…', 'Aa', '⬡'][((t.questionOrder || 1) - 1) % 9]}</span>
+                  <i /><i /><i />
+                </div>
+              )}
+              <div className="question-card-header flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5">
                   <StatusIcon status={t.status} />
                   <span className="text-xs font-medium text-slate-400">Question {String(t.questionOrder).padStart(2, '0')}</span>
                 </div>
                 <DifficultyBadge level={t.difficulty} />
               </div>
-              <div className="mt-4 flex-1">
+              <div className="question-card-content mt-4 flex-1">
                 {showTopic && <p className="text-[11px] font-semibold tracking-[0.12em] text-brand-600 uppercase">{topicNames[t.category]}</p>}
-                <Link to={`/tasks/${t.slug}`} className="mt-1 block text-base font-bold leading-snug text-slate-900 transition-colors group-hover:text-brand-700">
+                <Link to={taskPath(language, t.slug)} className="mt-1 block text-base font-bold leading-snug text-slate-900 transition-colors group-hover:text-brand-700">
                   {t.title}
                 </Link>
                 {t.description && <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-500">{t.description}</p>}
               </div>
-              <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
+              <div className="question-card-footer mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
                 <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${t.status === 'completed' ? 'text-emerald-700' : t.status === 'attempted' ? 'text-amber-700' : 'text-slate-500'}`}>
                   <StatusIcon status={t.status} />
                   {t.status === 'completed' ? 'Solved' : t.status === 'attempted' ? 'In progress' : 'Ready to solve'}
                 </span>
                 <Link
-                  to={`/tasks/${t.slug}`}
+                  to={taskPath(language, t.slug)}
                   className="inline-flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-brand-600 hover:text-white focus-visible:outline-brand-500"
                 >
                   {t.status === 'completed' ? 'Review' : t.status === 'attempted' ? 'Continue' : 'Solve'}

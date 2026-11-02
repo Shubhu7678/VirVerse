@@ -5,10 +5,12 @@ import { LoadingBlock, ErrorBlock, EmptyState } from '../components/States'
 import QuestionList from '../components/QuestionList'
 import ProgressBar, { progressLabel } from '../components/ProgressBar'
 import Icon, { icons } from '../components/Icon'
+import './practice.css'
 
-export default function TopicDetail() {
+export default function TopicDetail({ language = 'c' }) {
   const { category } = useParams()
-  const { data, loading, error } = useAsync(fetchTasks, 'topic')
+  const prefix = language === 'c' ? '' : `/${language}`
+  const { data, loading, error } = useAsync(() => fetchTasks(language), `topic-${language}`)
 
   if (loading) return <LoadingBlock label="Loading questions…" />
   if (error) return <ErrorBlock message={error} />
@@ -17,7 +19,7 @@ export default function TopicDetail() {
   if (!topic) {
     return (
       <EmptyState title="Topic not found" text="This topic does not exist.">
-        <Link to="/tasks" className="text-sm font-semibold text-brand-600 hover:text-brand-700">
+        <Link to={prefix || '/tasks'} className="text-sm font-semibold text-brand-600 hover:text-brand-700">
           Back to topics
         </Link>
       </EmptyState>
@@ -27,8 +29,8 @@ export default function TopicDetail() {
   const tasks = data.tasks.filter((t) => t.category === topic.slug)
   if (topic.locked) {
     return (
-      <div className="mx-auto max-w-3xl">
-        <Link to="/tasks" className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-brand-600">
+      <div className="task-detail-page mx-auto max-w-3xl">
+        <Link to={prefix || '/tasks'} className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-brand-600">
           <Icon d={icons.back} className="size-4" /> All topics
         </Link>
         <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-6">
@@ -42,8 +44,8 @@ export default function TopicDetail() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl">
-      <Link to="/tasks" className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-brand-600">
+    <div className="task-detail-page mx-auto max-w-5xl">
+      <Link to={prefix || '/tasks'} className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-brand-600">
         <Icon d={icons.back} className="size-4" /> All topics
       </Link>
 
@@ -54,7 +56,7 @@ export default function TopicDetail() {
         </div>
         {topic.nextSlug && (
           <Link
-            to={`/tasks/${topic.nextSlug}`}
+            to={`${prefix}/tasks/${topic.nextSlug}`}
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700"
           >
             {topic.completed === 0 ? 'Start Learning' : 'Continue Learning'}
@@ -77,6 +79,8 @@ export default function TopicDetail() {
         <QuestionList
           tasks={tasks}
           topicNames={{}}
+          variant="tasks"
+          language={language}
           emptyState={
             <EmptyState title="No questions yet" text="Questions for this topic are on the way. Check back soon." />
           }

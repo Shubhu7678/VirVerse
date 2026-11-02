@@ -4,11 +4,14 @@ import useAsync from '../hooks/useAsync'
 import { LoadingBlock, ErrorBlock } from '../components/States'
 import TopicCard from '../components/TopicCard'
 import ProgressBar from '../components/ProgressBar'
+import Icon, { icons } from '../components/Icon'
 import { LAST_TASK_KEY } from '../utils/lastTask'
 import '../styles/topics.css'
 
-export default function Topics() {
-  const { data, loading, error } = useAsync(fetchTasks, 'topics')
+export default function Topics({ language = 'c' }) {
+  const title = language === 'javascript' ? 'JavaScript' : language === 'python' ? 'Python' : 'C'
+  const prefix = language === 'c' ? '' : `/${language}`
+  const { data, loading, error } = useAsync(() => fetchTasks(language), `topics-${language}`)
 
   if (loading) return <LoadingBlock label="Loading topics…" />
   if (error) return <ErrorBlock message={error} />
@@ -21,82 +24,96 @@ export default function Topics() {
       return null
     }
   })()
-  const resume = last && data.tasks.find((t) => t.slug === last.slug && t.status !== 'completed')
+  const resume = last && data.tasks.find((task) => task.slug === last.slug && task.status !== 'completed')
+  const nextTask = resume || continueTask
+  const lockedCount = categories.filter((topic) => topic.locked).length
 
   return (
-    <div className="topics-page mx-auto max-w-6xl space-y-7 sm:space-y-8">
-      <section className="topics-hero profile-enter relative isolate overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm">
-        <div className="topics-hero-grid pointer-events-none absolute inset-0 -z-10" />
-        <div className="pointer-events-none absolute -top-28 -right-12 -z-10 size-80 rounded-full bg-brand-100/60 blur-3xl" />
-        <div className="pointer-events-none absolute -right-8 bottom-0 -z-10 size-56 rounded-full bg-violet-100/40 blur-3xl" />
-        <div className="flex flex-col gap-6 p-5 sm:p-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <p className="flex items-center gap-2 text-[11px] font-bold tracking-[0.18em] text-brand-600 uppercase">
-              <span className="size-1.5 rounded-full bg-brand-500 shadow-[0_0_0_3px_var(--color-brand-100)]" />
-              Your learning roadmap
-            </p>
-            <h1 className="mt-3 text-3xl font-bold tracking-[-0.04em] text-slate-900 sm:text-4xl">C Programming</h1>
-            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-500 sm:text-base sm:leading-7">
-              Follow a guided path from your first Hello World to building with files. Learn at your pace, one topic at a time.
-            </p>
-          </div>
-          <Link
-            to="/playground"
-            className="group inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:text-brand-700 hover:shadow-md focus-visible:outline-brand-500"
-          >
-            <span className="font-mono text-brand-600 transition-transform duration-200 group-hover:scale-110">{'<>'}</span>
-            Open C Playground
-            <span aria-hidden="true" className="text-slate-400 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-brand-600">↗</span>
-          </Link>
-        </div>
-      </section>
-
-      <section className="profile-enter grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]" style={{ animationDelay: '70ms' }}>
-        <div className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm transition-shadow duration-200 hover:shadow-md sm:p-6">
-          <div className="flex flex-wrap items-end justify-between gap-2">
-            <div>
-              <p className="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">Your progress</p>
-              <p className="mt-1 text-lg font-bold text-slate-900">{stats.completed} <span className="font-medium text-slate-500">of {stats.total} questions solved</span></p>
+    <div className="topics-page">
+      <section className="topics-hero">
+        <div className="topics-hero-copy">
+          <p className="topics-eyebrow"><span /> {title.toUpperCase()} PROGRAMMING <span className="topics-eyebrow-line" /></p>
+          <h1>{title} <span>Programming</span></h1>
+          <p className="topics-hero-description">
+            Build a strong foundation in {title}, from the basics to advanced concepts.
+          </p>
+          <div className="topics-hero-progress">
+            <div className="topics-progress-ring" style={{ '--progress': `${stats.percent}%` }}>
+              <span>{stats.percent}%</span>
             </div>
-            <span className="text-2xl font-bold tracking-tight text-brand-600">{stats.percent}%</span>
+            <div className="topics-progress-detail">
+              <p>{stats.completed} of {stats.total} questions completed</p>
+              <ProgressBar percent={stats.percent} label="Overall topic progress" size="h-2" />
+            </div>
           </div>
-          <div className="mt-4"><ProgressBar percent={stats.percent} label="Overall progress" size="h-2" /></div>
         </div>
-        {(resume || continueTask) && (
-          <Link
-            to={`/tasks/${(resume || continueTask).slug}`}
-            className="group flex items-center gap-4 rounded-3xl bg-linear-to-br from-brand-600 to-violet-600 p-5 text-white shadow-md shadow-brand-900/10 transition duration-300 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-white sm:min-w-72 sm:p-6"
-          >
-            <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-white/15">
-              <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-                <path d="M8 5v14l11-7-11-7z" strokeLinejoin="round" />
-              </svg>
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-xs font-medium text-indigo-100">{resume ? 'Pick up where you left off' : 'Next up for you'}</span>
-              <span className="mt-1 block truncate text-sm font-bold">{(resume || continueTask).title}</span>
-            </span>
-            <span className="text-lg transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
-          </Link>
-        )}
+
+        <div className="topics-hero-art" aria-hidden="true">
+          <div className="topics-art-halo" />
+          <span className="topics-art-spark topics-art-spark-a">✦</span>
+          <span className="topics-art-spark topics-art-spark-b">✧</span>
+          <div className="topics-art-float topics-art-float-left">&lt;/&gt;</div>
+          <div className="topics-art-float topics-art-float-right">&lt;/&gt;</div>
+          <div className="topics-art-laptop">
+            <div className="topics-art-screen">
+              <span className="topics-art-window"><i /><i /><i /></span>
+              <div className="topics-art-code">
+                <b>{language === 'javascript' ? 'JS' : language === 'python' ? 'Py' : 'C'}</b><span><i /><i /><i /><i /></span>
+              </div>
+            </div>
+            <div className="topics-art-base" />
+          </div>
+          <div className="topics-art-wave" />
+        </div>
+
+        <div className="topics-hero-action">
+          {nextTask ? (
+            <Link to={`${prefix}/tasks/${nextTask.slug}`} className="topics-resume">
+              <span className="topics-resume-play"><Icon d={icons.arrow} className="size-3.5" /></span>
+              <span>{resume ? 'Resume' : 'Continue'}: {nextTask.title}</span>
+              <Icon d={icons.arrow} className="size-4" />
+            </Link>
+          ) : (
+            <span className="topics-resume topics-resume-done">All topics complete <Icon d={icons.check} className="size-4" /></span>
+          )}
+          <span className="topics-last-studied"><Icon d={icons.submissions} className="size-3.5" /> Your next challenge is ready</span>
+        </div>
       </section>
 
-      <section className="profile-enter" style={{ animationDelay: '130ms' }}>
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <p className="text-[11px] font-bold tracking-[0.16em] text-brand-600 uppercase">Explore and practice</p>
-            <h2 className="mt-1.5 text-2xl font-bold tracking-[-0.03em] text-slate-900">Your topics</h2>
-          </div>
-          <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-500 shadow-sm">
-            {categories.length} topics
-          </span>
+      <section className="topics-journey">
+        <span className="topics-journey-icon" aria-hidden="true">✦</span>
+        <div>
+          <h2>Your learning journey</h2>
+          <p>Complete topics, practice problems and track your progress.</p>
         </div>
-        <div className="topics-card-grid grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="topics-journey-graphic" aria-hidden="true">
+          <Icon d={icons.arrow} className="size-5" />
+          <span /><span /><span />
+        </div>
+      </section>
+
+      <section className="topics-list-section" id="all-topics">
+        <div className="topics-section-heading">
+          <div>
+            <h2>{title} Topics</h2>
+            <p>Explore all {title} programming topics below.</p>
+          </div>
+          <a href="#topic-grid" className="topics-view-all">View all <Icon d={icons.arrow} className="size-3.5" /></a>
+        </div>
+        <div className="topics-card-grid" id="topic-grid">
           {categories.map((topic, index) => (
-            <TopicCard key={topic.slug} topic={topic} index={index} />
+            <TopicCard key={topic.slug} topic={topic} index={index} language={language} />
           ))}
         </div>
       </section>
+
+      {lockedCount > 0 && (
+        <aside className="topics-access-note">
+          <span aria-hidden="true">♛</span>
+          <p><strong>Want to unlock all topics and get full access?</strong> Join an organization with an active VirVerse subscription.</p>
+          <Icon d={icons.profile} className="size-4" />
+        </aside>
+      )}
     </div>
   )
 }

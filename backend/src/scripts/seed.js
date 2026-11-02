@@ -33,7 +33,7 @@ async function seed() {
   const ops = questions.map((q) => ({
     updateOne: {
       filter: { slug: q.slug },
-      update: { $set: { ...q, order: q.topicOrder * 100 + q.questionOrder } },
+      update: { $set: { ...q, language: 'c', order: q.topicOrder * 100 + q.questionOrder } },
       upsert: true,
     },
   }));

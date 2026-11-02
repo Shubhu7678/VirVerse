@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Spinner from '../Spinner'
+import Icon, { icons } from '../Icon'
 import { getHint } from '../../utils/diagnostics'
 
 const tabs = [
@@ -165,7 +166,7 @@ function TerminalTab({ run, events, sendInput }) {
           <span className={`size-2 rounded-full ${run.running ? 'animate-pulse bg-emerald-400' : 'bg-slate-500'}`} />
           <span className="text-xs font-medium text-slate-300">Interactive terminal</span>
         </div>
-        <span className="text-[11px] text-slate-500">
+        <span className="playground-terminal-status text-[11px] text-slate-500">
           {run.running ? run.ready ? 'Program is running' : 'Compiling…' : 'Ready'}
         </span>
       </div>
@@ -214,27 +215,43 @@ function TerminalTab({ run, events, sendInput }) {
 }
 
 export default function ConsolePanel({
-  tab, setTab, stdin, setStdin, run, test, showTests = true, interactive = false, sendInput,
+  tab, setTab, stdin, setStdin, run, test, showTests = true, interactive = false, sendInput, onClear, clearDisabled = false,
 }) {
   const visibleTabs = interactive
     ? [{ id: 'terminal', label: 'Terminal' }, { id: 'output', label: 'Run details' }]
     : showTests ? tabs : tabs.filter((t) => t.id !== 'tests')
   return (
     <div className="flex h-full flex-col bg-white">
-      <div role="tablist" className="flex shrink-0 border-b border-slate-200 px-2">
-        {visibleTabs.map((t) => (
+      <div role="tablist" className="flex shrink-0 items-center border-b border-slate-200 px-2">
+        <div className="flex min-w-0 flex-1 items-stretch">
+          {visibleTabs.map((t) => (
+            <button
+              key={t.id}
+              role="tab"
+              aria-selected={tab === t.id}
+              onClick={() => setTab(t.id)}
+              className={`-mb-px inline-flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition ${
+                tab === t.id ? 'border-brand-600 text-brand-700' : 'border-transparent text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              {interactive && <Icon d={t.id === 'terminal' ? icons.terminal : icons.list} className="size-4" />}
+              {t.label}
+            </button>
+          ))}
+        </div>
+        {interactive && onClear && (
           <button
-            key={t.id}
-            role="tab"
-            aria-selected={tab === t.id}
-            onClick={() => setTab(t.id)}
-            className={`-mb-px border-b-2 px-4 py-2.5 text-sm font-medium transition ${
-              tab === t.id ? 'border-brand-600 text-brand-700' : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
+            type="button"
+            onClick={onClear}
+            disabled={clearDisabled}
+            className="playground-console-clear inline-flex min-h-8 shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 text-xs font-medium text-slate-500 transition hover:border-brand-300 hover:text-brand-700"
           >
-            {t.label}
+            <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M4 7h16M10 11v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3" />
+            </svg>
+            Clear
           </button>
-        ))}
+        )}
       </div>
       <div className="min-h-0 flex-1 overflow-auto p-4">
         {interactive && tab === 'terminal' && <TerminalTab run={run} events={run.events} sendInput={sendInput} />}

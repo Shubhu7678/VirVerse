@@ -21,6 +21,14 @@ export const DEFAULT_LANGUAGES = [
     key: 'c', name: 'C', monacoId: 'c', extension: 'c', runtime: 'c', enabled: true,
     starterCode: '#include <stdio.h>\n\nint main(void) {\n    return 0;\n}\n',
   },
+  {
+    key: 'javascript', name: 'JavaScript', monacoId: 'javascript', extension: 'js', runtime: 'javascript', enabled: true,
+    starterCode: "const fs = require('node:fs')\nconst input = fs.readFileSync(0, 'utf8').trim()\nconsole.log(input)\n",
+  },
+  {
+    key: 'python', name: 'Python', monacoId: 'python', extension: 'py', runtime: 'python', enabled: true,
+    starterCode: 'import sys\n\ndata = sys.stdin.read().strip()\nprint(data)\n',
+  },
 ]
 
 // Insert-only: admin edits to existing plans/languages are never overwritten.

@@ -12,7 +12,7 @@ export function Logo({ className = '' }) {
 export default function AuthLayout({ title, subtitle, children, footer }) {
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
-      <aside className="relative hidden overflow-hidden bg-linear-to-br from-brand-600 via-indigo-600 to-violet-700 p-12 text-white lg:flex lg:flex-col lg:justify-between">
+      <aside className="relative hidden overflow-hidden bg-linear-to-br from-brand-600 via-brand-700 to-brand-700 p-12 text-white lg:flex lg:flex-col lg:justify-between">
         <Logo />
         <div className="relative z-10 max-w-md">
           <h2 className="text-4xl leading-tight font-bold">Everything you need, in one place.</h2>

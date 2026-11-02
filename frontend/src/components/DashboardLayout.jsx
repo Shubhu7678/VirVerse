@@ -29,6 +29,22 @@ const nav = [
   { label: 'Submissions', to: '/submissions', icon: icons.submissions },
 ]
 
+const javascriptNav = [
+  { label: 'Topics', to: '/javascript', end: true },
+  { label: 'Practice Problems', to: '/javascript/practice' },
+  { label: 'JavaScript Playground', to: '/javascript/playground' },
+  { label: 'My Tasks', to: '/javascript/my-tasks' },
+  { label: 'Completed Tasks', to: '/javascript/completed' },
+]
+
+const pythonNav = [
+  { label: 'Topics', to: '/python', end: true },
+  { label: 'Practice Problems', to: '/python/practice' },
+  { label: 'Python Playground', to: '/python/playground' },
+  { label: 'My Tasks', to: '/python/my-tasks' },
+  { label: 'Completed Tasks', to: '/python/completed' },
+]
+
 const itemClass = ({ isActive }) =>
   `group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
     isActive
@@ -59,8 +75,16 @@ function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
     || location.pathname.startsWith('/topics/')
     || location.pathname === '/practice'
     || location.pathname === '/playground'
+  const javascriptActive = location.pathname === '/javascript'
+    || location.pathname.startsWith('/javascript/')
+  const pythonActive = location.pathname === '/python'
+    || location.pathname.startsWith('/python/')
   const [programmingState, setProgrammingState] = useState({ pathname: location.pathname, open: programmingActive })
   const programmingOpen = programmingState.pathname === location.pathname ? programmingState.open : programmingActive
+  const [javascriptState, setJavascriptState] = useState({ pathname: location.pathname, open: javascriptActive })
+  const javascriptOpen = javascriptState.pathname === location.pathname ? javascriptState.open : javascriptActive
+  const [pythonState, setPythonState] = useState({ pathname: location.pathname, open: pythonActive })
+  const pythonOpen = pythonState.pathname === location.pathname ? pythonState.open : pythonActive
   const webDevelopmentActive = location.pathname.startsWith('/web-development/')
   const [webDevelopmentState, setWebDevelopmentState] = useState({ pathname: location.pathname, open: webDevelopmentActive })
   const webDevelopmentOpen = webDevelopmentState.pathname === location.pathname
@@ -78,7 +102,7 @@ function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
         <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-bold tracking-wide text-emerald-700">LEARN</span>
       </div>
 
-      <div className="mx-2 mt-4 rounded-2xl bg-linear-to-br from-brand-600 to-violet-600 p-4 text-white shadow-md shadow-brand-900/10">
+      <div className="mx-2 mt-4 rounded-2xl bg-linear-to-br from-brand-600 to-brand-700 p-4 text-white shadow-md shadow-brand-900/10">
         <div className="flex items-center gap-2">
           <span className="flex size-8 items-center justify-center rounded-xl bg-white/15"><Icon d={icons.code} className="size-4" /></span>
           <span className="text-xs font-semibold text-indigo-100">Your workspace</span>
@@ -124,6 +148,60 @@ function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
             <div className="min-h-0 overflow-hidden">
               <ul className="mt-1 space-y-0.5 border-l border-slate-200 ml-[21px]">
                 <NavItems items={nav[1].children} close={close} nested />
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li className="mt-2">
+          <button
+            type="button"
+            aria-expanded={pythonOpen}
+            aria-controls="python-navigation"
+            onClick={() => setPythonState({ pathname: location.pathname, open: !pythonOpen })}
+            className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors ${
+              pythonActive ? 'bg-brand-50 text-brand-700' : 'text-slate-700 hover:bg-slate-100'
+            }`}
+          >
+            <Icon d={icons.code} className="size-5 shrink-0 text-slate-500 transition-colors group-hover:text-brand-600" />
+            <span className="flex-1 text-left">Python</span>
+            <svg viewBox="0 0 20 20" className={`size-4 text-slate-400 transition-transform duration-300 ${pythonOpen ? 'rotate-180' : ''}`} fill="currentColor" aria-hidden="true">
+              <path fillRule="evenodd" d="M5.22 7.47a.75.75 0 011.06 0L10 11.19l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 8.53a.75.75 0 010-1.06z" clipRule="evenodd" />
+            </svg>
+          </button>
+          <div
+            id="python-navigation"
+            className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${pythonOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+          >
+            <div className="min-h-0 overflow-hidden">
+              <ul className="mt-1 space-y-0.5 border-l border-slate-200 ml-[21px]">
+                <NavItems items={pythonNav} close={close} nested />
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li className="mt-2">
+          <button
+            type="button"
+            aria-expanded={javascriptOpen}
+            aria-controls="javascript-navigation"
+            onClick={() => setJavascriptState({ pathname: location.pathname, open: !javascriptOpen })}
+            className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors ${
+              javascriptActive ? 'bg-brand-50 text-brand-700' : 'text-slate-700 hover:bg-slate-100'
+            }`}
+          >
+            <Icon d={icons.code} className="size-5 shrink-0 text-slate-500 transition-colors group-hover:text-brand-600" />
+            <span className="flex-1 text-left">JavaScript</span>
+            <svg viewBox="0 0 20 20" className={`size-4 text-slate-400 transition-transform duration-300 ${javascriptOpen ? 'rotate-180' : ''}`} fill="currentColor" aria-hidden="true">
+              <path fillRule="evenodd" d="M5.22 7.47a.75.75 0 011.06 0L10 11.19l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 8.53a.75.75 0 010-1.06z" clipRule="evenodd" />
+            </svg>
+          </button>
+          <div
+            id="javascript-navigation"
+            className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${javascriptOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+          >
+            <div className="min-h-0 overflow-hidden">
+              <ul className="mt-1 space-y-0.5 border-l border-slate-200 ml-[21px]">
+                <NavItems items={javascriptNav} close={close} nested />
               </ul>
             </div>
           </div>
@@ -185,7 +263,7 @@ function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
 
       <div className="border-t border-slate-100 pt-3">
         <div className="mb-2 flex items-center gap-3 rounded-2xl bg-slate-50 p-3">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-brand-600 to-violet-600 text-sm font-bold text-white shadow-sm">{initials}</span>
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-brand-600 to-brand-700 text-sm font-bold text-white shadow-sm">{initials}</span>
           <span className="min-w-0 flex-1">
             <span className="block truncate text-sm font-semibold text-slate-800">{userName}</span>
             <span className="block truncate text-xs text-slate-500">{user?.email}</span>
@@ -334,7 +412,7 @@ export default function DashboardLayout() {
             >
               <Icon d={theme === 'dark' ? icons.sun : icons.moon} className="size-5" />
             </button>
-            <Link to="/profile" className="flex size-10 items-center justify-center rounded-xl bg-linear-to-br from-brand-600 to-violet-600 text-sm font-bold text-white shadow-sm ring-2 ring-white transition hover:scale-105 hover:shadow-md" aria-label={`Open profile for ${userName}`}>
+            <Link to="/profile" className="flex size-10 items-center justify-center rounded-xl bg-linear-to-br from-brand-600 to-brand-700 text-sm font-bold text-white shadow-sm ring-2 ring-white transition hover:scale-105 hover:shadow-md" aria-label={`Open profile for ${userName}`}>
               {initials}
             </Link>
           </div>

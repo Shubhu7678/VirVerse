@@ -25,6 +25,7 @@ const rules = [
     .isLength({ min: 1, max: MAX_CODE_LENGTH })
     .withMessage(`Code must be between 1 and ${MAX_CODE_LENGTH} characters`),
   body('stdin').optional().isString().isLength({ max: MAX_STDIN_LENGTH }).withMessage('Input is too long'),
+  body('language').optional().isIn(['c', 'javascript', 'python']).withMessage('Unsupported programming language'),
 ];
 
 router.post('/', protect, runLimiter, rules, handleValidation, execute);

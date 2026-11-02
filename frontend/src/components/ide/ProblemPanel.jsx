@@ -5,7 +5,7 @@ import { getErrorMessage } from '../../api/client'
 
 function CodeBlock({ label, children }) {
   return (
-    <div>
+    <div className="task-code-block">
       <p className="mb-1.5 text-xs font-semibold tracking-wide text-slate-500 uppercase">{label}</p>
       <pre className="overflow-x-auto rounded-lg bg-slate-900 p-3 font-mono text-sm text-slate-100">
         {children || '(none)'}
@@ -14,7 +14,8 @@ function CodeBlock({ label, children }) {
   )
 }
 
-function WorkedSolution({ solution }) {
+function WorkedSolution({ solution, language }) {
+  const isLanguageSolution = language !== 'c'
   const commentLines = solution.notes.split('\n').flatMap((paragraph) => {
     const words = paragraph.split(/\s+/)
     const lines = []
@@ -34,17 +35,36 @@ function WorkedSolution({ solution }) {
   return (
     <div className="overflow-hidden rounded-xl border border-slate-700 bg-slate-950 shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-800 px-4 py-2.5">
-        <span className="text-xs font-semibold text-slate-200">Worked C solution</span>
-        <span className="rounded-md bg-slate-800 px-2 py-1 font-mono text-[10px] font-semibold text-slate-400">C</span>
+        <span className="text-xs font-semibold text-slate-200">
+          {isLanguageSolution
+            ? `Guided ${language === 'javascript' ? 'JavaScript' : 'Python'} solution`
+            : 'Worked C solution'}
+        </span>
+        <span className="rounded-md bg-slate-800 px-2 py-1 font-mono text-[10px] font-semibold text-slate-400">
+          {language === 'javascript' ? 'JS' : language === 'python' ? 'Py' : 'C'}
+        </span>
       </div>
-      <pre className="max-h-96 overflow-auto p-4 text-sm leading-6 text-slate-100">
-        <code>{solution.solution}</code>
-      </pre>
+      {solution.solution && (
+        <div className="border-t border-slate-800 px-4 py-3">
+          <p className="mb-2 text-[10px] font-bold tracking-[0.14em] text-slate-500 uppercase">
+            {isLanguageSolution ? 'Solution code' : 'Complete solution'}
+          </p>
+          <pre className="max-h-96 overflow-auto rounded-lg bg-slate-900 p-3 text-sm leading-6 text-slate-100">
+            <code>{solution.solution}</code>
+          </pre>
+        </div>
+      )}
       <div className="border-t border-slate-800 bg-slate-900 px-4 py-3">
-        <p className="mb-2 text-[10px] font-bold tracking-[0.14em] text-slate-500 uppercase">Commented walkthrough</p>
-        <pre className="overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-5 text-slate-400">
-          {commentLines.map((line) => `// ${line}`).join('\n')}
-        </pre>
+        <p className="mb-2 text-[10px] font-bold tracking-[0.14em] text-slate-500 uppercase">
+          {isLanguageSolution ? 'Solution walkthrough' : 'Commented walkthrough'}
+        </p>
+        {isLanguageSolution ? (
+          <p className="whitespace-pre-line text-sm leading-relaxed text-slate-300">{solution.notes}</p>
+        ) : (
+          <pre className="overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-5 text-slate-400">
+            {commentLines.map((line) => `// ${line}`).join('\n')}
+          </pre>
+        )}
       </div>
     </div>
   )
@@ -94,8 +114,8 @@ export default function ProblemPanel({ task, status }) {
   }
 
   return (
-    <div className="space-y-6 p-5">
-      <div>
+    <div className="task-problem-content space-y-6 p-5">
+      <div className="task-problem-title">
         <h1 className="text-xl font-bold tracking-tight">{task.title}</h1>
         <div className="mt-2 flex flex-wrap items-center gap-2">
           <DifficultyBadge level={task.difficulty} />
@@ -103,13 +123,13 @@ export default function ProblemPanel({ task, status }) {
         </div>
       </div>
 
-      <section>
+      <section className="task-problem-description">
         <h2 className="mb-2 font-semibold">Problem</h2>
         <Description text={task.description} />
       </section>
 
       {task.hint && (
-        <section className="rounded-xl border border-amber-200 bg-amber-50/70 p-4 dark:border-amber-900 dark:bg-amber-950/30">
+        <section className="task-problem-hint rounded-xl border border-amber-200 bg-amber-50/70 p-4 dark:border-amber-900 dark:bg-amber-950/30">
           <button
             type="button"
             onClick={() => setHintOpen((open) => !open)}
@@ -133,13 +153,17 @@ export default function ProblemPanel({ task, status }) {
                     aria-expanded={solutionOpen}
                     className="text-sm font-semibold text-brand-700 underline decoration-brand-300 underline-offset-4 transition hover:text-brand-600 dark:text-brand-600"
                   >
-                    {solutionOpen ? 'Hide worked answer' : 'Still stuck? Show worked answer'}
+                    {solutionOpen
+                      ? 'Hide solution'
+                      : task.language === 'c'
+                        ? 'Still stuck? Show worked answer'
+                        : 'Still stuck? Show solution'}
                   </button>
                   {solutionOpen && (
                     <div className="mt-3 space-y-3">
                       {solutionLoading && <p role="status" className="text-sm text-slate-500">Loading worked answer…</p>}
                       {solutionError && <p role="alert" className="text-sm text-red-600">{solutionError}</p>}
-                      {solution && <WorkedSolution solution={solution} />}
+                      {solution && <WorkedSolution solution={solution} language={task.language} />}
                     </div>
                   )}
                 </div>
@@ -149,13 +173,13 @@ export default function ProblemPanel({ task, status }) {
         </section>
       )}
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+      <section className="task-problem-examples">
         <CodeBlock label="Example input">{task.exampleInput}</CodeBlock>
         <CodeBlock label="Expected output">{task.exampleOutput}</CodeBlock>
       </section>
 
       {task.constraints.length > 0 && (
-        <section>
+        <section className="task-problem-constraints">
           <h2 className="mb-2 font-semibold">Constraints</h2>
           <ul className="list-disc space-y-1 pl-5 text-sm text-slate-700">
             {task.constraints.map((c) => (
@@ -165,15 +189,15 @@ export default function ProblemPanel({ task, status }) {
         </section>
       )}
 
-      <section>
+      <section className="task-problem-tests">
         <h2 className="mb-1 font-semibold">Sample test cases</h2>
         <p className="mb-3 text-sm text-slate-500">
           Submissions are also checked against {task.hiddenTestCount} hidden test case
           {task.hiddenTestCount === 1 ? '' : 's'}.
         </p>
-        <div className="space-y-4">
+        <div className="task-problem-sample-cases">
           {task.sampleTests.map((tc, i) => (
-            <div key={i} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            <div key={i} className="task-problem-test-case">
               <CodeBlock label={`Case ${i + 1} input`}>{tc.input}</CodeBlock>
               <CodeBlock label={`Case ${i + 1} output`}>{tc.expectedOutput}</CodeBlock>
             </div>

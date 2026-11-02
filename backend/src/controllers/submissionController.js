@@ -86,7 +86,11 @@ export async function createSubmission(req, res) {
 
   let outcome;
   try {
-    outcome = await executeProgram({ code, inputs: task.testCases.map((tc) => withNewline(tc.input)) });
+    outcome = await executeProgram({
+      code,
+      inputs: task.testCases.map((tc) => withNewline(tc.input)),
+      language: task.language ?? 'c',
+    });
   } catch (err) {
     if (err instanceof ExecutorError) return res.status(err.status).json({ message: err.message });
     throw err;
@@ -167,7 +171,7 @@ export async function listSubmissions(req, res) {
     .sort({ createdAt: -1 })
     .limit(limit)
     .select('-code')
-    .populate('task', 'title slug difficulty category')
+    .populate('task', 'title slug difficulty category language')
     .lean();
 
   res.json({
@@ -179,7 +183,13 @@ export async function listSubmissions(req, res) {
         passedCount: s.passedCount,
         totalCount: s.totalCount,
         createdAt: s.createdAt,
-        task: { title: s.task.title, slug: s.task.slug, difficulty: s.task.difficulty, category: s.task.category },
+        task: {
+          title: s.task.title,
+          slug: s.task.slug,
+          difficulty: s.task.difficulty,
+          category: s.task.category,
+          language: s.task.language ?? 'c',
+        },
       })),
   });
 }

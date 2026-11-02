@@ -27,6 +27,9 @@ function validateExecutionRequest(body) {
   if (!Array.isArray(body.inputs) || body.inputs.length < 1 || body.inputs.length > MAX_INPUTS) {
     throw fail(`Inputs must contain between 1 and ${MAX_INPUTS} test cases.`);
   }
+  if (body.language !== undefined && !['c', 'javascript', 'python'].includes(body.language)) {
+    throw fail('Unsupported programming language.');
+  }
   let totalInputBytes = 0;
   for (const input of body.inputs) {
     if (typeof input !== 'string' || Buffer.byteLength(input) > MAX_STDIN_LENGTH) {

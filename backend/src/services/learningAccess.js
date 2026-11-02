@@ -3,6 +3,10 @@ import Organization from '../models/Organization.js';
 import OrganizationSubscription from '../models/OrganizationSubscription.js';
 
 export async function hasOrganizationLearningAccess(user, organizationId) {
+  return hasLanguageLearningAccess(user, organizationId, 'c');
+}
+
+export async function hasLanguageLearningAccess(user, organizationId, language) {
   if (user.isDemo) return false;
   if (user.platformRole === 'super_admin') return true;
   if (!organizationId) return false;
@@ -18,7 +22,7 @@ export async function hasOrganizationLearningAccess(user, organizationId) {
   const subscription = await OrganizationSubscription.findOne({
     organization: organizationId,
     status: { $in: ['active', 'trial'] },
-    features: 'c-programming',
+    features: language === 'c' ? 'c-programming' : 'multi-language',
   }).lean();
   if (!subscription) return false;
   const now = new Date();
@@ -28,8 +32,15 @@ export async function hasOrganizationLearningAccess(user, organizationId) {
 
 export async function canAccessTask(user, task, organizationId) {
   if (user.isDemo) {
-    return task.category === 'basics' && task.questionOrder >= 1 && task.questionOrder <= 10;
+    const language = task.language ?? 'c';
+    const firstCategory = language === 'javascript'
+      ? 'js-basics'
+      : language === 'python' ? 'python-basics' : 'basics';
+    return task.category === firstCategory && task.questionOrder >= 1 && task.questionOrder <= 10;
   }
-  if (task.category === 'basics') return true;
-  return hasOrganizationLearningAccess(user, organizationId);
+  const firstCategory = task.language === 'javascript'
+    ? 'js-basics'
+    : task.language === 'python' ? 'python-basics' : 'basics';
+  if (task.category === firstCategory) return true;
+  return hasLanguageLearningAccess(user, organizationId, task.language ?? 'c');
 }

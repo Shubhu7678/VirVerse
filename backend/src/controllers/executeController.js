@@ -2,16 +2,17 @@ import { executeProgram, classifyRun, ExecutorError } from '../services/executor
 import { createInteractiveTicket } from '../services/executor/interactiveTickets.js';
 
 export async function execute(req, res) {
-  const { code, stdin = '' } = req.body;
+  const { code, stdin = '', language = 'c' } = req.body;
 
   try {
-    const { compile, runs } = await executeProgram({ code, inputs: [stdin] });
+    const { compile, runs } = await executeProgram({ code, inputs: [stdin], language });
 
     if (!compile.ok) {
       return res.json({ status: 'Compilation Error', compileOutput: compile.output, stdout: '', stderr: '' });
     }
 
     const run = runs[0];
+    if (!run) return res.status(503).json({ message: 'The code runner did not return a result.' });
     res.json({
       status: classifyRun(run),
       compileOutput: compile.output, // warnings, if any

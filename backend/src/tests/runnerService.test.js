@@ -17,6 +17,7 @@ const ticketSecret = 'runner-ticket-test-secret-with-more-than-32-bytes';
 const allowedOrigin = 'https://virvese-test.example';
 const canExecuteLocally = process.platform === 'darwin'
   && existsSync('/usr/bin/sandbox-exec')
+  && existsSync('/usr/bin/xcrun')
   && existsSync('/usr/bin/cc');
 
 async function getFreePort() {
@@ -57,7 +58,7 @@ async function authorizedRequest(url, body, signal) {
   });
 }
 
-test('remote runner authenticates requests and executes batch and interactive C programs', async (t) => {
+test('remote runner authenticates requests and executes C, JavaScript, Python, and interactive programs', async (t) => {
   const port = await getFreePort();
   const url = `http://127.0.0.1:${port}`;
   const previous = {
@@ -139,6 +140,30 @@ test('remote runner authenticates requests and executes batch and interactive C 
   assert.equal(execution.runs.length, 2);
   assert.equal(execution.runs[0].stdout.trim(), 'value=42');
   assert.equal(execution.runs[1].stdout.trim(), 'value=-7');
+
+  const javascriptExecution = await remote.executeProgram({
+    language: 'javascript',
+    code: "const fs = require('node:fs'); const n = Number(fs.readFileSync(0, 'utf8')); console.log(n * 2)",
+    inputs: ['21\n', '-4\n'],
+  });
+  assert.equal(javascriptExecution.compile.ok, true);
+  assert.deepEqual(
+    javascriptExecution.runs.map((run) => run.stdout.trim()),
+    ['42', '-8'],
+    JSON.stringify(javascriptExecution.runs),
+  );
+
+  const pythonExecution = await remote.executeProgram({
+    language: 'python',
+    code: 'import sys\nvalue = int(sys.stdin.read())\nprint(value * 2)',
+    inputs: ['21\n', '-4\n'],
+  });
+  assert.equal(pythonExecution.compile.ok, true);
+  assert.deepEqual(
+    pythonExecution.runs.map((run) => run.stdout.trim()),
+    ['42', '-8'],
+    JSON.stringify(pythonExecution.runs),
+  );
 
   const timedOutExecution = await remote.executeProgram({
     code: 'int main(void) { for (;;) {} return 0; }',

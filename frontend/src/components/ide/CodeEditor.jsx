@@ -21,12 +21,18 @@ const options = {
   smoothScrolling: true,
 }
 
-export default function CodeEditor({ value, onChange, theme, onRun, language = 'c', fontSize = 14, wordWrap = false }) {
+export default function CodeEditor({
+  value, onChange, theme, onRun, onCursorPosition, language = 'c', fontSize = 14, wordWrap = false,
+}) {
   // Monaco commands are registered once, so keep the latest handler in a ref.
   const runRef = useRef(onRun)
+  const cursorRef = useRef(onCursorPosition)
   useEffect(() => {
     runRef.current = onRun
   }, [onRun])
+  useEffect(() => {
+    cursorRef.current = onCursorPosition
+  }, [onCursorPosition])
 
   return (
     <Editor
@@ -39,6 +45,11 @@ export default function CodeEditor({ value, onChange, theme, onRun, language = '
       loading={<div className="p-4 text-sm text-slate-500">Loading editor…</div>}
       onMount={(editor, monaco) => {
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => runRef.current())
+        editor.onDidChangeCursorPosition(({ position }) => {
+          cursorRef.current?.({ line: position.lineNumber, column: position.column })
+        })
+        const position = editor.getPosition()
+        if (position) cursorRef.current?.({ line: position.lineNumber, column: position.column })
         editor.focus()
       }}
     />

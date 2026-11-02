@@ -1,10 +1,12 @@
-# Remote C execution runner
+# Remote code execution runner
 
-VirVerse's Vercel API cannot access a Docker daemon or run isolated Docker containers. Keep the React app and Express API on Vercel, and run this service on a dedicated Linux VM with Docker. The existing `runner/Dockerfile` remains the isolated GCC image; the runner service only validates requests and asks the host Docker daemon to create short-lived, network-disabled containers.
+VirVerse's Vercel API cannot access a Docker daemon or run isolated Docker containers. Keep the React app and Express API on Vercel, and run this service on a dedicated Linux VM with Docker. The isolated image includes GCC and Node.js; the runner service validates requests and asks the host Docker daemon to create short-lived, network-disabled containers.
 
 ## Security boundary
 
-- Student C source is compiled and run only inside `virvese-c-runner` containers, never in the Express API or runner Node.js process.
+- Student C, JavaScript, and Python code runs only inside `virvese-c-runner` containers, never in the Express API or runner Node.js process.
+- JavaScript execution uses Node's permission model with filesystem access denied, no network, and the same CPU, memory, process, timeout, and output limits as C execution.
+- Python execution uses isolated mode without site imports or bytecode writes, inside the no-network, resource-limited container.
 - Execution containers have no network, dropped Linux capabilities, `no-new-privileges`, memory/CPU/PID limits, read-only runtime filesystems, output/time limits, and size/fd limits.
 - The API-to-runner HTTP endpoint uses an HMAC signature, timestamp, and one-use nonce. Interactive WebSockets use a 30-second, signed, one-use ticket and enforce the configured frontend origin.
 - The runner has no MongoDB credentials. Hidden tests and judging remain in the API.
@@ -71,16 +73,18 @@ Always Free is a best-effort demo/beta host, not dependable production infrastru
 
 Leave `VITE_RUNNER_WS_URL` unset for the existing local cookie-authenticated API WebSocket. For local end-to-end testing of the remote flow, start the runner with a development/test execution driver and use an HTTPS/WSS tunnel only on a trusted network. Do not expose Docker or the runner port directly to the internet.
 
+The Python learning path contains 100 exercises across five topics. From `backend`, run `npm run migrate` and `npm run seed:python` to register Python and seed the tasks. Rebuild and redeploy the runner image after adding Python support with `docker build -t virvese-c-runner:latest -f backend/runner/Dockerfile backend/runner`.
+
 ## Verification
 
 1. `curl -i https://runner.example.com/health` should return `200` and `{"status":"ok"}`.
 2. A direct unauthenticated `POST /internal/v1/execute` must return `401`. Do not add the HMAC secrets to browser requests.
-3. In the deployed Playground, compile and run a program that reads a number with `scanf` and prints it. Confirm stdin/stdout and interactive prompts work.
+3. In the deployed Playground, compile and run a C program that reads a number with `scanf` and prints it. Confirm stdin/stdout and interactive prompts work. Submit JavaScript and Python tasks and confirm they run in the isolated Node.js and Python containers.
 4. Submit an intentionally malformed program such as `int main( {` and confirm the UI reports a compilation error, not a runner configuration error.
 5. Submit a known practice problem and verify its result. The API continues to judge the test cases and filter hidden-case details; the runner response is internal only.
 6. Confirm the runner VM firewall exposes no port 5002 or 2375 and that Caddy is the only public path to the service.
 
-Run the focused backend integration test with `node --test --test-name-pattern="remote runner" src/tests/runnerService.test.js` from `backend`. It exercises HMAC rejection/replay protection, batch stdin/stdout, compilation errors, and sequential interactive `scanf` input using the local macOS sandbox. On a non-macOS machine the C integration portion is skipped unless adapted to use the Docker runner image. Run the frontend build with `npm run build` from `frontend`.
+Run the focused backend integration test with `node --test --test-name-pattern="remote runner" src/tests/runnerService.test.js` from `backend`. It exercises HMAC rejection/replay protection, C, JavaScript, and Python batch stdin/stdout, C compilation errors, and sequential interactive `scanf` input using the local macOS sandbox. On a non-macOS machine the execution integration portion is skipped unless adapted to use the Docker runner image. Run the frontend build with `npm run build` from `frontend`.
 
 ## Operations and limits
 

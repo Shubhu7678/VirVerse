@@ -26,14 +26,14 @@ export function isAvailable() {
   return Boolean(getRunnerUrl() && Buffer.byteLength(process.env.RUNNER_SERVICE_SECRET || '') >= 32);
 }
 
-export async function executeProgram({ code, inputs }) {
+export async function executeProgram({ code, inputs, language = 'c' }) {
   const base = getRunnerUrl();
   const secret = process.env.RUNNER_SERVICE_SECRET;
   if (!base || Buffer.byteLength(secret || '') < 32) {
     throw new Error('Remote execution requires a valid RUNNER_URL and a 32-byte RUNNER_SERVICE_SECRET.');
   }
 
-  const body = JSON.stringify({ code, inputs });
+  const body = JSON.stringify({ code, inputs, ...(language !== 'c' ? { language } : {}) });
   const timestamp = String(Math.floor(Date.now() / 1000));
   const nonce = randomUUID();
   const signature = signRunnerRequest(secret, timestamp, nonce, body);
