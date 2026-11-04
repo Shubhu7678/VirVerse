@@ -250,12 +250,14 @@
 
 .task-editor-tools {
   display: flex;
+  min-width: 0;
   align-items: center;
   gap: 6px;
 }
 
 .task-editor-font-control,
-.task-editor-control {
+.task-editor-control,
+.task-editor-theme-control {
   display: inline-flex;
   min-height: 30px;
   align-items: center;
@@ -271,6 +273,27 @@
 .task-editor-font-control button,
 .task-editor-control {
   padding: 5px 8px;
+}
+
+.task-editor-theme-control {
+  padding: 0 6px;
+}
+
+.task-editor-theme-control select {
+  max-width: 112px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.task-editor-theme-control:focus-within,
+.task-editor-control:focus-visible,
+.task-editor-font-control button:focus-visible {
+  outline: 2px solid var(--color-brand-500, #54d6b3);
+  outline-offset: 2px;
 }
 
 .task-editor-font-control button {
@@ -299,6 +322,12 @@
   color: var(--color-brand-700, #176e83);
 }
 
+.task-editor-ligatures b {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .task-editor-canvas {
   min-height: 160px;
   flex: 1 1 auto;
@@ -306,6 +335,27 @@
 
 .task-editor-canvas > * {
   height: 100%;
+}
+
+.task-editor-statusbar {
+  display: flex;
+  min-height: 24px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  border-top: 1px solid var(--color-slate-200, #e2e8f0);
+  background: var(--color-slate-50, #f8fafc);
+  padding: 0 12px;
+  color: var(--color-slate-500, #64748b);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 10px;
+}
+
+.task-editor-statusbar.is-dark {
+  border-color: #2b323c;
+  background: #171a1f;
+  color: #a4afbd;
 }
 
 .task-action-bar {
@@ -469,9 +519,11 @@
   .task-editor-toolbar {
     gap: 6px;
     padding: 0 8px;
+    overflow-x: auto;
   }
 
   .task-editor-tools {
+    flex: 0 0 auto;
     gap: 4px;
   }
 
@@ -479,9 +531,26 @@
     padding: 5px 6px;
   }
 
+  .task-editor-theme-control {
+    min-width: 35px;
+    justify-content: center;
+  }
+
+  .task-editor-theme-control select {
+    width: 100%;
+    max-width: 90px;
+  }
+
   .task-editor-control span,
   .task-run-shortcut {
     display: none;
+  }
+
+  .task-editor-statusbar {
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 8px;
+    font-size: 9px;
   }
 
   .task-action-bar {

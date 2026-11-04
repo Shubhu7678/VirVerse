@@ -19,6 +19,9 @@ import './task-detail.css'
 
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max)
 const draftKey = (slug) => `virvese:draft:${slug}`
+const editorThemeKey = 'virvese:python-editor-theme'
+const editorLigaturesKey = 'virvese:editor-ligatures'
+const editorThemeOptions = ['app', 'virverse-vscode-dark', 'virverse-one-dark', 'virverse-dracula']
 const isMac = typeof navigator !== 'undefined' && /Mac/i.test(navigator.platform)
 
 function Workspace({ task, assignmentId }) {
@@ -31,6 +34,14 @@ function Workspace({ task, assignmentId }) {
 
   const [fontSize, setFontSize] = useState(() => Number(localStorage.getItem('virvese:editor-font')) || 14)
   const [wrap, setWrap] = useState(() => localStorage.getItem('virvese:editor-wrap') === '1')
+  const [editorTheme, setEditorTheme] = useState(() => {
+    const saved = localStorage.getItem(editorThemeKey)
+    return editorThemeOptions.includes(saved) ? saved : 'app'
+  })
+  const [fontLigatures, setFontLigatures] = useState(() => localStorage.getItem(editorLigaturesKey) === '1')
+  const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 })
+  const [formatting, setFormatting] = useState(false)
+  const editorRef = useRef(null)
   const [copied, setCopied] = useState(false)
   const [toast, setToast] = useState('')
   const navigate = useNavigate()
@@ -62,6 +73,39 @@ function Workspace({ task, assignmentId }) {
       setTimeout(() => setCopied(false), 1500)
     } catch {
       setToast('Could not copy. Select the code and press Ctrl/Cmd + C instead.')
+    }
+  }
+
+  const changeEditorTheme = (event) => {
+    const next = event.target.value
+    setEditorTheme(next)
+    localStorage.setItem(editorThemeKey, next)
+  }
+
+  const toggleLigatures = () =>
+    setFontLigatures((enabled) => {
+      localStorage.setItem(editorLigaturesKey, enabled ? '0' : '1')
+      return !enabled
+    })
+
+  const formatCode = async () => {
+    if (formatting || busyRef.current || !editorRef.current) return
+    setFormatting(true)
+    try {
+      const action = editorRef.current.getAction('editor.action.formatDocument')
+      if (!action) throw new Error('The Python formatter is not available.')
+      const model = editorRef.current.getModel()
+      const before = model?.getValue()
+      await action.run()
+      setToast(model && model.getValue() !== before
+        ? 'Python code formatted with Ruff.'
+        : 'Code is already formatted.')
+    } catch (error) {
+      setToast(error instanceof Error
+        ? `Could not format Python code: ${error.message}`
+        : 'Could not format Python code.')
+    } finally {
+      setFormatting(false)
     }
   }
 
@@ -185,6 +229,39 @@ function Workspace({ task, assignmentId }) {
                 <span aria-live="polite">{fontSize}</span>
                 <button onClick={() => changeFont(1)} disabled={fontSize >= 24} aria-label="Increase font size">A+</button>
               </div>
+              {task.language === 'python' && (
+                <>
+                  <label className="task-editor-theme-control">
+                    <span className="sr-only">Editor theme</span>
+                    <select aria-label="Editor theme" value={editorTheme} onChange={changeEditorTheme}>
+                      <option value="app">App theme</option>
+                      <option value="virverse-vscode-dark">VS Code Dark</option>
+                      <option value="virverse-one-dark">One Dark</option>
+                      <option value="virverse-dracula">Dracula</option>
+                    </select>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={toggleLigatures}
+                    aria-label="Toggle font ligatures"
+                    aria-pressed={fontLigatures}
+                    className={`task-editor-control task-editor-ligatures ${fontLigatures ? 'is-active' : ''}`}
+                  >
+                    <span>Ligatures</span>
+                    <b aria-hidden="true">fi</b>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={formatCode}
+                    disabled={formatting || busy}
+                    aria-label="Format Python code with Ruff"
+                    aria-busy={formatting}
+                    className="task-editor-control task-editor-format"
+                  >
+                    {formatting ? 'Formatting…' : 'Format'}
+                  </button>
+                </>
+              )}
               <button
                 onClick={toggleWrap}
                 aria-pressed={wrap}
@@ -212,9 +289,25 @@ function Workspace({ task, assignmentId }) {
               onRun={handleRun}
               language={task.language === 'c' ? 'c' : task.language}
               fontSize={fontSize}
+              fontLigatures={task.language === 'python' && fontLigatures}
+              editorTheme={task.language === 'python' ? editorTheme : 'app'}
+              onCursorPosition={task.language === 'python' ? setCursorPosition : undefined}
+              onEditorMount={task.language === 'python' ? (editor) => { editorRef.current = editor } : undefined}
               wordWrap={wrap}
             />
           </div>
+
+          {task.language === 'python' && (
+            <div
+              className={`task-editor-statusbar ${editorTheme === 'app' ? (theme === 'dark' ? 'is-dark' : '') : 'is-dark'}`}
+              role="status"
+              aria-label="Python editor status"
+            >
+              <span>Ln {cursorPosition.line}, Col {cursorPosition.column}</span>
+              <span>Spaces: 4</span>
+              <span>Python 3</span>
+            </div>
+          )}
 
           <div className="task-action-bar">
             <div className="task-run-actions">

@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { DifficultyBadge, StatusBadge } from '../Badges'
 import { fetchTaskSolution } from '../../api/tasks'
 import { getErrorMessage } from '../../api/client'
+import Icon, { icons } from '../Icon'
+import DocumentationDrawer from './DocumentationDrawer'
 
 function CodeBlock({ label, children }) {
   return (
@@ -93,6 +95,8 @@ export default function ProblemPanel({ task, status }) {
   const [solutionLoading, setSolutionLoading] = useState(false)
   const [solutionError, setSolutionError] = useState('')
   const [solution, setSolution] = useState(null)
+  const [docsOpen, setDocsOpen] = useState(false)
+  const docsTriggerRef = useRef(null)
 
   const toggleSolution = async () => {
     if (solutionOpen) {
@@ -116,8 +120,22 @@ export default function ProblemPanel({ task, status }) {
   return (
     <div className="task-problem-content space-y-6 p-5">
       <div className="task-problem-title">
-        <h1 className="text-xl font-bold tracking-tight">{task.title}</h1>
-        <div className="mt-2 flex flex-wrap items-center gap-2">
+        <div className="task-problem-title-row">
+          <h1 className="text-xl font-bold tracking-tight">{task.title}</h1>
+          <button
+            ref={docsTriggerRef}
+            type="button"
+            className="task-docs-trigger"
+            onClick={() => setDocsOpen(true)}
+            aria-haspopup="dialog"
+            aria-expanded={docsOpen}
+            aria-controls="documentation-drawer"
+          >
+            <Icon d={icons.bookOpen} className="size-4" />
+            <span>Docs</span>
+          </button>
+        </div>
+        <div className="task-problem-badges flex flex-wrap items-center gap-2">
           <DifficultyBadge level={task.difficulty} />
           <StatusBadge status={status} />
         </div>
@@ -204,6 +222,13 @@ export default function ProblemPanel({ task, status }) {
           ))}
         </div>
       </section>
+
+      <DocumentationDrawer
+        task={task}
+        open={docsOpen}
+        onClose={() => setDocsOpen(false)}
+        triggerRef={docsTriggerRef}
+      />
     </div>
   )
 }

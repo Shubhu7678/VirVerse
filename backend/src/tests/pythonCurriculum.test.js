@@ -27,3 +27,17 @@ test('Python curriculum has twenty guided questions for every topic', () => {
     assert.equal(category.order, index + 1);
   }
 });
+
+test('Python Basics introduces printing and input in small steps', () => {
+  const basics = PYTHON_QUESTIONS.filter((question) => question.category === 'python-basics');
+
+  assert.deepEqual(
+    basics.slice(0, 5).map((question) => question.title),
+    ['Print Hello, World!', 'Greet the Learner', 'Echo a Message', 'Print a Number', 'Add Two Integers'],
+  );
+  assert.match(basics[0].description, /No input is provided/);
+  assert.match(basics[1].starterCode, /^name = input\(\)/);
+  assert.match(basics[2].starterCode, /^message = input\(\)/);
+  assert.match(basics[3].starterCode, /^number = int\(input\(\)\)/);
+  assert.match(basics[4].starterCode, /^first, second = map\(int, input\(\)\.split\(\)\)/);
+});

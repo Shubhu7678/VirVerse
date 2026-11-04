@@ -5,7 +5,6 @@ import { EmptyState } from './States'
 import { taskPath } from '../utils/languageRoutes'
 
 const rank = { Easy: 1, Medium: 2, Hard: 3 }
-const pageSize = 12
 
 const sorters = {
   order: (a, b) => a.order - b.order,
@@ -42,7 +41,8 @@ const field =
  * `fixedStatus` hides the status filter for pages that already scope by status (My Tasks / Completed).
  */
 export default function QuestionList({
-  tasks, topicNames, showTopic = false, fixedStatus = null, emptyState, variant, language = 'c',
+  tasks, topicNames, showTopic = false, fixedStatus = null, hideStatusFilter = false,
+  hideSort = false, hideSummary = false, pageSize = 12, featuredSlug = null, emptyState, variant, language = 'c',
 }) {
   const themed = variant === 'practice' || variant === 'tasks'
   const [search, setSearch] = useState('')
@@ -123,7 +123,7 @@ export default function QuestionList({
             <option>Medium</option>
             <option>Hard</option>
           </select>
-          {!fixedStatus && (
+          {!hideStatusFilter && !fixedStatus && (
             <select value={status} onChange={(e) => {
               setStatus(e.target.value)
               setPage(1)
@@ -134,29 +134,33 @@ export default function QuestionList({
               <option value="todo">Not attempted</option>
             </select>
           )}
-          <select value={sort} onChange={(e) => {
-            setSort(e.target.value)
-            setPage(1)
-          }} aria-label="Sort questions" className={`${field} lg:max-w-44`}>
-            <option value="order">Question order</option>
-            <option value="order-desc">Reverse order</option>
-            <option value="difficulty">Difficulty</option>
-            <option value="title">Title A–Z</option>
-          </select>
-        </div>
-        <div className="question-summary mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
-          <p className="text-xs text-slate-500" aria-live="polite">
-            <span className="font-semibold text-slate-800">{completedCount} of {tasks.length}</span> completed
-            <span className="mx-2 text-slate-300">·</span>
-            Showing <span className="font-semibold text-slate-800">{firstVisible}–{lastVisible}</span> of{' '}
-            <span className="font-semibold text-slate-800">{visible.length}</span> questions
-          </p>
-          {filtersActive && (
-            <button onClick={clear} className="text-xs font-semibold text-brand-600 transition hover:text-brand-700">
-              Clear filters
-            </button>
+          {!hideSort && (
+            <select value={sort} onChange={(e) => {
+              setSort(e.target.value)
+              setPage(1)
+            }} aria-label="Sort questions" className={`${field} lg:max-w-44`}>
+              <option value="order">Question order</option>
+              <option value="order-desc">Reverse order</option>
+              <option value="difficulty">Difficulty</option>
+              <option value="title">Title A–Z</option>
+            </select>
           )}
         </div>
+        {!hideSummary && (
+          <div className="question-summary mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
+            <p className="text-xs text-slate-500" aria-live="polite">
+              <span className="font-semibold text-slate-800">{completedCount} of {tasks.length}</span> completed
+              <span className="mx-2 text-slate-300">·</span>
+              Showing <span className="font-semibold text-slate-800">{firstVisible}–{lastVisible}</span> of{' '}
+              <span className="font-semibold text-slate-800">{visible.length}</span> questions
+            </p>
+            {filtersActive && (
+              <button onClick={clear} className="text-xs font-semibold text-brand-600 transition hover:text-brand-700">
+                Clear filters
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {visible.length === 0 ? (
@@ -172,7 +176,7 @@ export default function QuestionList({
           {pageTasks.map((t, index) => (
             <article
               key={t.id}
-              className={`question-card group flex min-w-0 flex-col rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lg hover:shadow-brand-900/5 sm:p-5 ${themed ? 'practice-question-card' : ''}`}
+              className={`question-card group flex min-w-0 flex-col rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lg hover:shadow-brand-900/5 sm:p-5 ${themed ? 'practice-question-card' : ''} ${t.slug === featuredSlug ? 'is-next-question' : ''} ${t.status === 'completed' ? 'is-completed-question' : ''}`}
               style={{ animationDelay: `${Math.min(index, 12) * 30}ms` }}
             >
               {variant === 'practice' && (
@@ -186,6 +190,9 @@ export default function QuestionList({
                   <StatusIcon status={t.status} />
                   <span className="text-xs font-medium text-slate-400">Question {String(t.questionOrder).padStart(2, '0')}</span>
                 </div>
+                {t.slug === featuredSlug && t.status !== 'completed' && (
+                  <span className="question-card-next">Next</span>
+                )}
                 <DifficultyBadge level={t.difficulty} />
               </div>
               <div className="question-card-content mt-4 flex-1">
