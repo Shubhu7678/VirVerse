@@ -56,7 +56,6 @@
   border: 1px solid rgb(84 214 179 / 26%);
   border-radius: 10px;
   box-shadow: 0 0 18px rgb(49 191 157 / 12%);
-  filter: hue-rotate(260deg) saturate(.8);
 }
 
 .landing-nav,

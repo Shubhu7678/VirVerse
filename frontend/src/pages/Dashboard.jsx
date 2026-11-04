@@ -149,50 +149,59 @@ export default function Dashboard() {
         </article>
       </section>
 
-      <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-        <div className="mb-4">
-          <h2 className="text-lg font-bold text-slate-900">Choose your learning path</h2>
-          <p className="mt-1 text-sm text-slate-500">Pick a language and keep building your skills.</p>
+      <section className="vv-learning-paths">
+        <div className="vv-learning-paths-heading">
+          <h2>Choose your learning path</h2>
+          <p>Pick a language and keep building your skills.</p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <Link
             to="/tasks"
-            className="group rounded-2xl border border-slate-200 bg-linear-to-br from-violet-50 to-white p-5 transition hover:border-violet-300 hover:shadow-md"
+            className="vv-learning-path-card vv-path-c"
           >
-            <span className="inline-flex size-10 items-center justify-center rounded-xl bg-violet-100 text-sm font-bold text-violet-700">C</span>
-            <h3 className="mt-3 font-bold text-slate-900 group-hover:text-violet-700">C Programming</h3>
-            <p className="mt-1 text-sm text-slate-500">
+            <div className="vv-learning-path-card-top">
+              <span className="vv-learning-path-mark">C</span>
+              <span className="vv-learning-path-arrow"><Icon d={icons.arrow} className="size-4" /></span>
+            </div>
+            <h3>C Programming</h3>
+            <p>
               {data.stats.completed} of {data.stats.total} questions complete · 17 topics
             </p>
           </Link>
           <Link
             to="/javascript"
-            className="group rounded-2xl border border-slate-200 bg-linear-to-br from-amber-50 to-white p-5 transition hover:border-amber-300 hover:shadow-md"
+            className="vv-learning-path-card vv-path-javascript"
           >
-            <span className="inline-flex size-10 items-center justify-center rounded-xl bg-amber-100 text-sm font-bold text-amber-700">JS</span>
-            <h3 className="mt-3 font-bold text-slate-900 group-hover:text-amber-700">JavaScript</h3>
+            <div className="vv-learning-path-card-top">
+              <span className="vv-learning-path-mark">JS</span>
+              <span className="vv-learning-path-arrow"><Icon d={icons.arrow} className="size-4" /></span>
+            </div>
+            <h3>JavaScript</h3>
             {javascript.loading ? (
-              <p className="mt-1 text-sm text-slate-500">Loading your progress…</p>
+              <p>Loading your progress…</p>
             ) : javascript.error ? (
-              <p className="mt-1 text-sm text-red-600">{javascript.error}</p>
+              <p className="vv-learning-path-error">{javascript.error}</p>
             ) : (
-              <p className="mt-1 text-sm text-slate-500">
+              <p>
                 {javascript.data.stats.completed} of {javascript.data.stats.total} questions complete · {javascript.data.categories.length} topics
               </p>
             )}
           </Link>
           <Link
             to="/python"
-            className="group rounded-2xl border border-slate-200 bg-linear-to-br from-sky-50 to-white p-5 transition hover:border-sky-300 hover:shadow-md"
+            className="vv-learning-path-card vv-path-python"
           >
-            <span className="inline-flex size-10 items-center justify-center rounded-xl bg-sky-100 text-sm font-bold text-sky-700">Py</span>
-            <h3 className="mt-3 font-bold text-slate-900 group-hover:text-sky-700">Python</h3>
+            <div className="vv-learning-path-card-top">
+              <span className="vv-learning-path-mark">Py</span>
+              <span className="vv-learning-path-arrow"><Icon d={icons.arrow} className="size-4" /></span>
+            </div>
+            <h3>Python</h3>
             {python.loading ? (
-              <p className="mt-1 text-sm text-slate-500">Loading your progress…</p>
+              <p>Loading your progress…</p>
             ) : python.error ? (
-              <p className="mt-1 text-sm text-red-600">{python.error}</p>
+              <p className="vv-learning-path-error">{python.error}</p>
             ) : (
-              <p className="mt-1 text-sm text-slate-500">
+              <p>
                 {python.data.stats.completed} of {python.data.stats.total} questions complete · {python.data.categories.length} topics
               </p>
             )}

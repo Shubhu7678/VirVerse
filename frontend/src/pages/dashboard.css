@@ -21,6 +21,93 @@
   --dash-violet: var(--color-brand-500);
 }
 
+.vv-learning-paths {
+  min-width: 0;
+  border: 1px solid var(--dash-border);
+  border-radius: 17px;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgb(84 214 179 / 5%), transparent 48%),
+    var(--dash-card);
+  padding: 20px;
+  box-shadow: 0 5px 18px rgb(11 10 38 / 5%);
+}
+
+.vv-learning-paths-heading { margin-bottom: 15px; }
+.vv-learning-paths-heading h2 { margin: 0; color: var(--dash-text); font-size: 15px; font-weight: 720; letter-spacing: -0.02em; }
+.vv-learning-paths-heading p { margin: 4px 0 0; color: var(--dash-muted); font-size: 11px; }
+
+.vv-learning-path-card {
+  --path-accent: #168c78;
+  display: flex;
+  min-width: 0;
+  min-height: 132px;
+  flex-direction: column;
+  border: 1px solid color-mix(in srgb, var(--path-accent) 20%, var(--dash-border));
+  border-radius: 14px;
+  background:
+    radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--path-accent) 9%, transparent), transparent 58%),
+    var(--dash-card-soft);
+  padding: 15px;
+  color: var(--dash-text);
+  text-decoration: none;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.vv-path-javascript { --path-accent: #b88717; }
+.vv-path-python { --path-accent: #3f82b4; }
+.dark .vv-path-c { --path-accent: #54d6b3; }
+.dark .vv-path-javascript { --path-accent: #f0c65c; }
+.dark .vv-path-python { --path-accent: #82baf0; }
+
+.vv-learning-path-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--path-accent) 48%, var(--dash-border));
+  box-shadow: 0 12px 25px color-mix(in srgb, var(--path-accent) 10%, transparent);
+}
+
+.vv-learning-path-card:focus-visible {
+  outline: 2px solid var(--path-accent);
+  outline-offset: 3px;
+}
+
+.vv-learning-path-card-top { display: flex; align-items: center; justify-content: space-between; }
+
+.vv-learning-path-mark {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--path-accent) 22%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--path-accent) 11%, var(--dash-card));
+  color: var(--path-accent);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.vv-learning-path-arrow {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid var(--dash-border);
+  border-radius: 50%;
+  background: var(--dash-card);
+  color: var(--dash-muted);
+  transition: color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.vv-learning-path-card:hover .vv-learning-path-arrow {
+  transform: translateX(2px);
+  border-color: color-mix(in srgb, var(--path-accent) 38%, var(--dash-border));
+  color: var(--path-accent);
+}
+
+.vv-learning-path-card h3 { margin: 13px 0 0; color: var(--dash-text); font-size: 13px; font-weight: 700; }
+.vv-learning-path-card p { margin: 4px 0 0; color: var(--dash-muted); font-size: 10px; line-height: 1.5; }
+.vv-learning-path-card .vv-learning-path-error { color: #dc2626; }
+.dark .vv-learning-path-card .vv-learning-path-error { color: #fca5a5; }
+
 .vv-welcome {
   position: relative;
   display: grid;

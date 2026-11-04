@@ -153,6 +153,17 @@ body {
   --color-brand-700: #be123c;
 }
 
+:root[data-palette="violet"] { --brand-mark-filter: saturate(1.05) hue-rotate(8deg); }
+:root[data-palette="blue"] { --brand-mark-filter: saturate(1.05) hue-rotate(350deg); }
+:root[data-palette="emerald"] { --brand-mark-filter: saturate(.8) hue-rotate(300deg); }
+:root[data-palette="orange"] { --brand-mark-filter: saturate(1.1) hue-rotate(145deg); }
+:root[data-palette="rose"] { --brand-mark-filter: saturate(1.05) hue-rotate(115deg); }
+
+img[src="/brand-mark.png"] {
+  filter: var(--brand-mark-filter, saturate(.8) hue-rotate(300deg));
+  transition: filter 180ms ease;
+}
+
 :root.dark[data-palette="violet"] {
   --color-brand-50: #1b1f47;
   --color-brand-100: #262b66;
