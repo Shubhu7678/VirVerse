@@ -1,8 +1,8 @@
-// Visual states: not started (neutral), in progress (indigo), completed (green).
+// Visual states: not started (neutral), in progress (accent), completed (green).
 const fill = {
-  'not-started': 'bg-slate-300',
-  'in-progress': 'bg-brand-500',
-  completed: 'bg-emerald-500',
+  'not-started': 'bg-line-strong',
+  'in-progress': 'bg-accent',
+  completed: 'bg-success',
 }
 
 export const progressLabel = {
@@ -15,7 +15,7 @@ export function progressState(percent) {
   return percent === 0 ? 'not-started' : percent >= 100 ? 'completed' : 'in-progress'
 }
 
-export default function ProgressBar({ percent, label, size = 'h-2' }) {
+export default function ProgressBar({ percent, label, size = 'h-1.5' }) {
   const state = progressState(percent)
   return (
     <div
@@ -24,7 +24,7 @@ export default function ProgressBar({ percent, label, size = 'h-2' }) {
       aria-valuemax={100}
       aria-valuenow={percent}
       aria-label={label}
-      className={`${size} w-full overflow-hidden rounded-full bg-slate-100`}
+      className={`${size} w-full overflow-hidden rounded-full bg-surface-2`}
     >
       <div className={`h-full rounded-full transition-all duration-500 ${fill[state]}`} style={{ width: `${percent}%` }} />
     </div>

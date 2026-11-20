@@ -1,87 +1,236 @@
 @import "tailwindcss";
-
-@theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --color-brand-50: #e8f8f2;
-  --color-brand-100: #c9efdf;
-  --color-brand-500: #54d6b3;
-  --color-brand-600: #168c78;
-  --color-brand-700: #176e83;
-}
-
-:root {
-  --color-indigo-50: #e8f8f2;
-  --color-indigo-100: #c9efdf;
-  --color-indigo-200: #a7e5cd;
-  --color-indigo-300: #7bdcba;
-  --color-indigo-400: #54d6b3;
-  --color-indigo-500: #168c78;
-  --color-indigo-600: #168c78;
-  --color-indigo-700: #176e83;
-  --color-indigo-900: #123039;
-  --color-violet-50: #e8f8f2;
-  --color-violet-100: #c9efdf;
-  --color-violet-200: #a7e5cd;
-  --color-violet-300: #7bdcba;
-  --color-violet-400: #54d6b3;
-  --color-violet-500: #168c78;
-  --color-violet-600: #168c78;
-  --color-violet-700: #176e83;
-  --color-violet-900: #123039;
-  --color-blue-50: #e8f8f2;
-  --color-blue-100: #c9efdf;
-  --color-blue-200: #a7e5cd;
-  --color-blue-300: #7bdcba;
-  --color-blue-400: #54d6b3;
-  --color-blue-500: #168c78;
-  --color-blue-600: #168c78;
-  --color-blue-700: #176e83;
-  --color-blue-900: #123039;
-}
-
-body {
-  @apply bg-slate-50 text-slate-900 antialiased;
-}
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/*
- * Dark theme: remaps the palette the app already uses instead of duplicating every class.
- * Neutral/tinted scales flip, so existing utilities (bg-white, text-slate-900, bg-emerald-50...)
- * automatically get dark counterparts.
- */
+/* ------------------------------------------------------------------
+ * Design tokens
+ * Semantic values live on :root (light) and .dark. Components use the
+ * utilities generated below (bg-surface, text-fg, border-line, ...), so
+ * a theme change never needs per-component dark: variants.
+ * ------------------------------------------------------------------ */
+:root {
+  --bg: #f7f5f0;
+  --surface: #fffefb;
+  --surface-2: #f1eee7;
+  --line: #e4dfd3;
+  --line-strong: #cfc8b8;
+  --fg: #1d1b16;
+  --fg-muted: #5c574b;
+  --fg-subtle: #6f6a5c;
+
+  --accent: #b45309;
+  --accent-hover: #9a4708;
+  --accent-fg: #ffffff;
+  --accent-soft: #fdf0dc;
+  --accent-text: #9a4708;
+
+  --success: #15803d;
+  --success-soft: #e6f4ea;
+  --warn: #a16207;
+  --warn-soft: #fbf1d3;
+  --danger: #b91c1c;
+  --danger-soft: #fbe9e7;
+
+  --overlay: rgb(29 27 22 / 0.45);
+  --pop-shadow: 0 12px 32px -8px rgb(29 27 22 / 0.22), 0 2px 6px rgb(29 27 22 / 0.08);
+}
+
 .dark {
-  --surface: #121e24;
-  --color-slate-50: #0b1117;
-  --color-slate-100: #17252b;
-  --color-slate-200: #283840;
-  --color-slate-300: #3b5057;
-  --color-slate-400: #819399;
-  --color-slate-500: #96a8ac;
-  --color-slate-600: #b0bec1;
-  --color-slate-700: #c9d4d5;
-  --color-slate-800: #e0e8e9;
-  --color-slate-900: #f3f6f7;
-  --color-indigo-50: #0d2a22;
-  --color-indigo-200: #104033;
-  --color-indigo-500: #54d6b3;
-  --color-indigo-600: #54d6b3;
-  --color-indigo-700: #83d8c0;
-  --color-indigo-900: #e1f8ef;
-  --color-violet-50: #0d2a22;
-  --color-violet-200: #104033;
-  --color-violet-500: #54d6b3;
-  --color-violet-600: #54d6b3;
-  --color-violet-700: #83d8c0;
-  --color-violet-900: #e1f8ef;
-  --color-blue-50: #0d2a22;
-  --color-blue-200: #104033;
-  --color-blue-500: #54d6b3;
-  --color-blue-600: #54d6b3;
-  --color-blue-700: #83d8c0;
-  --color-blue-900: #e1f8ef;
-  --color-emerald-50: #0d2a22;
-  --color-amber-50: #2c2210;
+  --bg: #151412;
+  --surface: #1c1b18;
+  --surface-2: #252320;
+  --line: #2e2c28;
+  --line-strong: #433f39;
+  --fg: #f1eee8;
+  --fg-muted: #b0aa9d;
+  --fg-subtle: #8a8478;
+
+  --accent: #f2a33a;
+  --accent-hover: #f7b559;
+  --accent-fg: #1a1204;
+  --accent-soft: #2e2210;
+  --accent-text: #f5b85c;
+
+  --success: #5fd38a;
+  --success-soft: #12261a;
+  --warn: #eab308;
+  --warn-soft: #2a2308;
+  --danger: #f87171;
+  --danger-soft: #301618;
+
+  --overlay: rgb(0 0 0 / 0.6);
+  --pop-shadow: 0 16px 40px -8px rgb(0 0 0 / 0.6), 0 2px 6px rgb(0 0 0 / 0.4);
+}
+
+@theme inline {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-text: var(--accent-text);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --radius-control: 0.5rem;
+  --radius-card: 0.75rem;
+  --shadow-pop: var(--pop-shadow);
+
+  /* Type scale: nothing below 12px. */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.125rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.375rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.625rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.375rem;
+  --text-xl--line-height: 1.875rem;
+  --text-2xl: 1.75rem;
+  --text-2xl--line-height: 2.25rem;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "cv11", "ss01";
+}
+
+/* Visible keyboard focus everywhere */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+@keyframes vv-pop { 0% { transform: scale(.96); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
+.animate-pop { animation: vv-pop .18s ease-out; }
+@keyframes vv-toast-in { 0% { transform: translateY(8px); opacity: 0 } 100% { transform: translateY(0); opacity: 1 } }
+.animate-toast { animation: vv-toast-in .2s ease-out; }
+@keyframes vv-profile-enter { 0% { transform: translateY(10px); opacity: 0 } 100% { transform: translateY(0); opacity: 1 } }
+.profile-enter { animation: vv-profile-enter .45s cubic-bezier(.2,.75,.25,1) both; }
+
+/* App shell layout hooks (used by DashboardLayout) */
+.dashboard-menu-button { display: flex; }
+.dashboard-mobile-nav { display: block; }
+@media (min-width: 64rem) {
+  .dashboard-shell { padding-left: 16rem; }
+  .dashboard-sidebar { display: block; }
+  .dashboard-menu-button,
+  .dashboard-mobile-nav { display: none; }
+}
+
+/* ------------------------------------------------------------------
+ * LEGACY COMPATIBILITY (delete once every screen is migrated to tokens)
+ * Screens that have not been redesigned yet still use Tailwind's slate /
+ * indigo / violet / blue / brand classes and `.bg-white`. These remaps point
+ * them at the new warm neutrals and amber accent so nothing looks broken
+ * in the meantime. New code must use the semantic utilities above.
+ * ------------------------------------------------------------------ */
+:root {
+  --color-slate-50: #f7f5f0;
+  --color-slate-100: #f1eee7;
+  --color-slate-200: #e4dfd3;
+  --color-slate-300: #cfc8b8;
+  --color-slate-400: #9b9484;
+  --color-slate-500: #756f61;
+  --color-slate-600: #5c574b;
+  --color-slate-700: #433f36;
+  --color-slate-800: #2a2822;
+  --color-slate-900: #1d1b16;
+
+  --color-brand-50: #fdf0dc;
+  --color-brand-100: #fbe3bd;
+  --color-brand-500: #e08a1e;
+  --color-brand-600: #b45309;
+  --color-brand-700: #9a4708;
+
+  --color-indigo-50: #fdf0dc;
+  --color-indigo-100: #fbe3bd;
+  --color-indigo-200: #f6cf94;
+  --color-indigo-300: #efb867;
+  --color-indigo-400: #e39a35;
+  --color-indigo-500: #c9700f;
+  --color-indigo-600: #b45309;
+  --color-indigo-700: #9a4708;
+  --color-indigo-900: #4a2204;
+  --color-violet-50: #fdf0dc;
+  --color-violet-100: #fbe3bd;
+  --color-violet-200: #f6cf94;
+  --color-violet-300: #efb867;
+  --color-violet-400: #e39a35;
+  --color-violet-500: #c9700f;
+  --color-violet-600: #b45309;
+  --color-violet-700: #9a4708;
+  --color-violet-900: #4a2204;
+  --color-blue-50: #fdf0dc;
+  --color-blue-100: #fbe3bd;
+  --color-blue-200: #f6cf94;
+  --color-blue-300: #efb867;
+  --color-blue-400: #e39a35;
+  --color-blue-500: #c9700f;
+  --color-blue-600: #b45309;
+  --color-blue-700: #9a4708;
+  --color-blue-900: #4a2204;
+}
+
+.dark {
+  --color-slate-50: #151412;
+  --color-slate-100: #252320;
+  --color-slate-200: #2e2c28;
+  --color-slate-300: #433f39;
+  --color-slate-400: #8a8478;
+  --color-slate-500: #a19b8e;
+  --color-slate-600: #b0aa9d;
+  --color-slate-700: #cdc8bc;
+  --color-slate-800: #e3dfd5;
+  --color-slate-900: #f1eee8;
+
+  --color-brand-50: #2e2210;
+  --color-brand-100: #4a3515;
+  --color-brand-500: #f2a33a;
+  --color-brand-600: #f2a33a;
+  --color-brand-700: #f5b85c;
+
+  --color-indigo-50: #2e2210;
+  --color-indigo-200: #4a3515;
+  --color-indigo-500: #f2a33a;
+  --color-indigo-600: #f2a33a;
+  --color-indigo-700: #f5b85c;
+  --color-indigo-900: #fdecd0;
+  --color-violet-50: #2e2210;
+  --color-violet-200: #4a3515;
+  --color-violet-500: #f2a33a;
+  --color-violet-600: #f2a33a;
+  --color-violet-700: #f5b85c;
+  --color-violet-900: #fdecd0;
+  --color-blue-50: #2e2210;
+  --color-blue-200: #4a3515;
+  --color-blue-500: #f2a33a;
+  --color-blue-600: #f2a33a;
+  --color-blue-700: #f5b85c;
+  --color-blue-900: #fdecd0;
+  --color-emerald-50: #12261a;
+  --color-amber-50: #2a2308;
   --color-red-50: #301618;
   --color-red-200: #5b2226;
   --color-red-400: #f87171;
@@ -89,120 +238,14 @@ body {
 
 .dark .bg-white { background-color: var(--surface); }
 .dark .bg-white\/80 { background-color: color-mix(in srgb, var(--surface) 80%, transparent); }
-.dark .bg-slate-900 { background-color: #080d13; }
-.dark .text-slate-100 { color: #f3f6f7; }
+.dark .bg-slate-900 { background-color: #0e0d0b; }
+.dark .text-slate-100 { color: #f1eee8; }
 .dark .text-brand-600,
 .dark .text-brand-700,
-.dark .hover\:text-brand-700:hover { color: var(--color-brand-dark-text); }
-.dark .text-emerald-700 { color: #54d6b3; }
+.dark .hover\:text-brand-700:hover { color: var(--accent-text); }
+.dark .text-emerald-700 { color: var(--success); }
 .dark .text-amber-700 { color: #fcd34d; }
 .dark .text-red-700 { color: #fca5a5; }
 .dark .text-red-600 { color: #f87171; }
 .dark .hover\:text-red-600:hover { color: #f87171; }
-
-/* Visible keyboard focus everywhere */
-:focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 2px; }
-
-@media (prefers-reduced-motion: reduce) {
-  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-}
-
-@keyframes vv-pop { 0% { transform: scale(.9); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
-.animate-pop { animation: vv-pop .25s ease-out; }
-@keyframes vv-profile-enter { 0% { transform: translateY(10px); opacity: 0 } 100% { transform: translateY(0); opacity: 1 } }
-.profile-enter { animation: vv-profile-enter .45s cubic-bezier(.2,.75,.25,1) both; }
 .dark .bg-slate-900\/40 { background-color: rgb(0 0 0 / 0.6); }
-
-:root[data-palette="violet"] {
-  --color-brand-50: #e8f8f2;
-  --color-brand-100: #c9efdf;
-  --color-brand-500: #54d6b3;
-  --color-brand-600: #168c78;
-  --color-brand-700: #176e83;
-}
-
-:root[data-palette="blue"] {
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
-}
-
-:root[data-palette="emerald"] {
-  --color-brand-50: #e8f8f2;
-  --color-brand-100: #c9efdf;
-  --color-brand-500: #54d6b3;
-  --color-brand-600: #168c78;
-  --color-brand-700: #176e83;
-}
-
-:root[data-palette="orange"] {
-  --color-brand-50: #fff7ed;
-  --color-brand-100: #ffedd5;
-  --color-brand-500: #f97316;
-  --color-brand-600: #ea580c;
-  --color-brand-700: #c2410c;
-}
-
-:root[data-palette="rose"] {
-  --color-brand-50: #fff1f2;
-  --color-brand-100: #ffe4e6;
-  --color-brand-500: #f43f5e;
-  --color-brand-600: #e11d48;
-  --color-brand-700: #be123c;
-}
-
-:root[data-palette="violet"] { --brand-mark-filter: saturate(1.05) hue-rotate(8deg); }
-:root[data-palette="blue"] { --brand-mark-filter: saturate(1.05) hue-rotate(350deg); }
-:root[data-palette="emerald"] { --brand-mark-filter: saturate(.8) hue-rotate(300deg); }
-:root[data-palette="orange"] { --brand-mark-filter: saturate(1.1) hue-rotate(145deg); }
-:root[data-palette="rose"] { --brand-mark-filter: saturate(1.05) hue-rotate(115deg); }
-
-img[src="/brand-mark.png"] {
-  filter: var(--brand-mark-filter, saturate(.8) hue-rotate(300deg));
-  transition: filter 180ms ease;
-}
-
-:root.dark[data-palette="violet"] {
-  --color-brand-50: #1b1f47;
-  --color-brand-100: #262b66;
-  --color-brand-dark-text: #54d6b3;
-}
-
-:root.dark[data-palette="blue"] {
-  --color-brand-50: #10213c;
-  --color-brand-100: #19345b;
-  --color-brand-dark-text: #93c5fd;
-}
-
-:root.dark[data-palette="emerald"] {
-  --color-brand-50: #0d2a22;
-  --color-brand-100: #104033;
-  --color-brand-500: #54d6b3;
-  --color-brand-600: #168c78;
-  --color-brand-700: #176e83;
-  --color-brand-dark-text: #54d6b3;
-}
-
-:root.dark[data-palette="orange"] {
-  --color-brand-50: #321d0b;
-  --color-brand-100: #4a2a0e;
-  --color-brand-dark-text: #fdba74;
-}
-
-:root.dark[data-palette="rose"] {
-  --color-brand-50: #34121e;
-  --color-brand-100: #4f172a;
-  --color-brand-dark-text: #fda4af;
-}
-
-.dashboard-menu-button { display: flex; }
-.dashboard-mobile-nav { display: block; }
-
-@media (min-width: 64rem) {
-  .dashboard-shell { padding-left: 16rem; }
-  .dashboard-sidebar { display: block; }
-  .dashboard-menu-button,
-  .dashboard-mobile-nav { display: none; }
-}

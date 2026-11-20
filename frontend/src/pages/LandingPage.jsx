@@ -55,7 +55,7 @@ function ProductPreview() {
       </div>
       <div className="landing-preview-body">
         <aside className="landing-preview-sidebar" aria-hidden="true">
-          <div className="landing-preview-brand"><img src="/brand-mark.png" alt="" /><span>VirVerse</span></div>
+          <div className="landing-preview-brand"><img src="/brand-mark.svg" alt="" /><span>VirVerse</span></div>
           <div className="landing-preview-workspace"><span>&lt;/&gt;</span><b>Your workspace</b><small>Keep your momentum</small></div>
           <div className="landing-preview-nav landing-preview-nav-active"><Icon d={icons.dashboard} /> Dashboard</div>
           <div className="landing-preview-nav"><Icon d={icons.code} /> C Programming</div>
@@ -150,7 +150,7 @@ export default function LandingPage() {
     <main className="landing-page">
       <header className="landing-header">
         <a className="landing-brand" href="#home" aria-label="VirVerse home">
-          <img src="/brand-mark.png" alt="" />
+          <img src="/brand-mark.svg" alt="" />
           <span>VirVerse</span>
         </a>
         <nav id="landing-navigation" className={`landing-nav ${mobileMenuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
@@ -339,7 +339,7 @@ export default function LandingPage() {
       </div>
 
       <footer className="landing-footer">
-        <a className="landing-brand" href="#home"><img src="/brand-mark.png" alt="" /><span>VirVerse</span></a>
+        <a className="landing-brand" href="#home"><img src="/brand-mark.svg" alt="" /><span>VirVerse</span></a>
         <p>Learn by doing. Build with confidence.</p>
         <nav aria-label="Footer navigation"><a href="#features">Features</a><a href="#roadmap">Roadmap</a><Link to="/login">Sign in</Link><Link to="/signup">Sign up</Link></nav>
         <span className="landing-copyright">© {YEAR} VirVerse</span>

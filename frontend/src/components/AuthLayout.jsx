@@ -3,7 +3,7 @@ const YEAR = new Date().getFullYear()
 export function Logo({ className = '' }) {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <img src="/brand-mark.png" alt="" className="size-9 rounded-xl shadow-sm" />
+      <img src="/brand-mark.svg" alt="" className="size-9 rounded-xl shadow-sm" />
       <span className="text-lg font-bold tracking-tight">VirVerse</span>
     </div>
   )

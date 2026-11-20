@@ -6,23 +6,35 @@ import { LoadingBlock, ErrorBlock, EmptyState } from '../components/States'
 import QuestionList from '../components/QuestionList'
 import ProgressBar from '../components/ProgressBar'
 import Icon, { icons } from '../components/Icon'
+import Card from '../components/ui/Card'
+import Tabs from '../components/ui/Tabs'
 import ConceptSection from '../components/ide/ConceptSection'
 import { getConceptsForTask, getLanguageLabel } from '../data/programmingConcepts'
-import './practice.css'
-import './topic-detail.css'
 import '../components/ide/documentation.css'
-
-const topicTabs = [
-  { id: 'questions', label: 'Questions', icon: icons.code },
-  { id: 'learn', label: 'Learn & Docs', icon: icons.bookOpen },
-  { id: 'details', label: 'Topic Details', icon: icons.tasks },
-]
 
 function getDifficultyLabel(topic) {
   const { easy = 0, medium = 0, hard = 0 } = topic.difficulty || {}
   if (topic.total > 0 && easy === topic.total) return topic.order === 1 ? 'Beginner' : 'Easy'
   if (hard > 0) return medium > 0 || easy > 0 ? 'All levels' : 'Advanced'
   return 'Intermediate'
+}
+
+function BackLink({ to }) {
+  return (
+    <Link to={to} className="inline-flex items-center gap-1.5 text-sm text-fg-muted transition-colors hover:text-fg">
+      <Icon d={icons.back} className="size-4" /> All topics
+    </Link>
+  )
+}
+
+function Fact({ label, value, hint }) {
+  return (
+    <Card>
+      <p className="text-sm text-fg-muted">{label}</p>
+      <p className="mt-1 text-xl font-semibold text-fg tabular-nums">{value}</p>
+      <p className="mt-1 text-xs text-fg-subtle">{hint}</p>
+    </Card>
+  )
 }
 
 export default function TopicDetail({ language = 'c' }) {
@@ -54,7 +66,7 @@ export default function TopicDetail({ language = 'c' }) {
   if (!topic) {
     return (
       <EmptyState title="Topic not found" text="This topic does not exist.">
-        <Link to={prefix || '/tasks'} className="text-sm font-semibold text-brand-600 hover:text-brand-700">
+        <Link to={prefix || '/tasks'} className="text-sm font-medium text-accent-text hover:underline">
           Back to topics
         </Link>
       </EmptyState>
@@ -63,13 +75,11 @@ export default function TopicDetail({ language = 'c' }) {
 
   if (topic.locked) {
     return (
-      <div className="task-detail-page mx-auto max-w-3xl">
-        <Link to={prefix || '/tasks'} className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-brand-600">
-          <Icon d={icons.back} className="size-4" /> All topics
-        </Link>
-        <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-6">
-          <h1 className="text-xl font-bold">{topic.name} is locked</h1>
-          <p className="mt-2 text-sm text-slate-700">
+      <div className="mx-auto max-w-3xl">
+        <BackLink to={prefix || '/tasks'} />
+        <div className="mt-6 rounded-card border border-warn/40 bg-warn-soft p-6">
+          <h2 className="text-xl font-semibold text-fg">{topic.name} is locked</h2>
+          <p className="mt-2 text-sm text-fg-muted">
             Standalone learner access includes Topic 1. Join an organization with an active VirVerse subscription to unlock the remaining question bank.
           </p>
         </div>
@@ -85,89 +95,38 @@ export default function TopicDetail({ language = 'c' }) {
   const difficultyLabel = getDifficultyLabel(topic)
   const minutes = Math.max(10, total * 2)
 
+  const tabs = [
+    { value: 'questions', label: 'Questions', count: total },
+    { value: 'learn', label: 'Learn & docs' },
+    { value: 'details', label: 'Details' },
+  ]
+
   return (
-    <div className="topic-detail-page">
-      <Link to={prefix || '/tasks'} className="topic-detail-back">
-        <Icon d={icons.back} className="size-4" />
-        <span>All topics</span>
-      </Link>
+    <div className="mx-auto max-w-6xl space-y-6">
+      <BackLink to={prefix || '/tasks'} />
 
-      <section className="topic-detail-hero">
-        <div className="topic-detail-hero-copy">
-          <p className="topic-detail-eyebrow"><span /> {languageName.toUpperCase()} LEARNING PATH</p>
-          <div className="topic-detail-title-row">
-            <span className={`topic-detail-language-icon is-${language}`} aria-hidden="true">{topic.icon || languageName.slice(0, 2)}</span>
-            <div className="topic-detail-title-copy">
-              <h1>{topic.name}</h1>
-              <p>{topic.description}</p>
-            </div>
-          </div>
-          <div className="topic-detail-tags">
-            <span className="topic-detail-level"><i /> {difficultyLabel}</span>
-            <span><Icon d={icons.list} className="size-3.5" /> {total} Questions</span>
-            <span><Icon d={icons.submissions} className="size-3.5" /> ~{minutes} mins</span>
-          </div>
+      <section className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="min-w-0 max-w-2xl">
+          <p className="text-sm text-fg-subtle">{languageName} · {difficultyLabel} · {total} questions · about {minutes} min</p>
+          <h2 className="mt-1 text-2xl font-semibold tracking-tight text-fg">{topic.name}</h2>
+          <p className="mt-1 text-fg-muted">{topic.description}</p>
         </div>
-
-        <div className="topic-detail-hero-art" aria-hidden="true">
-          <div className="topic-detail-art-orbit" />
-          <div className="topic-detail-art-device">
-            <div className="topic-detail-art-topbar"><i /><i /><i /><span>main.{language === 'python' ? 'py' : language === 'javascript' ? 'js' : 'c'}</span></div>
-            <code>
-              <b>{language === 'python' ? 'print' : language === 'javascript' ? 'console.log' : 'printf'}</b>
-              (<em>"Hello, {languageName}!"</em>)
-            </code>
-            <span className="topic-detail-art-code-line" />
-            <span className="topic-detail-art-code-line is-short" />
+        <div className="w-full shrink-0 lg:w-72">
+          <div className="mb-2 flex items-baseline justify-between text-sm">
+            <span className="text-fg-muted tabular-nums">{completed} of {total} solved</span>
+            <span className="font-medium text-fg tabular-nums">{percent}%</span>
           </div>
-          <span className="topic-detail-art-bubble">&lt;/&gt;</span>
-          <span className="topic-detail-art-spark">✦</span>
+          <ProgressBar percent={percent} label={`${topic.name} progress`} />
         </div>
       </section>
 
-      <section className="topic-detail-progress" aria-label="Topic progress">
-        <div className="topic-detail-progress-ring" style={{ '--progress': `${percent}%` }}>
-          <span>{percent}%</span>
-        </div>
-        <div className="topic-detail-progress-main">
-          <div className="topic-detail-progress-heading">
-            <strong>Topic Progress</strong>
-            <span>{completed} of {total} questions completed</span>
-          </div>
-          <ProgressBar percent={percent} label={`${topic.name} progress`} size="h-2" />
-        </div>
-        <div className="topic-detail-progress-stats">
-          <div><Icon d={icons.check} /><strong>{completed}</strong><span>Solved</span></div>
-          <div><Icon d={icons.code} /><strong>{remaining}</strong><span>Remaining</span></div>
-          <div><Icon d={icons.list} /><strong>{total}</strong><span>Total</span></div>
-        </div>
-      </section>
-
-      <nav className="topic-detail-tabs" aria-label="Topic sections">
-        {topicTabs.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            className={activeTab === tab.id ? 'is-active' : ''}
-            aria-current={activeTab === tab.id ? 'page' : undefined}
-            onClick={() => selectTab(tab.id)}
-          >
-            <Icon d={tab.icon} className="size-4" />
-            {tab.label}
-            {tab.id === 'questions' && <span>{total}</span>}
-          </button>
-        ))}
-        {activeTab === 'questions' && (
-          <span className="topic-detail-tab-note">Pick a challenge and keep your streak going</span>
-        )}
-      </nav>
+      <Tabs label="Topic sections" items={tabs} value={activeTab} onChange={selectTab} />
 
       {activeTab === 'questions' && (
-        <section className="topic-detail-tab-panel" aria-label="Topic questions">
+        <section aria-label="Topic questions">
           <QuestionList
             tasks={tasks}
             topicNames={{}}
-            variant="tasks"
             language={language}
             pageSize={9}
             hideStatusFilter
@@ -182,12 +141,11 @@ export default function TopicDetail({ language = 'c' }) {
       )}
 
       {activeTab === 'learn' && (
-        <section className="topic-detail-tab-panel topic-detail-learn" aria-labelledby="topic-learn-heading">
-          <div className="topic-detail-panel-heading">
-            <span className="topic-detail-panel-kicker">LEARN AT YOUR PACE</span>
-            <h2 id="topic-learn-heading">Concepts for {topic.name}</h2>
-            <p>Short, reusable lessons connected to the questions in this topic. Examples teach the building blocks without revealing complete answers.</p>
-          </div>
+        <section aria-labelledby="topic-learn-heading" className="max-w-3xl">
+          <h3 id="topic-learn-heading" className="text-lg font-semibold text-fg">Concepts for {topic.name}</h3>
+          <p className="mt-1 mb-4 text-sm text-fg-muted">
+            Short, reusable lessons connected to the questions in this topic. Examples teach the building blocks without revealing complete answers.
+          </p>
           {concepts.length > 0 ? (
             <div className="docs-concept-list">
               {concepts.map((concept, index) => (
@@ -205,30 +163,26 @@ export default function TopicDetail({ language = 'c' }) {
       )}
 
       {activeTab === 'details' && (
-        <section className="topic-detail-tab-panel topic-detail-overview" aria-labelledby="topic-details-heading">
-          <div className="topic-detail-panel-heading">
-            <span className="topic-detail-panel-kicker">YOUR LEARNING ROADMAP</span>
-            <h2 id="topic-details-heading">About {topic.name}</h2>
-            <p>{topic.description}</p>
+        <section aria-labelledby="topic-details-heading" className="space-y-6">
+          <h3 id="topic-details-heading" className="sr-only">About {topic.name}</h3>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <Fact label="Level" value={difficultyLabel} hint="Builds confidence step by step" />
+            <Fact label="Questions" value={total} hint={`${completed} completed · ${remaining} left`} />
+            <Fact label="Estimated time" value={`~${minutes} min`} hint="Take breaks whenever you need" />
           </div>
-          <div className="topic-detail-facts">
-            <article><span>Level</span><strong>{difficultyLabel}</strong><small>Designed to build confidence step by step</small></article>
-            <article><span>Questions</span><strong>{total}</strong><small>{completed} completed · {remaining} left to explore</small></article>
-            <article><span>Estimated time</span><strong>~{minutes} min</strong><small>Take breaks whenever you need them</small></article>
-          </div>
-          <div className="topic-detail-roadmap">
-            <h3>Start with these questions</h3>
-            <ol>
+          <div>
+            <h3 className="mb-3 text-lg font-semibold text-fg">Start with these questions</h3>
+            <Card padded={false} as="ol" className="divide-y divide-line overflow-hidden">
               {tasks.slice(0, 5).map((task) => (
                 <li key={task.id}>
-                  <Link to={`${prefix}/tasks/${task.slug}`}>
-                    <span>Q{String(task.questionOrder).padStart(2, '0')}</span>
-                    <strong>{task.title}</strong>
-                    <Icon d={icons.arrow} className="size-4" />
+                  <Link to={`${prefix}/tasks/${task.slug}`} className="flex items-center gap-4 px-4 py-3 transition-colors hover:bg-surface-2">
+                    <span className="font-mono text-xs text-fg-subtle tabular-nums">Q{String(task.questionOrder).padStart(2, '0')}</span>
+                    <span className="min-w-0 flex-1 truncate font-medium text-fg">{task.title}</span>
+                    <Icon d={icons.arrow} className="size-4 text-fg-subtle" />
                   </Link>
                 </li>
               ))}
-            </ol>
+            </Card>
           </div>
         </section>
       )}

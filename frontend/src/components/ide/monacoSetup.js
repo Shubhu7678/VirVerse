@@ -125,10 +125,40 @@ const defineEditorTheme = (name, colors) => {
   })
 }
 
+// Default "App theme": warm neutrals that sit flush against the app's surface colors.
+defineEditorTheme('virverse-dark', {
+  background: '#1c1b18', foreground: '#e6e1d6', lineNumber: '#8a8478',
+  lineHighlight: '#ffffff08', cursor: '#f2a33a', selection: '#4a3515',
+  indentGuide: '#2e2c28', bracketBackground: '#f2a33a22', bracket1: '#ffd580',
+  bracket2: '#89ddff', bracket3: '#c792ea', bracket4: '#f78c6c',
+  bracket5: '#c3e88d', bracket6: '#82aaff', error: '#f87171',
+  keyword: '#c586c0', string: '#ce9178', number: '#b5cea8', comment: '#7c8a6b',
+  function: '#dcdcaa', builtin: '#4fc1ff', operator: '#d4d4d4',
+  delimiter: '#c8c8c8', type: '#4ec9b0',
+})
+
+monaco.editor.defineTheme('virverse-light', {
+  base: 'vs',
+  inherit: true,
+  rules: [],
+  colors: {
+    'editor.background': '#fffefb',
+    'editor.foreground': '#1d1b16',
+    'editorLineNumber.foreground': '#8a8478',
+    'editorLineNumber.activeForeground': '#1d1b16',
+    'editor.lineHighlightBackground': '#f1eee788',
+    'editor.lineHighlightBorder': '#00000000',
+    'editorCursor.foreground': '#b45309',
+    'editor.selectionBackground': '#f6cf9466',
+    'editor.inactiveSelectionBackground': '#f6cf9444',
+    'editorIndentGuide.background1': '#e4dfd3',
+  },
+})
+
 defineEditorTheme('virverse-vscode-dark', {
   background: '#171a1f', foreground: '#d4d9e1', lineNumber: '#737d8c',
-  lineHighlight: '#ffffff08', cursor: '#54d6b3', selection: '#28454d',
-  indentGuide: '#303740', bracketBackground: '#54d6b322', bracket1: '#ffd580',
+  lineHighlight: '#ffffff08', cursor: '#f2a33a', selection: '#3a3a4d',
+  indentGuide: '#303740', bracketBackground: '#f2a33a22', bracket1: '#ffd580',
   bracket2: '#89ddff', bracket3: '#c792ea', bracket4: '#f78c6c',
   bracket5: '#c3e88d', bracket6: '#82aaff', error: '#f44747',
   keyword: '#c586c0', string: '#ce9178', number: '#b5cea8', comment: '#6a9955',

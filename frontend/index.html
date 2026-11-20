@@ -6,9 +6,11 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <meta name="theme-color" content="#151412" />
+    <meta name="description" content="Learn C, JavaScript, Python and web development by writing real code in your browser." />
+    <meta property="og:title" content="VirVerse" />
+    <meta property="og:description" content="Learn C, JavaScript, Python and web development by writing real code in your browser." />
+    <meta property="og:type" content="website" />
     <title>VirVerse</title>
     <script>
       // Runs before first paint so the page never flashes the wrong theme. Dark is the default.
@@ -16,6 +18,7 @@
         var t = localStorage.getItem('virvese:theme') || localStorage.getItem('virvese:editor-theme') || 'dark';
         document.documentElement.classList.toggle('dark', t !== 'light');
         document.documentElement.style.colorScheme = t === 'light' ? 'light' : 'dark';
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', t === 'light' ? '#f7f5f0' : '#151412');
       } catch (e) { document.documentElement.classList.add('dark'); }
     </script>
   </head>

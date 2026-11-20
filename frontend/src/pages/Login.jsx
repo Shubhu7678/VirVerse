@@ -71,7 +71,7 @@ export default function Login() {
           <div className="login-orbit login-orbit-small" aria-hidden="true" />
           <header className="login-nav">
             <Link to="/login" className="login-brand" aria-label="VirVerse home">
-              <img src="/brand-mark.png" alt="" />
+              <img src="/brand-mark.svg" alt="" />
               <span>VirVerse</span>
             </Link>
             <span className="login-nav-note">A little progress every day.</span>
@@ -94,7 +94,7 @@ export default function Login() {
               <div className="login-code-glow" />
             </div>
             <div className="login-hero-foot">
-              <span className="login-foot-mark"><img src="/brand-mark.png" alt="" /></span>
+              <span className="login-foot-mark"><img src="/brand-mark.svg" alt="" /></span>
               <span>Learn at your pace.<br /><strong>Build at your level.</strong></span>
               <span className="login-foot-divider" />
               <span className="login-foot-tag">C · HTML · MORE</span>
@@ -109,7 +109,7 @@ export default function Login() {
             <Link to="/signup">Create account <span aria-hidden="true">↗</span></Link>
           </div>
           <div className="login-card">
-            <div className="login-card-mark"><img src="/brand-mark.png" alt="" /></div>
+            <div className="login-card-mark"><img src="/brand-mark.svg" alt="" /></div>
             <p className="login-card-kicker">GOOD TO HAVE YOU BACK</p>
             <h2>Welcome back <span aria-hidden="true">👋</span></h2>
             <p className="login-card-subtitle">Sign in and keep your momentum going.</p>

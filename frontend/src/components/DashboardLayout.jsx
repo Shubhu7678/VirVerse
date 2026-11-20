@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { ChevronDown, LogOut } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-import { PALETTES, useTheme } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 import { Logo } from './AuthLayout'
 import Icon, { icons } from './Icon'
 import InvitationInbox from './InvitationInbox'
+import Select from './ui/Select'
+import Tooltip from './ui/Tooltip'
 import { useOrg } from '../context/OrgContext'
 
 const platformNav = [
@@ -13,264 +16,183 @@ const platformNav = [
   { label: 'Audit Logs', to: '/platform/audit-logs', icon: icons.submissions },
 ]
 
-const nav = [
-  { label: 'Dashboard', to: '/dashboard', icon: icons.dashboard },
+// JavaScript and Python are namespaced under their own prefix.
+const trackChildren = (base, playgroundLabel) => [
+  { label: 'Topics', to: base, end: true },
+  { label: 'Practice problems', to: `${base}/practice` },
+  { label: playgroundLabel, to: `${base}/playground` },
+  { label: 'My tasks', to: `${base}/my-tasks` },
+  { label: 'Completed', to: `${base}/completed` },
+]
+
+// One config drives every collapsible section; `match` decides when it auto-opens.
+const sections = [
   {
-    label: 'C Programming',
+    id: 'c',
+    label: 'C programming',
     icon: icons.code,
+    match: (p) => p === '/tasks' || p.startsWith('/topics/') || p === '/practice' || p === '/playground',
+    // The C track keeps its original un-namespaced routes; My tasks / Completed are top-level items.
     children: [
       { label: 'Topics', to: '/tasks', end: true },
-      { label: 'Practice Problems', to: '/practice' },
-      { label: 'C Playground', to: '/playground' },
+      { label: 'Practice problems', to: '/practice' },
+      { label: 'C playground', to: '/playground' },
     ],
   },
-  { label: 'My Tasks', to: '/my-tasks', icon: icons.tasks },
-  { label: 'Completed Tasks', to: '/completed', icon: icons.check },
-  { label: 'Submissions', to: '/submissions', icon: icons.submissions },
+  {
+    id: 'javascript',
+    label: 'JavaScript',
+    icon: icons.javascript,
+    match: (p) => p === '/javascript' || p.startsWith('/javascript/'),
+    children: trackChildren('/javascript', 'JavaScript playground'),
+  },
+  {
+    id: 'python',
+    label: 'Python',
+    icon: icons.terminal,
+    match: (p) => p === '/python' || p.startsWith('/python/'),
+    children: trackChildren('/python', 'Python playground'),
+  },
+  {
+    id: 'web',
+    label: 'Web development',
+    icon: icons.globe,
+    match: (p) => p.startsWith('/web-development/'),
+    children: [
+      { label: 'HTML', to: '/web-development/html', end: true },
+      { label: 'CSS', soon: true },
+      { label: 'JavaScript', soon: true },
+    ],
+  },
 ]
 
-const javascriptNav = [
-  { label: 'Topics', to: '/javascript', end: true },
-  { label: 'Practice Problems', to: '/javascript/practice' },
-  { label: 'JavaScript Playground', to: '/javascript/playground' },
-  { label: 'My Tasks', to: '/javascript/my-tasks' },
-  { label: 'Completed Tasks', to: '/javascript/completed' },
-]
-
-const pythonNav = [
-  { label: 'Topics', to: '/python', end: true },
-  { label: 'Practice Problems', to: '/python/practice' },
-  { label: 'Python Playground', to: '/python/playground' },
-  { label: 'My Tasks', to: '/python/my-tasks' },
-  { label: 'Completed Tasks', to: '/python/completed' },
-]
+const rowBase = 'flex w-full items-center gap-3 rounded-control px-3 text-sm font-medium transition-colors'
 
 const itemClass = ({ isActive }) =>
-  `group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
-    isActive
-      ? 'bg-brand-50 text-brand-700 shadow-sm ring-1 ring-brand-100'
-      : 'text-slate-600 hover:translate-x-0.5 hover:bg-slate-100 hover:text-slate-900'
-  }`
+  `${rowBase} h-9 ${isActive ? 'bg-accent-soft text-accent-text' : 'text-fg-muted hover:bg-surface-2 hover:text-fg'}`
 
 const childClass = ({ isActive }) =>
-  `flex items-center gap-3 rounded-xl py-2.5 pr-3 pl-11 text-[13px] font-medium transition-all duration-200 ${
-    isActive ? 'bg-brand-50/80 text-brand-700' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+  `flex h-8 items-center rounded-control pr-3 pl-3 text-sm transition-colors ${
+    isActive ? 'bg-accent-soft font-medium text-accent-text' : 'text-fg-muted hover:bg-surface-2 hover:text-fg'
   }`
 
-function NavItems({ items, close, nested = false }) {
+function NavItems({ items, close }) {
   return items.map((item) => (
     <li key={item.to}>
-      <NavLink to={item.to} end={item.end} className={nested ? childClass : itemClass} onClick={close}>
-        {!nested && <Icon d={item.icon} className="size-5 shrink-0 transition-transform duration-200 group-hover:scale-105" />}
+      <NavLink to={item.to} end={item.end} className={itemClass} onClick={close}>
+        <Icon d={item.icon} className="size-[18px] shrink-0" />
         <span className="min-w-0 flex-1 truncate">{item.label}</span>
-        {!nested && <span className="ml-auto size-1.5 rounded-full bg-current opacity-0 transition-opacity group-[.active]:opacity-100" />}
       </NavLink>
     </li>
   ))
 }
 
+function GroupLabel({ children }) {
+  return <li className="px-3 pt-4 pb-1 text-xs font-medium text-fg-subtle">{children}</li>
+}
+
+function NavSection({ section, pathname, close }) {
+  const active = section.match(pathname)
+  // A manual toggle only applies to the page it was made on; navigating re-syncs with the route.
+  const [manual, setManual] = useState({ pathname, open: active })
+  const open = manual.pathname === pathname ? manual.open : active
+  const panelId = `nav-${section.id}`
+
+  return (
+    <li>
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => setManual({ pathname, open: !open })}
+        className={`${rowBase} h-9 ${active ? 'text-fg' : 'text-fg-muted hover:bg-surface-2 hover:text-fg'}`}
+      >
+        <Icon d={section.icon} className={`size-[18px] shrink-0 ${active ? 'text-accent-text' : ''}`} />
+        <span className="flex-1 text-left">{section.label}</span>
+        <ChevronDown className={`size-4 text-fg-subtle transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+      </button>
+      <div id={panelId} className={`grid transition-[grid-template-rows] duration-200 ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+        <div className="min-h-0 overflow-hidden" inert={!open}>
+          <ul className="mt-0.5 mb-1 ml-[18px] space-y-0.5 border-l border-line pl-3">
+            {section.children.map((child) => (
+              <li key={child.label}>
+                {child.soon ? (
+                  <div className="flex h-8 items-center justify-between pr-3 text-sm text-fg-subtle" aria-disabled="true">
+                    {child.label}
+                    <span className="rounded-md bg-surface-2 px-1.5 py-0.5 text-xs">Soon</span>
+                  </div>
+                ) : (
+                  <NavLink to={child.to} end={child.end} className={childClass} onClick={close}>
+                    <span className="truncate">{child.label}</span>
+                  </NavLink>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </li>
+  )
+}
+
+function Avatar({ initials, className = 'size-9 text-sm' }) {
+  return (
+    <span className={`flex shrink-0 items-center justify-center rounded-full bg-accent-soft font-semibold text-accent-text ${className}`}>
+      {initials}
+    </span>
+  )
+}
+
 function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
-  const location = useLocation()
-  const programmingActive = location.pathname === '/tasks'
-    || location.pathname.startsWith('/topics/')
-    || location.pathname === '/practice'
-    || location.pathname === '/playground'
-  const javascriptActive = location.pathname === '/javascript'
-    || location.pathname.startsWith('/javascript/')
-  const pythonActive = location.pathname === '/python'
-    || location.pathname.startsWith('/python/')
-  const [programmingState, setProgrammingState] = useState({ pathname: location.pathname, open: programmingActive })
-  const programmingOpen = programmingState.pathname === location.pathname ? programmingState.open : programmingActive
-  const [javascriptState, setJavascriptState] = useState({ pathname: location.pathname, open: javascriptActive })
-  const javascriptOpen = javascriptState.pathname === location.pathname ? javascriptState.open : javascriptActive
-  const [pythonState, setPythonState] = useState({ pathname: location.pathname, open: pythonActive })
-  const pythonOpen = pythonState.pathname === location.pathname ? pythonState.open : pythonActive
-  const webDevelopmentActive = location.pathname.startsWith('/web-development/')
-  const [webDevelopmentState, setWebDevelopmentState] = useState({ pathname: location.pathname, open: webDevelopmentActive })
-  const webDevelopmentOpen = webDevelopmentState.pathname === location.pathname
-    ? webDevelopmentState.open
-    : webDevelopmentActive
+  const { pathname } = useLocation()
   const userName = user?.name?.trim() || 'Learner'
   const initials = userName.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase()
 
   return (
-    <nav className="flex h-full flex-col bg-white p-4 backdrop-blur-xl">
-      <div className="flex items-center justify-between rounded-2xl px-2 py-2">
-        <Link to="/dashboard" onClick={close} className="rounded-lg focus-visible:outline-brand-500">
-          <Logo />
-        </Link>
-        <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-bold tracking-wide text-emerald-700">LEARN</span>
-      </div>
+    <nav aria-label="Main" className="flex h-full flex-col bg-surface p-3">
+      <Link to="/dashboard" onClick={close} className="mb-2 rounded-control px-2 py-2">
+        <Logo />
+      </Link>
 
-      <div className="mx-2 mt-4 rounded-2xl bg-linear-to-br from-brand-600 to-brand-700 p-4 text-white shadow-md shadow-brand-900/10">
-        <div className="flex items-center gap-2">
-          <span className="flex size-8 items-center justify-center rounded-xl bg-white/15"><Icon d={icons.code} className="size-4" /></span>
-          <span className="text-xs font-semibold text-indigo-100">Your workspace</span>
-        </div>
-        <p className="mt-3 text-sm font-semibold">Keep your momentum</p>
-        <p className="mt-1 text-xs leading-relaxed text-indigo-100">A little practice every day goes a long way.</p>
-      </div>
-
-      <ul className="mt-5 flex-1 space-y-1 overflow-y-auto px-1 pb-3">
+      <ul className="flex-1 space-y-0.5 overflow-y-auto pb-3">
         {orgNav.length > 0 && (
           <>
-            <li className="mb-2 px-3 pt-2 text-[10px] font-bold tracking-[0.16em] text-slate-400 uppercase">Organization</li>
+            <GroupLabel>Organization</GroupLabel>
             <NavItems items={orgNav} close={close} />
-            <li className="mb-2 px-3 pt-5 text-[10px] font-bold tracking-[0.16em] text-slate-400 uppercase">Learning</li>
           </>
         )}
         {isSuperAdmin && (
           <>
-            <li className="mb-2 px-3 pt-2 text-[10px] font-bold tracking-[0.16em] text-slate-400 uppercase">Platform</li>
+            <GroupLabel>Platform</GroupLabel>
             <NavItems items={platformNav} close={close} />
-            <li className="mb-2 px-3 pt-5 text-[10px] font-bold tracking-[0.16em] text-slate-400 uppercase">Learning</li>
           </>
         )}
-        <NavItems items={[nav[0]]} close={close} />
-        <li className="mt-2">
-          <button
-            type="button"
-            aria-expanded={programmingOpen}
-            aria-controls="programming-navigation"
-            onClick={() => setProgrammingState({ pathname: location.pathname, open: !programmingOpen })}
-            className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100"
-          >
-            <Icon d={nav[1].icon} className="size-5 shrink-0 text-slate-500 transition-colors group-hover:text-brand-600" />
-            <span className="flex-1 text-left">{nav[1].label}</span>
-            <svg viewBox="0 0 20 20" className={`size-4 text-slate-400 transition-transform duration-300 ${programmingOpen ? 'rotate-180' : ''}`} fill="currentColor" aria-hidden="true">
-              <path fillRule="evenodd" d="M5.22 7.47a.75.75 0 011.06 0L10 11.19l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 8.53a.75.75 0 010-1.06z" clipRule="evenodd" />
-            </svg>
-          </button>
-          <div
-            id="programming-navigation"
-            className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${programmingOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
-          >
-            <div className="min-h-0 overflow-hidden">
-              <ul className="mt-1 space-y-0.5 border-l border-slate-200 ml-[21px]">
-                <NavItems items={nav[1].children} close={close} nested />
-              </ul>
-            </div>
-          </div>
-        </li>
-        <li className="mt-2">
-          <button
-            type="button"
-            aria-expanded={pythonOpen}
-            aria-controls="python-navigation"
-            onClick={() => setPythonState({ pathname: location.pathname, open: !pythonOpen })}
-            className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors ${
-              pythonActive ? 'bg-brand-50 text-brand-700' : 'text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <Icon d={icons.code} className="size-5 shrink-0 text-slate-500 transition-colors group-hover:text-brand-600" />
-            <span className="flex-1 text-left">Python</span>
-            <svg viewBox="0 0 20 20" className={`size-4 text-slate-400 transition-transform duration-300 ${pythonOpen ? 'rotate-180' : ''}`} fill="currentColor" aria-hidden="true">
-              <path fillRule="evenodd" d="M5.22 7.47a.75.75 0 011.06 0L10 11.19l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 8.53a.75.75 0 010-1.06z" clipRule="evenodd" />
-            </svg>
-          </button>
-          <div
-            id="python-navigation"
-            className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${pythonOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
-          >
-            <div className="min-h-0 overflow-hidden">
-              <ul className="mt-1 space-y-0.5 border-l border-slate-200 ml-[21px]">
-                <NavItems items={pythonNav} close={close} nested />
-              </ul>
-            </div>
-          </div>
-        </li>
-        <li className="mt-2">
-          <button
-            type="button"
-            aria-expanded={javascriptOpen}
-            aria-controls="javascript-navigation"
-            onClick={() => setJavascriptState({ pathname: location.pathname, open: !javascriptOpen })}
-            className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors ${
-              javascriptActive ? 'bg-brand-50 text-brand-700' : 'text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <Icon d={icons.code} className="size-5 shrink-0 text-slate-500 transition-colors group-hover:text-brand-600" />
-            <span className="flex-1 text-left">JavaScript</span>
-            <svg viewBox="0 0 20 20" className={`size-4 text-slate-400 transition-transform duration-300 ${javascriptOpen ? 'rotate-180' : ''}`} fill="currentColor" aria-hidden="true">
-              <path fillRule="evenodd" d="M5.22 7.47a.75.75 0 011.06 0L10 11.19l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 8.53a.75.75 0 010-1.06z" clipRule="evenodd" />
-            </svg>
-          </button>
-          <div
-            id="javascript-navigation"
-            className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${javascriptOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
-          >
-            <div className="min-h-0 overflow-hidden">
-              <ul className="mt-1 space-y-0.5 border-l border-slate-200 ml-[21px]">
-                <NavItems items={javascriptNav} close={close} nested />
-              </ul>
-            </div>
-          </div>
-        </li>
-        <li className="mt-2">
-          <button
-            type="button"
-            aria-expanded={webDevelopmentOpen}
-            aria-controls="web-development-navigation"
-            onClick={() => setWebDevelopmentState({ pathname: location.pathname, open: !webDevelopmentOpen })}
-            className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors ${
-              webDevelopmentActive ? 'bg-brand-50 text-brand-700' : 'text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <Icon d={icons.globe} className="size-5 shrink-0 text-slate-500 transition-colors group-hover:text-brand-600" />
-            <span className="flex-1 text-left">Web Development</span>
-            <svg viewBox="0 0 20 20" className={`size-4 text-slate-400 transition-transform duration-300 ${webDevelopmentOpen ? 'rotate-180' : ''}`} fill="currentColor" aria-hidden="true">
-              <path fillRule="evenodd" d="M5.22 7.47a.75.75 0 011.06 0L10 11.19l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 8.53a.75.75 0 010-1.06z" clipRule="evenodd" />
-            </svg>
-          </button>
-          <div
-            id="web-development-navigation"
-            className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${webDevelopmentOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
-          >
-            <div className="min-h-0 overflow-hidden">
-              <ul className="mt-1 space-y-0.5 border-l border-slate-200 ml-[21px]">
-                <li>
-                  <NavLink
-                    to="/web-development/html"
-                    end
-                    className={({ isActive }) => `flex items-center gap-2 rounded-xl py-2.5 pr-3 pl-11 text-[13px] font-semibold transition-all duration-200 ${
-                      isActive ? 'bg-brand-50/80 text-brand-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                    }`}
-                    onClick={close}
-                  >
-                    <Icon d={icons.globe} className="size-4 shrink-0" />
-                    <span className="min-w-0 flex-1 truncate">HTML</span>
-                  </NavLink>
-                </li>
-                {[
-                  { label: 'CSS', icon: icons.css },
-                  { label: 'JavaScript', icon: icons.javascript },
-                ].map((item) => (
-                  <li key={item.label}>
-                    <div className="flex items-center gap-2 rounded-xl py-2.5 pr-2 pl-11 text-[13px] text-slate-400" aria-disabled="true">
-                      <Icon d={item.icon} className="size-4 shrink-0" />
-                      <span className="min-w-0 flex-1 truncate">{item.label}</span>
-                      <span className="shrink-0 rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-slate-500">Coming Soon</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </li>
-        <NavItems items={nav.slice(2)} close={close} />
-        <NavItems items={[{ label: 'Profile', to: '/profile', icon: icons.profile }]} close={close} />
+        {(orgNav.length > 0 || isSuperAdmin) && <GroupLabel>Learning</GroupLabel>}
+        <NavItems items={[{ label: 'Dashboard', to: '/dashboard', icon: icons.dashboard }]} close={close} />
+        {sections.map((section) => (
+          <NavSection key={section.id} section={section} pathname={pathname} close={close} />
+        ))}
+        <NavItems
+          items={[
+            { label: 'My tasks', to: '/my-tasks', icon: icons.tasks },
+            { label: 'Completed', to: '/completed', icon: icons.check },
+            { label: 'Submissions', to: '/submissions', icon: icons.submissions },
+            { label: 'Profile', to: '/profile', icon: icons.profile },
+          ]}
+          close={close}
+        />
       </ul>
 
-      <div className="border-t border-slate-100 pt-3">
-        <div className="mb-2 flex items-center gap-3 rounded-2xl bg-slate-50 p-3">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-brand-600 to-brand-700 text-sm font-bold text-white shadow-sm">{initials}</span>
+      <div className="border-t border-line pt-3">
+        <div className="flex items-center gap-3 px-2 pb-2">
+          <Avatar initials={initials} />
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-sm font-semibold text-slate-800">{userName}</span>
-            <span className="block truncate text-xs text-slate-500">{user?.email}</span>
+            <span className="block truncate text-sm font-medium text-fg">{userName}</span>
+            <span className="block truncate text-xs text-fg-muted">{user?.email}</span>
           </span>
         </div>
-        <button onClick={logout} className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-500 transition-colors hover:bg-red-50 hover:text-red-600">
-          <Icon d={icons.logout} className="size-5 transition-transform group-hover:-translate-x-0.5" />
+        <button onClick={logout} className={`${rowBase} h-9 text-fg-muted hover:bg-danger-soft hover:text-danger`}>
+          <LogOut className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
           Sign out
         </button>
       </div>
@@ -278,12 +200,14 @@ function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
   )
 }
 
+const iconButton =
+  'flex size-9 items-center justify-center rounded-control border border-line-strong bg-surface text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg'
+
 export default function DashboardLayout() {
   const { user, logout, isSuperAdmin } = useAuth()
   const { memberships, activeOrganization, selectOrganization } = useOrg()
-  const { theme, toggle, palette, setPalette } = useTheme()
+  const { theme, toggle } = useTheme()
   const [open, setOpen] = useState(false)
-  const [paletteMenuOpen, setPaletteMenuOpen] = useState(false)
   const location = useLocation()
   const orgRole = activeOrganization?.role
   const orgNav = orgRole === 'org_admin'
@@ -307,8 +231,17 @@ export default function DashboardLayout() {
           ]
         : []
 
-  const allItems = [...orgNav, ...(isSuperAdmin ? platformNav : []), ...nav.flatMap((item) => item.children ?? [item]), { label: 'Profile', to: '/profile' }]
-  const activeItem = allItems
+  const pageItems = [
+    ...orgNav,
+    ...(isSuperAdmin ? platformNav : []),
+    { label: 'Dashboard', to: '/dashboard' },
+    ...sections.flatMap((section) => section.children.filter((child) => child.to).map((child) => ({ ...child, label: `${section.label} · ${child.label}` }))),
+    { label: 'My tasks', to: '/my-tasks' },
+    { label: 'Completed', to: '/completed' },
+    { label: 'Submissions', to: '/submissions' },
+    { label: 'Profile', to: '/profile' },
+  ]
+  const activeItem = pageItems
     .filter((item) => location.pathname === item.to.split('?')[0] || (item.to !== '/dashboard' && item.to !== '/tasks' && location.pathname.startsWith(`${item.to.split('?')[0]}/`)))
     .sort((a, b) => b.to.length - a.to.length)[0]
   const pageTitle = activeItem?.label ?? 'VirVerse'
@@ -319,103 +252,56 @@ export default function DashboardLayout() {
   const initials = userName.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase()
 
   return (
-    <div className="dashboard-shell min-h-screen bg-slate-50">
-      <aside className="dashboard-sidebar fixed inset-y-0 left-0 z-20 hidden w-64 border-r border-slate-200/80 bg-white">
+    <div className="dashboard-shell min-h-screen bg-bg">
+      <aside className="dashboard-sidebar fixed inset-y-0 left-0 z-20 hidden w-64 border-r border-line bg-surface">
         {sidebar}
       </aside>
 
       {open && (
         <div className="dashboard-mobile-nav fixed inset-0 z-50">
-          <button className="absolute inset-0 bg-slate-950/45 backdrop-blur-[2px]" onClick={closeMenu} aria-label="Close navigation" />
-          <aside className="absolute inset-y-0 left-0 w-64 animate-pop shadow-2xl">
+          <button className="absolute inset-0" style={{ background: 'var(--overlay)' }} onClick={closeMenu} aria-label="Close navigation" />
+          <aside className="animate-pop absolute inset-y-0 left-0 w-64 border-r border-line shadow-pop">
             {sidebar}
           </aside>
         </div>
       )}
 
-      <header className="sticky top-0 z-30 bg-white/80 shadow-sm shadow-slate-900/5 backdrop-blur-xl">
-        <div className="flex h-16 items-center gap-3 px-4 sm:px-6 lg:px-8">
-          <button
-            onClick={() => setOpen(true)}
-            className="dashboard-menu-button flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700"
-            aria-label="Open menu"
-          >
-            <Icon d={icons.menu} />
+      <header className="sticky top-0 z-30 border-b border-line bg-bg/90 backdrop-blur">
+        <div className="flex h-14 items-center gap-3 px-4 sm:px-6 lg:px-8">
+          <button onClick={() => setOpen(true)} className={`dashboard-menu-button ${iconButton}`} aria-label="Open menu">
+            <Icon d={icons.menu} className="size-[18px]" />
           </button>
 
-          <div className="min-w-0 flex-1">
-            <p className="hidden text-[10px] font-semibold tracking-[0.16em] text-slate-400 uppercase sm:block">VirVerse workspace</p>
-            <h1 className="truncate text-sm font-bold text-slate-900 sm:mt-0.5 sm:text-base">{pageTitle}</h1>
-          </div>
+          <h1 className="min-w-0 flex-1 truncate text-sm font-semibold text-fg sm:text-base">{pageTitle}</h1>
 
           {activeMemberships.length > 0 && (
-            <label className="relative hidden items-center sm:flex">
-              <select
-                aria-label="Active organization"
-                value={activeOrganization?.organization?.id ?? ''}
-                onChange={(e) => selectOrganization(e.target.value)}
-                className="max-w-44 appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pr-9 pl-3.5 text-xs font-semibold text-slate-700 shadow-sm outline-none transition hover:border-brand-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
-              >
-                {activeMemberships.map((membership) => (
-                  <option key={membership.organization._id} value={membership.organization._id}>
-                    {membership.organization.name} · {membership.role.replaceAll('_', ' ')}
-                  </option>
-                ))}
-              </select>
-              <svg viewBox="0 0 20 20" className="pointer-events-none absolute right-3 size-4 text-slate-400" fill="currentColor" aria-hidden="true">
-                <path fillRule="evenodd" d="M5.22 7.47a.75.75 0 011.06 0L10 11.19l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 8.53a.75.75 0 010-1.06z" clipRule="evenodd" />
-              </svg>
-            </label>
+            <Select
+              label="Active organization"
+              value={activeOrganization?.organization?.id ?? ''}
+              onChange={(e) => selectOrganization(e.target.value)}
+              className="hidden w-56 sm:block"
+            >
+              {activeMemberships.map((membership) => (
+                <option key={membership.organization._id} value={membership.organization._id}>
+                  {membership.organization.name} · {membership.role.replaceAll('_', ' ')}
+                </option>
+              ))}
+            </Select>
           )}
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            <InvitationInbox />
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setPaletteMenuOpen((current) => !current)}
-                className="flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700"
-                aria-label="Choose color palette"
-                aria-expanded={paletteMenuOpen}
-                aria-haspopup="true"
-                title="Color palette"
-              >
-                <span className="size-4 rounded-full border-2 border-white shadow-[0_0_0_1px_var(--color-slate-300)]" style={{ backgroundColor: PALETTES.find(({ id }) => id === palette)?.color }} />
-              </button>
-              {paletteMenuOpen && (
-                <div role="group" aria-label="Color palettes" className="absolute top-full right-0 z-40 mt-2 w-52 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
-                  <p className="px-3 py-2 text-[10px] font-bold tracking-[0.14em] text-slate-400 uppercase">Choose a color</p>
-                  {PALETTES.map((option) => (
-                    <button
-                      key={option.id}
-                      type="button"
-                      aria-pressed={palette === option.id}
-                      onClick={() => {
-                        setPalette(option.id)
-                        setPaletteMenuOpen(false)
-                      }}
-                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-                    >
-                      <span className="size-4 rounded-full" style={{ backgroundColor: option.color }} />
-                      <span className="flex-1">{option.name}</span>
-                      {palette === option.id && <span className="text-xs font-bold text-brand-600" aria-hidden="true">✓</span>}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+          <InvitationInbox />
+          <Tooltip label={theme === 'dark' ? 'Light theme' : 'Dark theme'}>
             <button
               onClick={toggle}
-              className="flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700"
+              className={iconButton}
               aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-              title={theme === 'dark' ? 'Light theme' : 'Dark theme'}
             >
-              <Icon d={theme === 'dark' ? icons.sun : icons.moon} className="size-5" />
+              <Icon d={theme === 'dark' ? icons.sun : icons.moon} className="size-[18px]" />
             </button>
-            <Link to="/profile" className="flex size-10 items-center justify-center rounded-xl bg-linear-to-br from-brand-600 to-brand-700 text-sm font-bold text-white shadow-sm ring-2 ring-white transition hover:scale-105 hover:shadow-md" aria-label={`Open profile for ${userName}`}>
-              {initials}
-            </Link>
-          </div>
+          </Tooltip>
+          <Link to="/profile" aria-label={`Open profile for ${userName}`} className="rounded-full">
+            <Avatar initials={initials} />
+          </Link>
         </div>
       </header>
 

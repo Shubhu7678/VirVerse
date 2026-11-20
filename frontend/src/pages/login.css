@@ -503,7 +503,7 @@
 }
 
 .login-page {
-  color: #f3f6f7;
+  color: #f1eee8;
   background:
     radial-gradient(ellipse at 50% 0%, rgb(33 121 112 / 10%), transparent 48%),
     #080d13;
@@ -518,43 +518,43 @@
   background:
     radial-gradient(ellipse at 73% 72%, rgb(33 121 112 / 19%), transparent 40%),
     radial-gradient(ellipse at 32% 38%, rgb(28 69 77 / 20%), transparent 53%),
-    linear-gradient(145deg, #0b1117 5%, #101a21 58%, #0c1319);
+    linear-gradient(145deg, #151412 5%, #1c1b18 58%, #0c1319);
 }
 
 .login-story::after {
-  border-color: rgb(84 214 179 / 16%);
+  border-color: rgb(242 163 58 / 16%);
   box-shadow:
-    0 0 0 44px rgb(84 214 179 / 4%),
-    0 0 0 100px rgb(84 214 179 / 3%),
-    inset 0 0 100px rgb(84 214 179 / 8%);
+    0 0 0 44px rgb(242 163 58 / 4%),
+    0 0 0 100px rgb(242 163 58 / 3%),
+    inset 0 0 100px rgb(242 163 58 / 8%);
 }
 
 .login-eyebrow { color: #a9d8ca; }
 .login-eyebrow > span,
 .login-panel-footer > span {
-  background: #54d6b3;
-  box-shadow: 0 0 14px rgb(84 214 179 / 65%);
+  background: #f2a33a;
+  box-shadow: 0 0 14px rgb(242 163 58 / 65%);
 }
 
 .login-hero h1 { color: #f4f7f8; }
-.login-hero h1 span { color: #54d6b3; }
+.login-hero h1 span { color: #f2a33a; }
 .login-hero-copy { color: #aab6c0; }
 .login-code-card {
-  border-color: rgb(84 214 179 / 20%);
+  border-color: rgb(242 163 58 / 20%);
   background: linear-gradient(145deg, rgb(24 43 45 / 92%), rgb(15 22 28 / 96%));
   box-shadow: 0 25px 65px rgb(0 0 0 / 34%), 0 0 48px rgb(39 152 127 / 9%);
 }
 .login-code-lines { color: #e0e9e9; }
-.login-code-lines em { color: #9ce8d1; }
+.login-code-lines em { color: #ffd89a; }
 .login-code-glow { background: #278d73; }
 .login-hero-foot strong { color: #e4eeee; }
 
-.login-orbit { border-color: rgb(84 214 179 / 12%); }
+.login-orbit { border-color: rgb(242 163 58 / 12%); }
 .login-orbit-large {
-  box-shadow: 0 0 0 26px rgb(84 214 179 / 2%), inset 0 0 70px rgb(84 214 179 / 5%);
+  box-shadow: 0 0 0 26px rgb(242 163 58 / 2%), inset 0 0 70px rgb(242 163 58 / 5%);
 }
 .login-orbit-small {
-  border-color: rgb(84 214 179 / 17%);
+  border-color: rgb(242 163 58 / 17%);
   box-shadow: 0 0 60px rgb(39 141 115 / 14%);
 }
 
@@ -564,7 +564,7 @@
     #10171e;
 }
 .login-panel-top a,
-.login-signup-mobile a { color: #83d8c0; }
+.login-signup-mobile a { color: #f5b85c; }
 .login-panel-top a:hover,
 .login-signup-mobile a:hover { color: #c9f5e7; }
 
@@ -572,12 +572,12 @@
   border-color: rgb(169 190 205 / 12%);
   background: linear-gradient(145deg, rgb(25 35 43 / 96%), rgb(17 25 32 / 98%));
 }
-.login-card h2 { color: #f3f6f7; }
+.login-card h2 { color: #f1eee8; }
 .login-card-kicker { color: #82cbb7; }
 .login-card-subtitle { color: #a5b0b7; }
 .login-card-mark {
-  border-color: rgb(84 214 179 / 22%);
-  background: rgb(84 214 179 / 10%);
+  border-color: rgb(242 163 58 / 22%);
+  background: rgb(242 163 58 / 10%);
 }
 
 .login-card .login-form label { color: #c9d2d6; }
@@ -588,33 +588,33 @@
 }
 .login-card .login-form input::placeholder { color: #89979e; }
 .login-card .login-form input:focus {
-  border-color: #54d6b3;
-  box-shadow: 0 0 0 3px rgb(84 214 179 / 14%);
+  border-color: #f2a33a;
+  box-shadow: 0 0 0 3px rgb(242 163 58 / 14%);
 }
 .login-card .login-form button[type="button"] { color: #aab9bd; }
 .login-card .login-form button[type="button"]:hover { color: #d3f6e9; }
 
 .login-submit {
   border-color: rgb(128 230 203 / 24%);
-  background: linear-gradient(105deg, #168c78, #176e83);
+  background: linear-gradient(105deg, #b45309, #9a4708);
   box-shadow: 0 8px 22px rgb(17 135 118 / 20%);
 }
 .login-submit:hover { background: linear-gradient(105deg, #20a58b, #1d8193); }
 
 .login-demo-icon {
-  background: rgb(84 214 179 / 12%);
-  color: #9ce8d1;
+  background: rgb(242 163 58 / 12%);
+  color: #ffd89a;
 }
 .login-demo-copy strong { color: #e0e9eb; }
 .login-demo-copy span { color: #a2afb5; }
 .login-demo-button {
-  border-color: rgb(84 214 179 / 26%);
-  background: rgb(84 214 179 / 9%);
+  border-color: rgb(242 163 58 / 26%);
+  background: rgb(242 163 58 / 9%);
   color: #a9e8d4;
 }
 .login-demo-button:hover {
-  border-color: rgb(84 214 179 / 48%);
-  background: rgb(84 214 179 / 16%);
+  border-color: rgb(242 163 58 / 48%);
+  background: rgb(242 163 58 / 16%);
 }
 
 @media (max-width: 680px) {

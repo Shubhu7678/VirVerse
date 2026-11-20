@@ -25,7 +25,7 @@ export default function ResizeHandle({ direction, containerRef, onChange }) {
         dragging.current = false
         document.body.style.userSelect = ''
       }}
-      className={`group hidden shrink-0 touch-none bg-slate-200 transition-colors hover:bg-brand-500 active:bg-brand-500 lg:block ${
+      className={`group hidden shrink-0 touch-none bg-line transition-colors hover:bg-accent active:bg-accent lg:block ${
         horizontal ? 'w-1 cursor-col-resize' : 'h-1 cursor-row-resize'
       }`}
     />

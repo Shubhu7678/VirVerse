@@ -1,7 +1,11 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Circle, CircleCheck, CircleDot, Search } from 'lucide-react'
 import { DifficultyBadge } from './Badges'
 import { EmptyState } from './States'
+import Select from './ui/Select'
+import Card from './ui/Card'
+import Button from './Button'
 import { taskPath } from '../utils/languageRoutes'
 
 const rank = { Easy: 1, Medium: 2, Hard: 3 }
@@ -13,38 +17,25 @@ const sorters = {
   title: (a, b) => a.title.localeCompare(b.title),
 }
 
-export function StatusIcon({ status }) {
-  if (status === 'completed') {
-    return (
-      <span className="flex size-6 items-center justify-center rounded-full bg-emerald-500 text-white" title="Completed" role="img" aria-label="Completed">
-        <svg viewBox="0 0 20 20" className="size-3.5" fill="currentColor" aria-hidden="true">
-          <path d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0L3.3 9.7a1 1 0 111.4-1.4l3.8 3.8 6.8-6.8a1 1 0 011.4 0z" />
-        </svg>
-      </span>
-    )
-  }
-  if (status === 'attempted') {
-    return (
-      <span className="flex size-6 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-500/20" title="Attempted, not accepted yet" role="img" aria-label="Attempted">
-        <span className="size-2.5 rounded-full bg-amber-500" />
-      </span>
-    )
-  }
-  return <span className="block size-6 rounded-full border-2 border-slate-300" title="Not attempted" role="img" aria-label="Not attempted" />
+const statusMeta = {
+  completed: { Glyph: CircleCheck, color: 'text-success', label: 'Completed', action: 'Review' },
+  attempted: { Glyph: CircleDot, color: 'text-warn', label: 'Attempted, not accepted yet', action: 'Continue' },
+  todo: { Glyph: Circle, color: 'text-fg-subtle', label: 'Not attempted', action: 'Solve' },
 }
 
-const field =
-  'min-h-11 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100'
+export function StatusIcon({ status }) {
+  const { Glyph, color, label } = statusMeta[status] || statusMeta.todo
+  return <Glyph className={`size-5 shrink-0 ${color}`} strokeWidth={1.75} role="img" aria-label={label} />
+}
 
 /**
- * Searchable, filterable question table.
+ * Searchable, filterable question list.
  * `fixedStatus` hides the status filter for pages that already scope by status (My Tasks / Completed).
  */
 export default function QuestionList({
   tasks, topicNames, showTopic = false, fixedStatus = null, hideStatusFilter = false,
-  hideSort = false, hideSummary = false, pageSize = 12, featuredSlug = null, emptyState, variant, language = 'c',
+  hideSort = false, hideSummary = false, pageSize = 12, featuredSlug = null, emptyState, language = 'c',
 }) {
-  const themed = variant === 'practice' || variant === 'tasks'
   const [search, setSearch] = useState('')
   const [difficulty, setDifficulty] = useState('all')
   const [status, setStatus] = useState('all')
@@ -59,6 +50,10 @@ export default function QuestionList({
     setStatus('all')
     setSort('order')
     setTopic('all')
+    setPage(1)
+  }
+  const onFilter = (setter) => (e) => {
+    setter(e.target.value)
     setPage(1)
   }
 
@@ -89,150 +84,114 @@ export default function QuestionList({
   if (tasks.length === 0) return emptyState
 
   return (
-    <div className={`question-list space-y-4 ${themed ? 'practice-question-list' : ''}`}>
-      <div className="question-filters rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5">
-        <div className="flex flex-col gap-3 lg:flex-row">
+    <div className="space-y-4">
+      <div className="flex flex-col gap-3 lg:flex-row">
+        <div className="relative min-w-0 flex-1">
+          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-fg-subtle" aria-hidden="true" />
           <input
             type="search"
             value={search}
-            onChange={(e) => {
-              setSearch(e.target.value)
-              setPage(1)
-            }}
-            placeholder="Search questions…"
+            onChange={onFilter(setSearch)}
+            placeholder="Search questions"
             aria-label="Search questions"
-            className={`${field} min-w-0 flex-1`}
+            className="h-10 w-full rounded-control border border-line-strong bg-surface pr-3 pl-9 text-sm text-fg outline-none transition-colors placeholder:text-fg-subtle focus:border-accent focus:ring-2 focus:ring-accent/30"
           />
-          {showTopic && (
-            <select value={topic} onChange={(e) => {
-              setTopic(e.target.value)
-              setPage(1)
-            }} aria-label="Filter by topic" className={`${field} lg:max-w-48`}>
-              <option value="all">All topics</option>
-              {Object.entries(topicNames).map(([slug, name]) => (
-                <option key={slug} value={slug}>{name}</option>
-              ))}
-            </select>
-          )}
-          <select value={difficulty} onChange={(e) => {
-            setDifficulty(e.target.value)
-            setPage(1)
-          }} aria-label="Filter by difficulty" className={`${field} lg:max-w-48`}>
-            <option value="all">All difficulties</option>
-            <option>Easy</option>
-            <option>Medium</option>
-            <option>Hard</option>
-          </select>
-          {!hideStatusFilter && !fixedStatus && (
-            <select value={status} onChange={(e) => {
-              setStatus(e.target.value)
-              setPage(1)
-            }} aria-label="Filter by status" className={`${field} lg:max-w-44`}>
-              <option value="all">All statuses</option>
-              <option value="completed">Completed</option>
-              <option value="attempted">Attempted</option>
-              <option value="todo">Not attempted</option>
-            </select>
-          )}
-          {!hideSort && (
-            <select value={sort} onChange={(e) => {
-              setSort(e.target.value)
-              setPage(1)
-            }} aria-label="Sort questions" className={`${field} lg:max-w-44`}>
-              <option value="order">Question order</option>
-              <option value="order-desc">Reverse order</option>
-              <option value="difficulty">Difficulty</option>
-              <option value="title">Title A–Z</option>
-            </select>
-          )}
         </div>
-        {!hideSummary && (
-          <div className="question-summary mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
-            <p className="text-xs text-slate-500" aria-live="polite">
-              <span className="font-semibold text-slate-800">{completedCount} of {tasks.length}</span> completed
-              <span className="mx-2 text-slate-300">·</span>
-              Showing <span className="font-semibold text-slate-800">{firstVisible}–{lastVisible}</span> of{' '}
-              <span className="font-semibold text-slate-800">{visible.length}</span> questions
-            </p>
-            {filtersActive && (
-              <button onClick={clear} className="text-xs font-semibold text-brand-600 transition hover:text-brand-700">
-                Clear filters
-              </button>
-            )}
-          </div>
+        {showTopic && (
+          <Select label="Filter by topic" value={topic} onChange={onFilter(setTopic)} className="lg:w-48">
+            <option value="all">All topics</option>
+            {Object.entries(topicNames).map(([slug, name]) => (
+              <option key={slug} value={slug}>{name}</option>
+            ))}
+          </Select>
+        )}
+        <Select label="Filter by difficulty" value={difficulty} onChange={onFilter(setDifficulty)} className="lg:w-44">
+          <option value="all">All difficulties</option>
+          <option>Easy</option>
+          <option>Medium</option>
+          <option>Hard</option>
+        </Select>
+        {!hideStatusFilter && !fixedStatus && (
+          <Select label="Filter by status" value={status} onChange={onFilter(setStatus)} className="lg:w-44">
+            <option value="all">All statuses</option>
+            <option value="completed">Completed</option>
+            <option value="attempted">Attempted</option>
+            <option value="todo">Not attempted</option>
+          </Select>
+        )}
+        {!hideSort && (
+          <Select label="Sort questions" value={sort} onChange={onFilter(setSort)} className="lg:w-44">
+            <option value="order">Question order</option>
+            <option value="order-desc">Reverse order</option>
+            <option value="difficulty">Difficulty</option>
+            <option value="title">Title A–Z</option>
+          </Select>
         )}
       </div>
 
-      {visible.length === 0 ? (
-        <div>
-          <EmptyState title="No questions match your filters" text="Try a different search or clear the filters.">
-            <button onClick={clear} className="text-sm font-semibold text-brand-600 hover:text-brand-700">
+      {!hideSummary && (
+        <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-fg-muted">
+          <p aria-live="polite" className="tabular-nums">
+            {completedCount} of {tasks.length} completed · showing {firstVisible}–{lastVisible} of {visible.length}
+          </p>
+          {filtersActive && (
+            <button onClick={clear} className="text-accent-text hover:underline">
               Clear filters
             </button>
-          </EmptyState>
-        </div>
-      ) : (
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {pageTasks.map((t, index) => (
-            <article
-              key={t.id}
-              className={`question-card group flex min-w-0 flex-col rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lg hover:shadow-brand-900/5 sm:p-5 ${themed ? 'practice-question-card' : ''} ${t.slug === featuredSlug ? 'is-next-question' : ''} ${t.status === 'completed' ? 'is-completed-question' : ''}`}
-              style={{ animationDelay: `${Math.min(index, 12) * 30}ms` }}
-            >
-              {variant === 'practice' && (
-                <div className="practice-question-art" aria-hidden="true">
-                  <span>{['</>', '☰', '＋', '›_', '◎', '☆', '…', 'Aa', '⬡'][((t.questionOrder || 1) - 1) % 9]}</span>
-                  <i /><i /><i />
-                </div>
-              )}
-              <div className="question-card-header flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <StatusIcon status={t.status} />
-                  <span className="text-xs font-medium text-slate-400">Question {String(t.questionOrder).padStart(2, '0')}</span>
-                </div>
-                {t.slug === featuredSlug && t.status !== 'completed' && (
-                  <span className="question-card-next">Next</span>
-                )}
-                <DifficultyBadge level={t.difficulty} />
-              </div>
-              <div className="question-card-content mt-4 flex-1">
-                {showTopic && <p className="text-[11px] font-semibold tracking-[0.12em] text-brand-600 uppercase">{topicNames[t.category]}</p>}
-                <Link to={taskPath(language, t.slug)} className="mt-1 block text-base font-bold leading-snug text-slate-900 transition-colors group-hover:text-brand-700">
-                  {t.title}
-                </Link>
-                {t.description && <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-500">{t.description}</p>}
-              </div>
-              <div className="question-card-footer mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
-                <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${t.status === 'completed' ? 'text-emerald-700' : t.status === 'attempted' ? 'text-amber-700' : 'text-slate-500'}`}>
-                  <StatusIcon status={t.status} />
-                  {t.status === 'completed' ? 'Solved' : t.status === 'attempted' ? 'In progress' : 'Ready to solve'}
-                </span>
-                <Link
-                  to={taskPath(language, t.slug)}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-brand-600 hover:text-white focus-visible:outline-brand-500"
-                >
-                  {t.status === 'completed' ? 'Review' : t.status === 'attempted' ? 'Continue' : 'Solve'}
-                  <svg viewBox="0 0 20 20" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-                    <path d="M4 10h12M10 4l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </Link>
-              </div>
-            </article>
-          ))}
+          )}
         </div>
       )}
+
+      {visible.length === 0 ? (
+        <EmptyState title="No questions match your filters" text="Try a different search or clear the filters.">
+          <Button variant="secondary" fullWidth={false} onClick={clear}>Clear filters</Button>
+        </EmptyState>
+      ) : (
+        <Card padded={false} as="ul" className="divide-y divide-line overflow-hidden">
+          {pageTasks.map((t) => {
+            const meta = statusMeta[t.status] || statusMeta.todo
+            const isNext = t.slug === featuredSlug && t.status !== 'completed'
+            return (
+              <li
+                key={t.id}
+                className={`flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 transition-colors hover:bg-surface-2 ${isNext ? 'bg-accent-soft/60' : ''}`}
+              >
+                <StatusIcon status={t.status} />
+                <span className="w-7 shrink-0 font-mono text-xs text-fg-subtle tabular-nums">{String(t.questionOrder).padStart(2, '0')}</span>
+                <div className="min-w-0 flex-1 basis-56">
+                  <Link to={taskPath(language, t.slug)} className="block truncate font-medium text-fg hover:text-accent-text">
+                    {t.title}
+                  </Link>
+                  {(showTopic || t.description) && (
+                    <p className="truncate text-sm text-fg-muted">
+                      {showTopic && topicNames[t.category]}
+                      {showTopic && t.description && ' · '}
+                      {t.description}
+                    </p>
+                  )}
+                </div>
+                {isNext && <span className="rounded-md bg-accent px-2 py-0.5 text-xs font-medium text-accent-fg">Up next</span>}
+                <DifficultyBadge level={t.difficulty} />
+                <Link
+                  to={taskPath(language, t.slug)}
+                  className="inline-flex h-8 w-20 items-center justify-center rounded-control border border-line-strong text-xs font-medium text-fg transition-colors hover:bg-surface"
+                  aria-label={`${meta.action} ${t.title}`}
+                >
+                  {meta.action}
+                </Link>
+              </li>
+            )
+          })}
+        </Card>
+      )}
+
       {pageCount > 1 && (
-        <nav className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-sm" aria-label="Question pages">
-          <p className="text-xs text-slate-500">Page {currentPage} of {pageCount}</p>
+        <nav className="flex flex-wrap items-center justify-between gap-3" aria-label="Question pages">
+          <p className="text-sm text-fg-muted tabular-nums">Page {currentPage} of {pageCount}</p>
           <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={() => setPage((current) => Math.max(1, current - 1))}
-              disabled={currentPage === 1}
-              className="min-h-9 rounded-lg border border-slate-200 px-3 text-sm font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-40"
-            >
+            <Button variant="secondary" size="sm" fullWidth={false} onClick={() => setPage((c) => Math.max(1, c - 1))} disabled={currentPage === 1}>
               Previous
-            </button>
+            </Button>
             {pageNumbers.map((pageNumber) => (
               <button
                 key={pageNumber}
@@ -240,23 +199,16 @@ export default function QuestionList({
                 onClick={() => setPage(pageNumber)}
                 aria-label={`Go to page ${pageNumber}`}
                 aria-current={currentPage === pageNumber ? 'page' : undefined}
-                className={`size-9 rounded-lg text-sm font-semibold transition ${
-                  currentPage === pageNumber
-                    ? 'bg-brand-600 text-white'
-                    : 'text-slate-600 hover:bg-brand-50 hover:text-brand-700'
+                className={`size-8 rounded-control text-sm font-medium tabular-nums transition-colors ${
+                  currentPage === pageNumber ? 'bg-accent text-accent-fg' : 'text-fg-muted hover:bg-surface-2 hover:text-fg'
                 }`}
               >
                 {pageNumber}
               </button>
             ))}
-            <button
-              type="button"
-              onClick={() => setPage((current) => Math.min(pageCount, current + 1))}
-              disabled={currentPage === pageCount}
-              className="min-h-9 rounded-lg border border-slate-200 px-3 text-sm font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-40"
-            >
+            <Button variant="secondary" size="sm" fullWidth={false} onClick={() => setPage((c) => Math.min(pageCount, c + 1))} disabled={currentPage === pageCount}>
               Next
-            </button>
+            </Button>
           </div>
         </nav>
       )}

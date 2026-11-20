@@ -8,32 +8,51 @@ import { LoadingBlock, ErrorBlock, EmptyState } from '../components/States'
 import Icon, { icons } from '../components/Icon'
 import ProgressBar from '../components/ProgressBar'
 import { DifficultyBadge } from '../components/Badges'
-import './dashboard.css'
+import { buttonClasses } from '../components/buttonStyles'
+import Card from '../components/ui/Card'
 import { taskPath } from '../utils/languageRoutes'
 
-function Stat({ label, value, icon, tone, percent }) {
+const verdictTone = {
+  Accepted: 'bg-success-soft text-success',
+  'Wrong Answer': 'bg-danger-soft text-danger',
+  'Compilation Error': 'bg-warn-soft text-warn',
+  'Runtime Error': 'bg-danger-soft text-danger',
+  'Time Limit Exceeded': 'bg-warn-soft text-warn',
+}
+
+function Stat({ label, value, hint, children }) {
   return (
-    <article className={`vv-stat-card ${tone}`}>
-      <div className="vv-stat-top">
-        <span className="vv-stat-label">{label}</span>
-        <span className="vv-stat-icon"><Icon d={icon} className="size-[18px]" /></span>
-      </div>
-      <div className="vv-stat-bottom">
-        <p className="vv-stat-value">{value}</p>
-        <div className="vv-stat-ring" style={{ '--progress': `${percent}%` }} aria-hidden="true">
-          <span><Icon d={icon} className="size-4" /></span>
-        </div>
-      </div>
-    </article>
+    <Card>
+      <p className="text-sm text-fg-muted">{label}</p>
+      <p className="mt-1 text-2xl font-semibold text-fg tabular-nums">{value}</p>
+      {hint && <p className="mt-1 text-xs text-fg-subtle">{hint}</p>}
+      {children && <div className="mt-3">{children}</div>}
+    </Card>
   )
 }
 
-const verdictTone = {
-  Accepted: 'vv-verdict-success',
-  'Wrong Answer': 'vv-verdict-error',
-  'Compilation Error': 'vv-verdict-warning',
-  'Runtime Error': 'vv-verdict-error',
-  'Time Limit Exceeded': 'vv-verdict-warning',
+function PathCard({ to, mark, title, state }) {
+  return (
+    <Card as={Link} to={to} interactive className="group flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <span className="flex size-9 items-center justify-center rounded-control bg-surface-2 font-mono text-sm font-medium text-fg">{mark}</span>
+        <Icon d={icons.arrow} className="size-4 text-fg-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-fg" />
+      </div>
+      <div>
+        <h3 className="font-semibold text-fg">{title}</h3>
+        {state.loading ? (
+          <p className="mt-1 text-sm text-fg-muted">Loading your progress…</p>
+        ) : state.error ? (
+          <p className="mt-1 text-sm text-danger">{state.error}</p>
+        ) : (
+          <p className="mt-1 text-sm text-fg-muted tabular-nums">
+            {state.completed} of {state.total} complete · {state.topics} topics
+          </p>
+        )}
+      </div>
+      {!state.loading && !state.error && <ProgressBar percent={state.total ? Math.round((state.completed / state.total) * 100) : 0} label={`${title} progress`} />}
+    </Card>
+  )
 }
 
 export default function Dashboard() {
@@ -53,205 +72,120 @@ export default function Dashboard() {
   const isDemoComplete = Boolean(user.isDemo && basics && basics.completed === basics.total)
   const firstName = user.name?.trim().split(/\s+/)[0] || 'Learner'
 
+  const pathState = (result) => ({
+    loading: result.loading,
+    error: result.error,
+    completed: result.data?.stats.completed,
+    total: result.data?.stats.total,
+    topics: result.data?.categories.length,
+  })
+
   return (
-    <div className="vv-dashboard">
-      <section className="vv-welcome">
-        <div className="vv-welcome-copy">
-          <span className="vv-kicker"><span /> YOUR LEARNING SPACE</span>
-          <h1>Welcome, <span>{firstName}</span> <span aria-hidden="true">👋</span></h1>
-          <p>
+    <div className="mx-auto max-w-5xl space-y-8">
+      <section className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <h2 className="text-2xl font-semibold tracking-tight text-fg">Welcome back, {firstName}</h2>
+          <p className="mt-1 text-fg-muted">
             {continueTask
               ? continueTask.attempted
                 ? `Ready to pick up “${continueTask.title}”?`
                 : `Your next challenge is “${continueTask.title}”.`
-              : 'You have completed every question. Amazing!'}
+              : 'You have completed every question.'}
           </p>
-          <div className="vv-welcome-badges">
-            {user.isDemo && <span className="vv-welcome-badge"><Icon d={icons.code} className="size-3.5" /> Private demo</span>}
-            <span className="vv-welcome-badge"><Icon d={icons.check} className="size-3.5" /> Keep your momentum</span>
-          </div>
         </div>
-        <div className="vv-welcome-art" aria-hidden="true">
-          <div className="vv-art-orbit vv-art-orbit-one" />
-          <div className="vv-art-orbit vv-art-orbit-two" />
-          <span className="vv-art-spark vv-art-spark-one">✦</span>
-          <span className="vv-art-spark vv-art-spark-two">✧</span>
-          <div className="vv-art-code"><span>&lt;/&gt;</span></div>
-          <div className="vv-art-laptop">
-            <div className="vv-art-screen">
-              <span><i /><i /><i /></span>
-              <b>&lt;code /&gt;</b>
-              <small>build something great</small>
-            </div>
-            <div className="vv-art-base" />
-          </div>
-        </div>
-        {continueTask ? (
-          <Link to={`/tasks/${continueTask.slug}`} className="vv-continue-button">
+        {continueTask && (
+          <Link to={`/tasks/${continueTask.slug}`} className={buttonClasses({ size: 'lg', className: 'shrink-0' })}>
             Continue learning <Icon d={icons.arrow} className="size-4" />
           </Link>
-        ) : (
-          <span className="vv-continue-button vv-continue-complete">All done <span aria-hidden="true">🎉</span></span>
         )}
       </section>
 
       {user.isDemo && showDemoGuide && (
-        <section className="vv-demo-guide">
-          <div className="vv-demo-icon"><Icon d={icons.code} className="size-5" /></div>
-          <div className="vv-demo-content">
-            <div className="vv-demo-heading">
-              <h2>Your C learning session starts here</h2>
-              <span>Private demo · 10 questions</span>
+        <Card className="border-accent/40 bg-accent-soft">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="font-semibold text-fg">Your C learning session starts here</h2>
+              <p className="mt-0.5 text-sm text-fg-muted">Private demo · 10 questions · progress expires after 24 hours</p>
             </div>
-            <p>
-              Try a question, run your code, then submit it to see your result. This demo progress belongs only to you and expires after 24 hours.
-            </p>
-            <ol>
-              <li><span>01</span>Open a C Basics question</li>
-              <li><span>02</span>Run code and check output</li>
-              <li><span>03</span>Submit to save your progress</li>
-            </ol>
-          </div>
-          <div className="vv-demo-actions">
-            {basics?.nextSlug && (
-              <Link to={`/tasks/${basics.nextSlug}`} className="vv-demo-start">
-                {isDemoComplete
-                  ? 'Review C Basics'
-                  : continueTask?.attempted || basics.completed
-                    ? 'Continue C Basics'
-                    : 'Start question 1'}
-                <Icon d={icons.arrow} className="size-4" />
-              </Link>
-            )}
-            <button type="button" onClick={() => setShowDemoGuide(false)} className="vv-demo-dismiss">
+            <button type="button" onClick={() => setShowDemoGuide(false)} className="text-sm text-fg-muted transition-colors hover:text-fg">
               Dismiss
             </button>
           </div>
-        </section>
+          <ol className="mt-4 grid gap-3 text-sm text-fg sm:grid-cols-3">
+            {['Open a C Basics question', 'Run your code and check the output', 'Submit to save your progress'].map((step, index) => (
+              <li key={step} className="flex items-start gap-3">
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-surface font-mono text-xs text-accent-text">{index + 1}</span>
+                {step}
+              </li>
+            ))}
+          </ol>
+          {basics?.nextSlug && (
+            <Link to={`/tasks/${basics.nextSlug}`} className={buttonClasses({ className: 'mt-4' })}>
+              {isDemoComplete ? 'Review C Basics' : continueTask?.attempted || basics.completed ? 'Continue C Basics' : 'Start question 1'}
+              <Icon d={icons.arrow} className="size-4" />
+            </Link>
+          )}
+        </Card>
       )}
 
-      <section className="vv-stats-grid" aria-label="Learning statistics">
-        <Stat label="Total questions" value={stats.total} icon={icons.list} tone="vv-stat-violet" percent={100} />
-        <Stat label="Solved" value={stats.completed} icon={icons.check} tone="vv-stat-green" percent={stats.total ? (stats.completed / stats.total) * 100 : 0} />
-        <Stat label="Remaining" value={stats.pending} icon={icons.submissions} tone="vv-stat-amber" percent={stats.total ? (stats.pending / stats.total) * 100 : 0} />
-        <article className="vv-stat-card vv-stat-blue">
-          <div className="vv-stat-top">
-            <span className="vv-stat-label">Overall completion</span>
-            <span className="vv-stat-icon"><Icon d={icons.dashboard} className="size-[18px]" /></span>
-          </div>
-          <div className="vv-stat-bottom">
-            <p className="vv-stat-value">{stats.percent}%</p>
-            <div className="vv-stat-ring" style={{ '--progress': `${stats.percent}%` }} aria-hidden="true">
-              <span><Icon d={icons.dashboard} className="size-4" /></span>
-            </div>
-          </div>
-          <ProgressBar percent={stats.percent} label="Overall completion" size="h-1.5" />
-        </article>
+      <section aria-label="Learning statistics" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <Stat label="Total questions" value={stats.total} />
+        <Stat label="Solved" value={stats.completed} />
+        <Stat label="Remaining" value={stats.pending} />
+        <Stat label="Overall completion" value={`${stats.percent}%`}>
+          <ProgressBar percent={stats.percent} label="Overall completion" />
+        </Stat>
       </section>
 
-      <section className="vv-learning-paths">
-        <div className="vv-learning-paths-heading">
-          <h2>Choose your learning path</h2>
-          <p>Pick a language and keep building your skills.</p>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Link
-            to="/tasks"
-            className="vv-learning-path-card vv-path-c"
-          >
-            <div className="vv-learning-path-card-top">
-              <span className="vv-learning-path-mark">C</span>
-              <span className="vv-learning-path-arrow"><Icon d={icons.arrow} className="size-4" /></span>
-            </div>
-            <h3>C Programming</h3>
-            <p>
-              {data.stats.completed} of {data.stats.total} questions complete · 17 topics
-            </p>
-          </Link>
-          <Link
-            to="/javascript"
-            className="vv-learning-path-card vv-path-javascript"
-          >
-            <div className="vv-learning-path-card-top">
-              <span className="vv-learning-path-mark">JS</span>
-              <span className="vv-learning-path-arrow"><Icon d={icons.arrow} className="size-4" /></span>
-            </div>
-            <h3>JavaScript</h3>
-            {javascript.loading ? (
-              <p>Loading your progress…</p>
-            ) : javascript.error ? (
-              <p className="vv-learning-path-error">{javascript.error}</p>
-            ) : (
-              <p>
-                {javascript.data.stats.completed} of {javascript.data.stats.total} questions complete · {javascript.data.categories.length} topics
-              </p>
-            )}
-          </Link>
-          <Link
-            to="/python"
-            className="vv-learning-path-card vv-path-python"
-          >
-            <div className="vv-learning-path-card-top">
-              <span className="vv-learning-path-mark">Py</span>
-              <span className="vv-learning-path-arrow"><Icon d={icons.arrow} className="size-4" /></span>
-            </div>
-            <h3>Python</h3>
-            {python.loading ? (
-              <p>Loading your progress…</p>
-            ) : python.error ? (
-              <p className="vv-learning-path-error">{python.error}</p>
-            ) : (
-              <p>
-                {python.data.stats.completed} of {python.data.stats.total} questions complete · {python.data.categories.length} topics
-              </p>
-            )}
-          </Link>
+      <section>
+        <h2 className="text-lg font-semibold text-fg">Learning paths</h2>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <PathCard to="/tasks" mark="C" title="C programming" state={{ loading: false, completed: stats.completed, total: stats.total, topics: data.categories.length }} />
+          <PathCard to="/javascript" mark="JS" title="JavaScript" state={pathState(javascript)} />
+          <PathCard to="/python" mark="Py" title="Python" state={pathState(python)} />
         </div>
       </section>
 
-      <section className="vv-recent">
-        <div className="vv-section-heading">
-          <div>
-            <span className="vv-section-icon"><Icon d={icons.submissions} className="size-4" /></span>
-            <div>
-              <h2>Recent submissions</h2>
-              <p>Your latest coding activity</p>
-            </div>
-          </div>
-          <Link to="/submissions" className="vv-view-all">
+      <section>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-fg">Recent submissions</h2>
+          <Link to="/submissions" className="inline-flex items-center gap-1 text-sm text-accent-text hover:underline">
             View all <Icon d={icons.arrow} className="size-3.5" />
           </Link>
         </div>
-        {subs.loading ? (
-          <LoadingBlock />
-        ) : subs.error ? (
-          <ErrorBlock message={subs.error} />
-        ) : recent.length === 0 ? (
-          <div className="vv-empty-state">
+        <div className="mt-3">
+          {subs.loading ? (
+            <LoadingBlock />
+          ) : subs.error ? (
+            <ErrorBlock message={subs.error} />
+          ) : recent.length === 0 ? (
             <EmptyState title="No submissions yet" text="Solve your first question and your submissions will show up here.">
               {continueTask && (
-                <Link to={`/tasks/${continueTask.slug}`} className="vv-empty-cta">
+                <Link to={`/tasks/${continueTask.slug}`} className={buttonClasses({ variant: 'secondary' })}>
                   Start with “{continueTask.title}” <Icon d={icons.arrow} className="size-4" />
                 </Link>
               )}
             </EmptyState>
-          </div>
-        ) : (
-          <ul className="vv-submission-list">
-            {recent.map((s) => (
-              <li key={s.id}>
-                <span className="vv-submission-file"><Icon d={icons.code} className="size-4" /></span>
-                <Link to={taskPath(s.task.language || 'c', s.task.slug)} className="vv-submission-title">
-                  {s.task.title}
-                  <span>Open problem</span>
-                </Link>
-                <DifficultyBadge level={s.task.difficulty} />
-                <span className={`vv-submission-verdict ${verdictTone[s.status] || ''}`}>{s.status}</span>
-                <time dateTime={s.createdAt}>{new Date(s.createdAt).toLocaleString()}</time>
-              </li>
-            ))}
-          </ul>
-        )}
+          ) : (
+            <Card padded={false} className="divide-y divide-line">
+              {recent.map((s) => (
+                <div key={s.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
+                  <Link
+                    to={taskPath(s.task.language || 'c', s.task.slug)}
+                    className="min-w-0 flex-1 basis-48 truncate font-medium text-fg hover:text-accent-text"
+                  >
+                    {s.task.title}
+                  </Link>
+                  <DifficultyBadge level={s.task.difficulty} />
+                  <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${verdictTone[s.status] || 'bg-surface-2 text-fg-muted'}`}>{s.status}</span>
+                  <time dateTime={s.createdAt} className="text-xs text-fg-subtle tabular-nums">
+                    {new Date(s.createdAt).toLocaleString()}
+                  </time>
+                </div>
+              ))}
+            </Card>
+          )}
+        </div>
       </section>
     </div>
   )

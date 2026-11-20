@@ -3,7 +3,7 @@ import Editor from '@monaco-editor/react'
 import './monacoSetup'
 
 const options = {
-  fontFamily: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', Menlo, Consolas, monospace",
+  fontFamily: "'Geist Mono Variable', 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace",
   minimap: { enabled: false },
   lineNumbers: 'on',
   tabSize: 4,
@@ -44,15 +44,11 @@ export default function CodeEditor({
     <Editor
       height="100%"
       language={language}
-      theme={editorTheme === 'app'
-        ? (theme === 'dark'
-          ? (language === 'python' ? 'virverse-vscode-dark' : 'vs-dark')
-          : 'vs')
-        : editorTheme}
+      theme={editorTheme === 'app' ? (theme === 'dark' ? 'virverse-dark' : 'virverse-light') : editorTheme}
       value={value}
       onChange={(v) => onChange(v ?? '')}
       options={{ ...options, fontSize, fontLigatures, wordWrap: wordWrap ? 'on' : 'off' }}
-      loading={<div className="p-4 text-sm text-slate-500">Loading editor…</div>}
+      loading={<div className="p-4 text-sm text-fg-muted">Loading editor…</div>}
       onMount={(editor, monaco) => {
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => runRef.current())
         editor.onDidChangeCursorPosition(({ position }) => {

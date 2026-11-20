@@ -26,7 +26,7 @@ export default function LandingScene() {
     scene.add(core)
 
     const wireMaterial = new THREE.MeshBasicMaterial({
-      color: 0x54d6b3,
+      color: 0xf2a33a,
       transparent: true,
       opacity: 0.72,
       wireframe: true,
@@ -36,12 +36,12 @@ export default function LandingScene() {
 
     const innerMesh = new THREE.Mesh(
       new THREE.IcosahedronGeometry(0.43, 0),
-      new THREE.MeshBasicMaterial({ color: 0x83e8d0, transparent: true, opacity: 0.5, wireframe: true }),
+      new THREE.MeshBasicMaterial({ color: 0xf7c27a, transparent: true, opacity: 0.5, wireframe: true }),
     )
     core.add(innerMesh)
 
     const orbitMaterial = new THREE.MeshBasicMaterial({
-      color: 0x40b8b2,
+      color: 0xe08a1e,
       transparent: true,
       opacity: 0.45,
       wireframe: true,
@@ -52,13 +52,13 @@ export default function LandingScene() {
 
     const secondOrbit = new THREE.Mesh(
       new THREE.TorusGeometry(1.18, 0.008, 4, 96),
-      new THREE.MeshBasicMaterial({ color: 0x438e9b, transparent: true, opacity: 0.38, wireframe: true }),
+      new THREE.MeshBasicMaterial({ color: 0xb45309, transparent: true, opacity: 0.38, wireframe: true }),
     )
     secondOrbit.rotation.set(1.1, -0.7, 0.25)
     core.add(secondOrbit)
 
     const nodeGeometry = new THREE.SphereGeometry(0.035, 8, 8)
-    const nodeMaterial = new THREE.MeshBasicMaterial({ color: 0x9ce8d1 })
+    const nodeMaterial = new THREE.MeshBasicMaterial({ color: 0xffd89a })
     for (let index = 0; index < 8; index += 1) {
       const angle = (index / 8) * Math.PI * 2
       const node = new THREE.Mesh(nodeGeometry, nodeMaterial)
@@ -85,7 +85,7 @@ export default function LandingScene() {
     const particleField = new THREE.Points(
       particleGeometry,
       new THREE.PointsMaterial({
-        color: 0x8be4d0,
+        color: 0xf5b85c,
         size: 0.035,
         transparent: true,
         opacity: 0.74,
@@ -110,7 +110,7 @@ export default function LandingScene() {
     linkGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linkPositions, 3))
     core.add(new THREE.LineSegments(
       linkGeometry,
-      new THREE.LineBasicMaterial({ color: 0x54d6b3, transparent: true, opacity: 0.2 }),
+      new THREE.LineBasicMaterial({ color: 0xf2a33a, transparent: true, opacity: 0.2 }),
     ))
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches

@@ -1,10 +1,25 @@
 import Spinner from './Spinner'
+import { buttonClasses } from './buttonStyles'
 
-export default function Button({ loading, children, className = '', ...props }) {
+/**
+ * `fullWidth` defaults to true only because older screens rely on it; new code should pass
+ * `fullWidth={false}` (or a className such as `w-auto`) for inline buttons.
+ */
+export default function Button({
+  loading,
+  children,
+  variant = 'primary',
+  size = 'md',
+  fullWidth = true,
+  className = '',
+  type,
+  ...props
+}) {
   return (
     <button
+      type={type}
       disabled={loading || props.disabled}
-      className={`inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 focus:outline-none focus:ring-4 focus:ring-brand-100 disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={buttonClasses({ variant, size, fullWidth, className })}
       {...props}
     >
       {loading && <Spinner />}
