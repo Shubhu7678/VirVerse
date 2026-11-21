@@ -57,9 +57,9 @@ export default function Topics({ language = 'c' }) {
 
       <section aria-labelledby="topics-heading">
         <h2 id="topics-heading" className="mb-3 text-lg font-semibold text-fg">{title} topics</h2>
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {categories.map((topic) => (
-            <TopicCard key={topic.slug} topic={topic} language={language} />
+        <div className="stagger grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {categories.map((topic, i) => (
+            <TopicCard key={topic.slug} topic={topic} language={language} index={Math.min(i, 12)} />
           ))}
         </div>
       </section>

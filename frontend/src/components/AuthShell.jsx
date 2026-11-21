@@ -1,8 +1,10 @@
+import { lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import Icon, { icons } from './Icon'
 import '../pages/login.css'
 
+const PathScene = lazy(() => import('./PathScene'))
 const YEAR = new Date().getFullYear()
 
 const points = [
@@ -17,6 +19,7 @@ export default function AuthShell({ title, subtitle, footer, children }) {
   return (
     <div className="au">
       <aside className="au-side" aria-label="About VirVerse">
+        <Suspense fallback={null}><PathScene className="au-scene" scale={0.55} /></Suspense>
         <Link to="/" className="au-brand" aria-label="VirVerse home"><img src="/brand-mark.svg" alt="" /><span>VirVerse</span></Link>
         <div className="au-side-body">
           <h2>Learn to code by <span>writing real code.</span></h2>

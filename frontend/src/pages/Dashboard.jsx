@@ -11,6 +11,7 @@ import { DifficultyBadge } from '../components/Badges'
 import { buttonClasses } from '../components/buttonStyles'
 import Card from '../components/ui/Card'
 import { taskPath } from '../utils/languageRoutes'
+import useCountUp from '../hooks/useCountUp'
 
 const verdictTone = {
   Accepted: 'bg-success-soft text-success',
@@ -20,23 +21,26 @@ const verdictTone = {
   'Time Limit Exceeded': 'bg-warn-soft text-warn',
 }
 
-function Stat({ label, value, hint, icon, children }) {
+function Stat({ label, value, hint, icon, children, index = 0 }) {
+  const isNumber = typeof value === 'number'
+  const counted = useCountUp(isNumber ? value : parseInt(value, 10))
+  const shown = isNumber ? counted : `${counted}%`
   return (
-    <Card className="relative overflow-hidden">
+    <Card className="lift relative overflow-hidden" style={{ '--i': index }}>
       <div className="flex items-center justify-between">
         <p className="text-sm text-fg-muted">{label}</p>
         {icon && <span className="flex size-8 items-center justify-center rounded-lg border border-accent-border bg-accent-soft text-accent-text"><Icon d={icon} className="size-4" /></span>}
       </div>
-      <p className="mt-2 text-3xl font-semibold tracking-tight text-fg tabular-nums">{value}</p>
+      <p className="mt-2 text-3xl font-semibold tracking-tight text-fg tabular-nums">{shown}</p>
       {hint && <p className="mt-1 text-xs text-fg-subtle">{hint}</p>}
       {children && <div className="mt-3">{children}</div>}
     </Card>
   )
 }
 
-function PathCard({ to, mark, title, state }) {
+function PathCard({ to, mark, title, state, index = 0 }) {
   return (
-    <Card as={Link} to={to} interactive className="group flex flex-col gap-4">
+    <Card as={Link} to={to} interactive className="lift group flex flex-col gap-4" style={{ '--i': index }}>
       <div className="flex items-center justify-between">
         <span className="flex size-10 items-center justify-center rounded-xl border border-accent-border bg-accent-soft font-mono text-sm font-semibold text-accent-text">{mark}</span>
         <Icon d={icons.arrow} className="size-4 text-fg-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-fg" />
@@ -132,21 +136,21 @@ export default function Dashboard() {
         </Card>
       )}
 
-      <section aria-label="Learning statistics" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Stat label="Total questions" value={stats.total} icon={icons.list} />
-        <Stat label="Solved" value={stats.completed} icon={icons.check} />
-        <Stat label="Remaining" value={stats.pending} icon={icons.tasks} />
-        <Stat label="Overall completion" value={`${stats.percent}%`} icon={icons.dashboard}>
+      <section aria-label="Learning statistics" className="stagger grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <Stat label="Total questions" value={stats.total} icon={icons.list} index={0} />
+        <Stat label="Solved" value={stats.completed} icon={icons.check} index={1} />
+        <Stat label="Remaining" value={stats.pending} icon={icons.tasks} index={2} />
+        <Stat label="Overall completion" value={`${stats.percent}%`} icon={icons.dashboard} index={3}>
           <ProgressBar percent={stats.percent} label="Overall completion" />
         </Stat>
       </section>
 
       <section>
         <h2 className="text-lg font-semibold text-fg">Learning paths</h2>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <PathCard to="/tasks" mark="C" title="C programming" state={{ loading: false, completed: stats.completed, total: stats.total, topics: data.categories.length }} />
-          <PathCard to="/javascript" mark="JS" title="JavaScript" state={pathState(javascript)} />
-          <PathCard to="/python" mark="Py" title="Python" state={pathState(python)} />
+        <div className="stagger mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <PathCard to="/tasks" index={0} mark="C" title="C programming" state={{ loading: false, completed: stats.completed, total: stats.total, topics: data.categories.length }} />
+          <PathCard to="/javascript" index={1} mark="JS" title="JavaScript" state={pathState(javascript)} />
+          <PathCard to="/python" index={2} mark="Py" title="Python" state={pathState(python)} />
         </div>
       </section>
 

@@ -26,7 +26,7 @@ export default function ProgressBar({ percent, label, size = 'h-1.5' }) {
       aria-label={label}
       className={`${size} w-full overflow-hidden rounded-full bg-inset`}
     >
-      <div className={`h-full rounded-full transition-all duration-500 ${fill[state]}`} style={{ width: `${percent}%` }} />
+      <div className="h-full" style={{ width: `${percent}%` }}><div className={`grow-x h-full w-full rounded-full ${fill[state]}`} /></div>
     </div>
   )
 }

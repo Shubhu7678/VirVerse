@@ -1,10 +1,14 @@
-import Spinner from './Spinner'
-
 export function LoadingBlock({ label = 'Loading…' }) {
   return (
-    <div className="flex items-center justify-center gap-2 py-16 text-sm text-fg-muted">
-      <Spinner className="size-5 text-accent-text" />
-      {label}
+    <div role="status" aria-label={label} className="mx-auto max-w-5xl space-y-6 py-2">
+      <div className="skeleton h-28 w-full !rounded-[1.25rem]" />
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {[0, 1, 2, 3].map((i) => <div key={i} className="skeleton h-24" style={{ animationDelay: `${i * 120}ms` }} />)}
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {[0, 1, 2].map((i) => <div key={i} className="skeleton h-36" style={{ animationDelay: `${i * 120}ms` }} />)}
+      </div>
+      <span className="sr-only">{label}</span>
     </div>
   )
 }

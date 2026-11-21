@@ -3,6 +3,7 @@ import { CircleCheck, Lightbulb } from 'lucide-react'
 import Spinner from '../Spinner'
 import Icon, { icons } from '../Icon'
 import { getHint } from '../../utils/diagnostics'
+import Confetti from '../Confetti'
 
 const tabs = [
   { id: 'input', label: 'Input' },
@@ -103,7 +104,8 @@ function TestsTab({ submitting, submitError, submission }) {
   if (!submission) return <p className="text-sm text-fg-muted">Click “Submit” to check your solution against all test cases.</p>
 
   return (
-    <div className="space-y-3">
+    <div className="anim-fade-up relative space-y-3">
+      {submission.status === 'Accepted' && <Confetti />}
       <div className="flex flex-wrap items-center gap-3">
         <Verdict label={submission.status} />
         {submission.status !== 'Compilation Error' && (
@@ -113,7 +115,7 @@ function TestsTab({ submitting, submitError, submission }) {
         )}
       </div>
       {submission.status === 'Accepted' && (
-        <p className="flex items-center gap-2 rounded-control bg-success-soft px-3 py-2 text-sm text-success"><CircleCheck className="size-4 shrink-0" aria-hidden="true" /> All test cases passed. Task completed.</p>
+        <p className="anim-pop flex items-center gap-2 rounded-control bg-success-soft px-3 py-2 text-sm text-success"><CircleCheck className="size-4 shrink-0" aria-hidden="true" /> All test cases passed. Task completed.</p>
       )}
       {submission.status !== 'Accepted' && <Hint>{getHint({ status: submission.status, compileOutput: submission.compileOutput })}</Hint>}
       {submission.compileOutput && (

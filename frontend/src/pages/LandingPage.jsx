@@ -1,8 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import Icon, { icons } from '../components/Icon'
+import { lazy, Suspense } from 'react'
+import useReveal from '../hooks/useReveal'
+import useLandingMotion from '../hooks/useLandingMotion'
+import { PlaygroundVisual, RoadmapVisual, PracticeVisual, ProgressVisual, SandboxVisual, ClassroomVisual } from '../components/FeatureVisuals'
+const PathScene = lazy(() => import('../components/PathScene'))
+import useCountUp from '../hooks/useCountUp'
 import './landing.css'
 
 const YEAR = new Date().getFullYear()
@@ -17,12 +23,12 @@ const stats = [
 const stack = ['C', 'JavaScript', 'Python', 'HTML', 'Monaco editor', 'Docker sandbox', 'Instant feedback', 'Progress tracking', 'Classroom tools']
 
 const features = [
-  { icon: icons.code, title: 'In-browser playground', text: 'Write and run C, JavaScript and Python in a real editor. No installs, no configuration.', to: '/playground', cta: 'Open the playground' },
-  { icon: icons.list, title: 'Structured roadmaps', text: 'Follow ordered topics from your first program to advanced concepts, one step at a time.', to: '/tasks', cta: 'Browse C topics' },
-  { icon: icons.tasks, title: 'Practice problems', text: 'Turn what you learn into skill with graded tasks, test cases and instant results.', to: '/practice', cta: 'Browse problems' },
-  { icon: icons.dashboard, title: 'Progress you can see', text: 'Track solved tasks, submissions and what to do next, and pick up where you left off.' },
-  { icon: icons.terminal, title: 'Safe code execution', text: 'Every run happens in a short-lived, network-isolated container, so experiments never break anything.' },
-  { icon: icons.profile, title: 'Built for classrooms', text: 'Organizations, sections and assignments let teachers guide a whole group of learners.' },
+  { key: 'play', visual: <PlaygroundVisual />, title: 'Write, run, see it work', text: 'A real editor with instant output for C, JavaScript and Python. No installs, no configuration.', to: '/playground', cta: 'Open the playground' },
+  { key: 'road', visual: <RoadmapVisual />, title: 'A roadmap that makes sense', text: 'Ordered topics take you from your first program to advanced ideas, one step at a time.', to: '/tasks', cta: 'Browse C topics' },
+  { key: 'practice', visual: <PracticeVisual />, title: 'Graded practice', text: 'Submit against hidden test cases and get a verdict in seconds.', to: '/practice', cta: 'Browse problems' },
+  { key: 'progress', visual: <ProgressVisual />, title: 'Progress you can see', text: 'Streaks, solved tasks and a clear next step, always saved to your account.' },
+  { key: 'box', visual: <SandboxVisual />, title: 'Sandboxed by default', text: 'Every run is a short-lived, network-isolated container, so experiments never break anything.' },
+  { key: 'class', visual: <ClassroomVisual />, title: 'Built for classrooms', text: 'Organizations, sections and assignments let teachers guide a whole group of learners.' },
 ]
 
 const tracks = [
@@ -47,28 +53,9 @@ const faqs = [
   { q: 'Will my progress be saved?', a: 'When you sign in, submissions and completed tasks are saved to your account.' },
 ]
 
-function useReveal() {
-  const ref = useRef(null)
-  useEffect(() => {
-    const node = ref.current
-    if (!node) return undefined
-    const items = node.querySelectorAll('[data-reveal]')
-    if (!('IntersectionObserver' in window)) {
-      items.forEach((el) => el.classList.add('is-in'))
-      return undefined
-    }
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-in')
-          io.unobserve(entry.target)
-        }
-      })
-    }, { threshold: 0.12 })
-    items.forEach((el) => io.observe(el))
-    return () => io.disconnect()
-  }, [])
-  return ref
+function StatValue({ value }) {
+  const n = useCountUp(parseInt(value, 10), 1100)
+  return <>{n}{value.endsWith('+') ? '+' : ''}</>
 }
 
 function Heading({ eyebrow, title, sub }) {
@@ -111,6 +98,14 @@ export default function LandingPage() {
   const { theme, toggle } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
   const rootRef = useReveal()
+  useLandingMotion(rootRef)
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
   const destination = user ? (isSuperAdmin ? '/platform' : '/dashboard') : '/signup'
   const ctaLabel = loading ? 'Checking session…' : user ? 'Go to dashboard' : 'Start learning'
   const guard = (event) => { if (loading) event.preventDefault(); else setMenuOpen(false) }
@@ -119,7 +114,7 @@ export default function LandingPage() {
   return (
     <div className="lp" ref={rootRef} id="home">
       <a className="lp-skip" href="#main">Skip to content</a>
-      <header className="lp-header">
+      <header className={`lp-header ${scrolled ? 'is-scrolled' : ''}`}>
         <div className="lp-wrap lp-header-in">
           <a className="lp-brand" href="#home" aria-label="VirVerse home"><img src="/brand-mark.svg" alt="" /><span>VirVerse</span></a>
           <nav id="lp-nav" className={`lp-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
@@ -146,27 +141,28 @@ export default function LandingPage() {
 
       <main id="main">
         <section className="lp-hero">
+          <Suspense fallback={null}><PathScene className="lp-scene" scale={0.8} offsetX={0} /></Suspense>
           <div className="lp-wrap lp-hero-in">
             <div className="lp-hero-copy">
-              <p className="lp-eyebrow lp-eyebrow-pill"><span className="lp-pulse" /> Learn C · JavaScript · Python · HTML</p>
-              <h1>Learn to code by <span className="lp-grad">writing real code.</span></h1>
-              <p className="lp-lede">VirVerse is an interactive platform with guided roadmaps, practice problems and an in-browser editor, so you build real programming skills step by step.</p>
-              <div className="lp-cta-row">
+              <p className="lp-eyebrow lp-eyebrow-pill" style={{ '--i': 0 }}><span className="lp-pulse" /> Learn C · JavaScript · Python · HTML</p>
+              <h1 style={{ '--i': 1 }}>Learn to code by <span className="lp-grad">writing real code.</span></h1>
+              <p className="lp-lede" style={{ '--i': 2 }}>VirVerse is an interactive platform with guided roadmaps, practice problems and an in-browser editor, so you build real programming skills step by step.</p>
+              <div className="lp-cta-row" style={{ '--i': 3 }}>
                 <Link to={destination} className="lp-btn lp-btn-primary" onClick={guard} aria-disabled={loading}>{ctaLabel}</Link>
                 <Link to="/playground" className="lp-btn lp-btn-ghost">Try the playground</Link>
               </div>
-              <ul className="lp-checks">
+              <ul className="lp-checks" style={{ '--i': 4 }}>
                 <li><Icon d={icons.check} className="size-4" /> No installs</li>
                 <li><Icon d={icons.check} className="size-4" /> Instant feedback</li>
                 <li><Icon d={icons.check} className="size-4" /> Free to start</li>
               </ul>
             </div>
-            <HeroMock />
+            <div className="lp-hero-visual"><span className="lp-orbit" aria-hidden="true" /><HeroMock /></div>
           </div>
           <div className="lp-wrap">
             <dl className="lp-stats">
               {stats.map((s) => (
-                <div key={s.label}><dt>{s.label}</dt><dd>{s.value}</dd><small>{s.detail}</small></div>
+                <div key={s.label}><dt>{s.label}</dt><dd><StatValue value={s.value} /></dd><small>{s.detail}</small></div>
               ))}
             </dl>
           </div>
@@ -182,13 +178,15 @@ export default function LandingPage() {
         <section className="lp-section" id="features">
           <div className="lp-wrap">
             <Heading eyebrow="Features" title="Everything you need to learn programming." sub="A focused toolkit that replaces a pile of tutorials, installers and scattered notes." />
-            <div className="lp-grid lp-grid-3">
-              {features.map((f) => (
-                <article className="lp-card" key={f.title} data-reveal>
-                  <span className="lp-icon"><Icon d={f.icon} className="size-5" /></span>
-                  <h3>{f.title}</h3>
-                  <p>{f.text}</p>
-                  {f.to && <Link className="lp-more" to={f.to}>{f.cta} <Icon d={icons.arrow} className="size-3.5" /></Link>}
+            <div className="lp-bento">
+              {features.map((f, i) => (
+                <article className={`lp-card lp-bento-${f.key}`} key={f.key} data-reveal style={{ transitionDelay: `${i * 60}ms` }}>
+                  <div className="lp-bento-visual">{f.visual}</div>
+                  <div className="lp-bento-copy">
+                    <h3>{f.title}</h3>
+                    <p>{f.text}</p>
+                    {f.to && <Link className="lp-more" to={f.to}>{f.cta} <Icon d={icons.arrow} className="size-3.5" /></Link>}
+                  </div>
                 </article>
               ))}
             </div>
@@ -200,7 +198,7 @@ export default function LandingPage() {
             <Heading eyebrow="Tracks" title="Pick a language and start building." sub="Every track has topics to read, a playground to experiment in and problems to solve." />
             <div className="lp-grid lp-grid-4">
               {tracks.map((t) => (
-                <article className="lp-card lp-track" key={t.name} data-reveal>
+                <article className="lp-card lp-track" key={t.name} data-reveal style={{ transitionDelay: `${tracks.indexOf(t) * 80}ms` }}>
                   <span className="lp-badge">{t.tag}</span>
                   <h3>{t.name}</h3>
                   <p>{t.text}</p>
@@ -219,7 +217,7 @@ export default function LandingPage() {
             <Heading eyebrow="How it works" title="From first line to confident coder." sub="A simple loop that keeps you moving forward." />
             <ol className="lp-steps">
               {steps.map((s, i) => (
-                <li key={s.title} data-reveal>
+                <li key={s.title} data-reveal style={{ transitionDelay: `${i * 120}ms` }}>
                   <span className="lp-step-n">{String(i + 1).padStart(2, '0')}</span>
                   <h3>{s.title}</h3>
                   <p>{s.text}</p>

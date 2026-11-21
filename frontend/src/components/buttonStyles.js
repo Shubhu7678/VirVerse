@@ -13,6 +13,6 @@ const sizes = {
 
 /** Class string for anything that should look like a button (e.g. a router <Link>). */
 export function buttonClasses({ variant = 'primary', size = 'md', fullWidth = false, className = '' } = {}) {
-  return `inline-flex items-center justify-center gap-2 rounded-full font-semibold whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${fullWidth ? 'w-full' : ''} ${sizes[size]} ${variants[variant]} ${className}`
+  return `press inline-flex items-center justify-center gap-2 rounded-full font-semibold whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${fullWidth ? 'w-full' : ''} ${sizes[size]} ${variants[variant]} ${className}`
 }
 

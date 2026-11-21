@@ -77,7 +77,8 @@
 }
 
 @theme inline {
-  --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Geist Variable", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   --color-bg: var(--bg);
@@ -132,7 +133,7 @@ body {
   color: var(--fg);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  font-feature-settings: "cv11", "ss01";
+  text-rendering: optimizeLegibility;
 }
 
 /* Visible keyboard focus everywhere */
@@ -148,6 +149,36 @@ body {
 .animate-toast { animation: vv-toast-in .2s ease-out; }
 @keyframes vv-profile-enter { 0% { transform: translateY(10px); opacity: 0 } 100% { transform: translateY(0); opacity: 1 } }
 .profile-enter { animation: vv-profile-enter .45s cubic-bezier(.2,.75,.25,1) both; }
+
+/* ---- Motion system (CSS only; every rule is neutralised by prefers-reduced-motion) ---- */
+:root { --ease-out: cubic-bezier(.2, .75, .25, 1); }
+h1, h2 { font-family: var(--font-display); }
+@keyframes vv-fade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes vv-float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
+@keyframes vv-orbit { to { transform: rotate(360deg) } }
+@keyframes vv-grow-x { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+@keyframes vv-shimmer { from { background-position: 200% 0 } to { background-position: -200% 0 } }
+@keyframes vv-ring { 0% { transform: scale(.4); opacity: .9 } 100% { transform: scale(2.4); opacity: 0 } }
+@keyframes vv-confetti { 0% { transform: translate3d(0,0,0) rotate(0); opacity: 1 } 100% { transform: translate3d(var(--dx), var(--dy), 0) rotate(var(--rot)); opacity: 0 } }
+@keyframes vv-shake { 0%,100% { transform: translateX(0) } 20%,60% { transform: translateX(-5px) } 40%,80% { transform: translateX(5px) } }
+@keyframes vv-type { from { clip-path: inset(0 100% 0 0) } to { clip-path: inset(0 0 0 0) } }
+.anim-fade-up { animation: vv-rise .55s var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * 70ms); }
+.anim-fade { animation: vv-fade .5s ease both; animation-delay: calc(var(--i, 0) * 70ms); }
+.anim-pop { animation: vv-pop .3s var(--ease-out) both; }
+.anim-shake { animation: vv-shake .4s ease; }
+.anim-float { animation: vv-float 6s ease-in-out infinite; }
+.stagger > * { animation: vv-rise .5s var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * 60ms); }
+.page-enter { animation: vv-rise .35s var(--ease-out) backwards; }
+.skeleton { background: linear-gradient(100deg, var(--surface-2) 30%, var(--inset) 50%, var(--surface-2) 70%); background-size: 200% 100%; animation: vv-shimmer 1.6s linear infinite; border-radius: var(--radius-control); }
+.press { transition: transform .15s var(--ease-out); }
+.press:active:not(:disabled) { transform: scale(.97); }
+.lift { transition: transform .25s var(--ease-out), box-shadow .25s, border-color .25s; }
+.lift:hover { transform: translateY(-3px); }
+.grow-x { transform-origin: left; animation: vv-grow-x .9s var(--ease-out) both; animation-delay: calc(var(--i, 0) * 80ms + 150ms); }
+@media (prefers-reduced-motion: reduce) {
+  .stagger > *, .anim-fade-up, .anim-fade, .page-enter, .grow-x { animation: none !important; opacity: 1; transform: none; }
+  .lift:hover { transform: none; }
+}
 
 @keyframes vv-rise { 0% { transform: translateY(14px); opacity: 0 } 100% { transform: translateY(0); opacity: 1 } }
 @keyframes vv-marquee { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }

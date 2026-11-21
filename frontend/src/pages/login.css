@@ -12,6 +12,9 @@
 @media (min-width: 960px) {
   .au-side { display: flex; flex-direction: column; justify-content: space-between; padding: 2.5rem 3.5rem; background: radial-gradient(40rem 24rem at 20% 0, var(--accent-soft), transparent 70%), var(--surface); border-right: 1px solid var(--line); }
 }
+.au-side { position: relative; overflow: hidden; }
+.au-scene { position: absolute; inset: 0; pointer-events: none; opacity: .9; }
+.au-side > :not(.au-scene) { position: relative; z-index: 1; }
 .au-side-body { max-width: 30rem; }
 .au-side h2 { font-size: clamp(2rem, 3vw, 2.75rem); line-height: 1.1; letter-spacing: -.03em; font-weight: 700; }
 .au-side h2 span { color: var(--accent-text); }
@@ -39,6 +42,15 @@
 .au-card h1 { font-size: 1.875rem; font-weight: 700; letter-spacing: -.03em; line-height: 1.15; }
 .au-sub { margin: .5rem 0 1.75rem; color: var(--fg-muted); }
 .au-form { display: grid; gap: 1rem; }
+.au-form > *, .au-or, .au-hint, .au-card > .au-btn { animation: vv-rise .5s var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * 60ms + 120ms); }
+.au-form > :nth-child(1) { --i: 0 } .au-form > :nth-child(2) { --i: 1 } .au-form > :nth-child(3) { --i: 2 } .au-form > :nth-child(4) { --i: 3 } .au-form > :nth-child(5) { --i: 4 } .au-form > :nth-child(6) { --i: 5 }
+.au-error { animation: vv-shake .4s ease; }
+.au-btn { transition: background-color .15s, opacity .15s, transform .15s var(--ease-out); }
+.au-btn:active:not(:disabled) { transform: scale(.98); }
+.au-code pre { animation: vv-type 1.6s steps(30, end) .5s backwards; }
+.au-side h2 { animation: vv-rise .6s var(--ease-out) backwards; }
+.au-side li { animation: vv-rise .5s var(--ease-out) backwards; }
+.au-side li:nth-child(1) { animation-delay: .15s } .au-side li:nth-child(2) { animation-delay: .25s } .au-side li:nth-child(3) { animation-delay: .35s }
 .au-form input { height: 2.75rem; border-radius: .75rem; background: var(--bg); }
 .au-error { padding: .75rem .875rem; border-radius: .75rem; border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent); background: var(--danger-soft); color: var(--danger); font-size: .875rem; }
 .au-rules { display: flex; flex-wrap: wrap; gap: .25rem 1rem; margin-top: -.5rem; font-size: .75rem; color: var(--fg-subtle); }
@@ -56,4 +68,4 @@
 .au-foot { text-align: center; color: var(--fg-muted); font-size: .875rem; }
 .au-foot a { color: var(--accent-text); font-weight: 600; }
 .au-foot a:hover { text-decoration: underline; }
-@media (prefers-reduced-motion: reduce) { .au-card { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .au-card, .au-form > *, .au-or, .au-hint, .au-side h2, .au-side li, .au-code pre, .au-error { animation: none; } }
