@@ -15,7 +15,7 @@
 
 .dark .playground-page,
 .dark .playground-layout {
-  --pg-bg: #080d13;
+  --pg-bg: #050507;
   --pg-surface: #0e151d;
   --pg-surface-raised: #142129;
   --pg-border: #2e2c28;
@@ -49,16 +49,16 @@
 
 .playground-interactive {
   padding: 4px 7px;
-  border: 1px solid rgb(242 163 58 / 20%);
+  border: 1px solid rgb(124 127 248 / 20%);
   border-radius: 999px;
-  background: rgb(242 163 58 / 9%);
-  color: #b45309;
+  background: rgb(124 127 248 / 9%);
+  color: #4f46e5;
   font-size: 8px;
   font-weight: 750;
   letter-spacing: 0.07em;
 }
 
-.dark .playground-interactive { color: #f2a33a; }
+.dark .playground-interactive { color: #7c7ff8; }
 .playground-subtitle { margin: 4px 0 0; color: var(--pg-muted); font-size: 11px; }
 .playground-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 7px; }
 
@@ -127,8 +127,8 @@
 }
 
 .dark .playground-editor-host .monaco-editor .current-line {
-  border-color: rgb(242 163 58 / 13%) !important;
-  background: rgb(242 163 58 / 6%) !important;
+  border-color: rgb(124 127 248 / 13%) !important;
+  background: rgb(124 127 248 / 6%) !important;
 }
 
 .playground-editor-status {
@@ -164,7 +164,7 @@
 }
 
 .playground-file-tab > span { color: var(--pg-accent); font-size: 13px; }
-.playground-file-tab > i { width: 7px; height: 7px; border-radius: 50%; background: #f2a33a; box-shadow: 0 0 8px rgb(242 163 58 / 55%); }
+.playground-file-tab > i { width: 7px; height: 7px; border-radius: 50%; background: #7c7ff8; box-shadow: 0 0 8px rgb(124 127 248 / 55%); }
 
 .playground-editor-language {
   padding: 4px 8px;
@@ -247,10 +247,10 @@
 
 .playground-terminal-status {
   padding: 4px 9px;
-  border: 1px solid rgb(242 163 58 / 15%);
+  border: 1px solid rgb(124 127 248 / 15%);
   border-radius: 999px;
-  background: rgb(242 163 58 / 8%);
-  color: #f2a33a;
+  background: rgb(124 127 248 / 8%);
+  color: #7c7ff8;
   font-size: 8px;
 }
 
@@ -263,11 +263,11 @@
   background: rgb(255 255 255 / 3%);
 }
 
-.playground-console .rounded-xl.border-slate-800.bg-slate-950 form > span { color: #f2a33a; }
+.playground-console .rounded-xl.border-slate-800.bg-slate-950 form > span { color: #7c7ff8; }
 .playground-console .rounded-xl.border-slate-800.bg-slate-950 form > input { color: #edf4f4; font-size: 11px; }
 .playground-console .rounded-xl.border-slate-800.bg-slate-950 form > input::placeholder { color: #819399; }
-.playground-console .rounded-xl.border-slate-800.bg-slate-950 form > button { border: 1px solid rgb(242 163 58 / 14%); }
-.playground-console .rounded-xl.border-slate-800.bg-slate-950 form > button:focus-visible { outline-color: #f2a33a; }
+.playground-console .rounded-xl.border-slate-800.bg-slate-950 form > button { border: 1px solid rgb(124 127 248 / 14%); }
+.playground-console .rounded-xl.border-slate-800.bg-slate-950 form > button:focus-visible { outline-color: #7c7ff8; }
 
 .dark .playground-console .rounded-xl.border-slate-800.bg-slate-950 {
   background: linear-gradient(145deg, #0b141a, #070d11);

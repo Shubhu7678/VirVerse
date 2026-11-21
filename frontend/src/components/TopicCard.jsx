@@ -25,9 +25,9 @@ export default function TopicCard({ topic, language = 'c' }) {
   const action = empty ? 'Questions coming soon' : completed === 0 ? 'Start' : percent === 100 ? 'Review' : 'Continue'
 
   return (
-    <article className={`flex flex-col rounded-card border border-line bg-surface p-5 ${locked ? 'opacity-70' : ''}`}>
+    <article className={`group flex flex-col rounded-card border border-line bg-surface p-5 transition-shadow hover:border-line-strong hover:shadow-[0_0_0_1px_var(--line-strong)] ${locked ? 'opacity-70' : ''}`}>
       <div className="flex items-center justify-between text-xs">
-        <span className="font-mono text-fg-subtle">{String(topic.order).padStart(2, '0')}</span>
+        <span className="flex size-8 items-center justify-center rounded-lg border border-accent-border bg-accent-soft font-mono text-accent-text">{String(topic.order).padStart(2, '0')}</span>
         <span className={`inline-flex items-center gap-1 font-medium ${statusColor}`}>
           {locked && <Lock className="size-3" aria-hidden="true" />}
           {statusLabel}

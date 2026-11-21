@@ -69,7 +69,7 @@ const sections = [
 const rowBase = 'flex w-full items-center gap-3 rounded-control px-3 text-sm font-medium transition-colors'
 
 const itemClass = ({ isActive }) =>
-  `${rowBase} h-9 ${isActive ? 'bg-accent-soft text-accent-text' : 'text-fg-muted hover:bg-surface-2 hover:text-fg'}`
+  `${rowBase} h-9 ${isActive ? 'bg-accent-soft text-accent-text ring-1 ring-accent-border' : 'text-fg-muted hover:bg-surface-2 hover:text-fg'}`
 
 const childClass = ({ isActive }) =>
   `flex h-8 items-center rounded-control pr-3 pl-3 text-sm transition-colors ${
@@ -184,7 +184,7 @@ function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
       </ul>
 
       <div className="border-t border-line pt-3">
-        <div className="flex items-center gap-3 px-2 pb-2">
+        <div className="mb-2 flex items-center gap-3 rounded-card border border-line bg-surface-2 p-2.5">
           <Avatar initials={initials} />
           <span className="min-w-0 flex-1">
             <span className="block truncate text-sm font-medium text-fg">{userName}</span>
@@ -201,7 +201,7 @@ function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
 }
 
 const iconButton =
-  'flex size-9 items-center justify-center rounded-control border border-line-strong bg-surface text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg'
+  'flex size-9 items-center justify-center rounded-full border border-line bg-transparent text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg'
 
 export default function DashboardLayout() {
   const { user, logout, isSuperAdmin } = useAuth()
@@ -252,7 +252,7 @@ export default function DashboardLayout() {
   const initials = userName.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase()
 
   return (
-    <div className="dashboard-shell min-h-screen bg-bg">
+    <div className="dashboard-shell app-glow min-h-screen bg-bg">
       <aside className="dashboard-sidebar fixed inset-y-0 left-0 z-20 hidden w-64 border-r border-line bg-surface">
         {sidebar}
       </aside>
@@ -266,13 +266,13 @@ export default function DashboardLayout() {
         </div>
       )}
 
-      <header className="sticky top-0 z-30 border-b border-line bg-bg/90 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-line bg-bg/75 backdrop-blur-xl backdrop-saturate-150">
         <div className="flex h-14 items-center gap-3 px-4 sm:px-6 lg:px-8">
           <button onClick={() => setOpen(true)} className={`dashboard-menu-button ${iconButton}`} aria-label="Open menu">
             <Icon d={icons.menu} className="size-[18px]" />
           </button>
 
-          <h1 className="min-w-0 flex-1 truncate text-sm font-semibold text-fg sm:text-base">{pageTitle}</h1>
+          <h1 className="min-w-0 flex-1 truncate text-sm font-semibold tracking-tight text-fg sm:text-base">{pageTitle}</h1>
 
           {activeMemberships.length > 0 && (
             <Select

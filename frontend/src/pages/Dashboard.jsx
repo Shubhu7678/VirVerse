@@ -20,11 +20,14 @@ const verdictTone = {
   'Time Limit Exceeded': 'bg-warn-soft text-warn',
 }
 
-function Stat({ label, value, hint, children }) {
+function Stat({ label, value, hint, icon, children }) {
   return (
-    <Card>
-      <p className="text-sm text-fg-muted">{label}</p>
-      <p className="mt-1 text-2xl font-semibold text-fg tabular-nums">{value}</p>
+    <Card className="relative overflow-hidden">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-fg-muted">{label}</p>
+        {icon && <span className="flex size-8 items-center justify-center rounded-lg border border-accent-border bg-accent-soft text-accent-text"><Icon d={icon} className="size-4" /></span>}
+      </div>
+      <p className="mt-2 text-3xl font-semibold tracking-tight text-fg tabular-nums">{value}</p>
       {hint && <p className="mt-1 text-xs text-fg-subtle">{hint}</p>}
       {children && <div className="mt-3">{children}</div>}
     </Card>
@@ -35,7 +38,7 @@ function PathCard({ to, mark, title, state }) {
   return (
     <Card as={Link} to={to} interactive className="group flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <span className="flex size-9 items-center justify-center rounded-control bg-surface-2 font-mono text-sm font-medium text-fg">{mark}</span>
+        <span className="flex size-10 items-center justify-center rounded-xl border border-accent-border bg-accent-soft font-mono text-sm font-semibold text-accent-text">{mark}</span>
         <Icon d={icons.arrow} className="size-4 text-fg-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-fg" />
       </div>
       <div>
@@ -82,9 +85,10 @@ export default function Dashboard() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">
-      <section className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+      <section className="flex flex-col gap-5 rounded-[1.25rem] border border-line bg-surface p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8" style={{ backgroundImage: 'radial-gradient(34rem 14rem at 100% 0, var(--accent-soft), transparent 70%)' }}>
         <div className="min-w-0">
-          <h2 className="text-2xl font-semibold tracking-tight text-fg">Welcome back, {firstName}</h2>
+          <p className="mb-2 text-xs font-semibold text-accent-text">Your learning space</p>
+          <h2 className="text-3xl font-semibold tracking-tight text-fg">Welcome back, {firstName}</h2>
           <p className="mt-1 text-fg-muted">
             {continueTask
               ? continueTask.attempted
@@ -129,10 +133,10 @@ export default function Dashboard() {
       )}
 
       <section aria-label="Learning statistics" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Stat label="Total questions" value={stats.total} />
-        <Stat label="Solved" value={stats.completed} />
-        <Stat label="Remaining" value={stats.pending} />
-        <Stat label="Overall completion" value={`${stats.percent}%`}>
+        <Stat label="Total questions" value={stats.total} icon={icons.list} />
+        <Stat label="Solved" value={stats.completed} icon={icons.check} />
+        <Stat label="Remaining" value={stats.pending} icon={icons.tasks} />
+        <Stat label="Overall completion" value={`${stats.percent}%`} icon={icons.dashboard}>
           <ProgressBar percent={stats.percent} label="Overall completion" />
         </Stat>
       </section>
@@ -177,7 +181,7 @@ export default function Dashboard() {
                     {s.task.title}
                   </Link>
                   <DifficultyBadge level={s.task.difficulty} />
-                  <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${verdictTone[s.status] || 'bg-surface-2 text-fg-muted'}`}>{s.status}</span>
+                  <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${verdictTone[s.status] || 'bg-surface-2 text-fg-muted'}`}>{s.status}</span>
                   <time dateTime={s.createdAt} className="text-xs text-fg-subtle tabular-nums">
                     {new Date(s.createdAt).toLocaleString()}
                   </time>

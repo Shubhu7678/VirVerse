@@ -1,349 +1,288 @@
-import { lazy, Suspense, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useTheme } from '../context/ThemeContext'
 import Icon, { icons } from '../components/Icon'
 import './landing.css'
 
 const YEAR = new Date().getFullYear()
-const LandingScene = lazy(() => import('../components/LandingScene'))
+
+const stats = [
+  { value: '3', label: 'Languages to learn', detail: 'C, JavaScript, Python' },
+  { value: '17', label: 'C topics', detail: 'From Hello World onward' },
+  { value: '4', label: 'Learning tracks', detail: 'Including web development' },
+  { value: '0', label: 'Setup required', detail: 'Everything runs in the browser' },
+]
+
+const stack = ['C', 'JavaScript', 'Python', 'HTML', 'Monaco editor', 'Docker sandbox', 'Instant feedback', 'Progress tracking', 'Classroom tools']
 
 const features = [
-  {
-    icon: icons.code,
-    tag: 'LEARN BY BUILDING',
-    title: 'Interactive Playground',
-    description: 'Write and run C, JavaScript, and Python programs right in your browser. No setup, just start coding.',
-    accent: 'violet',
-  },
-  {
-    icon: icons.list,
-    tag: 'A CLEAR PATH',
-    title: 'Structured Learning Path',
-    description: 'Follow a guided roadmap from your first program through the fundamentals of C.',
-    accent: 'blue',
-  },
-  {
-    icon: icons.tasks,
-    tag: 'PRACTICE WITH PURPOSE',
-    title: 'Practice Problems',
-    description: 'Turn what you learn into confidence with hands-on coding challenges.',
-    accent: 'cyan',
-  },
-  {
-    icon: icons.dashboard,
-    tag: 'SEE YOUR GROWTH',
-    title: 'Track Your Progress',
-    description: 'Keep your learning organized and pick up right where you left off.',
-    accent: 'violet',
-  },
+  { icon: icons.code, title: 'In-browser playground', text: 'Write and run C, JavaScript and Python in a real editor. No installs, no configuration.', to: '/playground', cta: 'Open the playground' },
+  { icon: icons.list, title: 'Structured roadmaps', text: 'Follow ordered topics from your first program to advanced concepts, one step at a time.', to: '/tasks', cta: 'Browse C topics' },
+  { icon: icons.tasks, title: 'Practice problems', text: 'Turn what you learn into skill with graded tasks, test cases and instant results.', to: '/practice', cta: 'Browse problems' },
+  { icon: icons.dashboard, title: 'Progress you can see', text: 'Track solved tasks, submissions and what to do next, and pick up where you left off.' },
+  { icon: icons.terminal, title: 'Safe code execution', text: 'Every run happens in a short-lived, network-isolated container, so experiments never break anything.' },
+  { icon: icons.profile, title: 'Built for classrooms', text: 'Organizations, sections and assignments let teachers guide a whole group of learners.' },
 ]
 
-const roadmap = [
-  { number: '01', title: 'C Basics', detail: 'Hello World, input & output, variables', icon: icons.code },
-  { number: '02', title: 'Control Flow', detail: 'If-else, switch, loops', icon: icons.tasks },
-  { number: '03', title: 'Data Structures', detail: 'Arrays, strings, functions', icon: icons.list },
-  { number: '04', title: 'Build & Explore', detail: 'Practice problems and web development', icon: icons.globe },
+const tracks = [
+  { name: 'C Programming', tag: '17 topics', text: 'Variables, control flow, arrays, strings and functions.', to: '/tasks', practice: '/practice' },
+  { name: 'JavaScript', tag: 'Playground + practice', text: 'Core language fundamentals, functions, arrays and objects.', to: '/javascript', practice: '/javascript/practice' },
+  { name: 'Python', tag: 'Playground + practice', text: 'Readable syntax, data structures and problem solving.', to: '/python', practice: '/python/practice' },
+  { name: 'Web development', tag: 'HTML first', text: 'Learn HTML with guided tasks. CSS and JavaScript are coming soon.', to: '/web-development/html', practice: '/web-development/html-basics' },
 ]
 
-function ProductPreview() {
+const steps = [
+  { title: 'Pick a track', text: 'Choose C, JavaScript, Python or web development.' },
+  { title: 'Learn a topic', text: 'Read a short explanation with examples you can edit.' },
+  { title: 'Solve problems', text: 'Run your code, check results, and submit when it passes.' },
+  { title: 'Track growth', text: 'See your progress and move on to the next topic.' },
+]
+
+const faqs = [
+  { q: 'Do I need to install anything?', a: 'No. The editor, compiler and interpreters run for you. Open a playground and start typing.' },
+  { q: 'Which languages can I learn?', a: 'C, JavaScript and Python have full tracks and playgrounds. Web development currently covers HTML, with CSS and JavaScript on the way.' },
+  { q: 'Is my code safe to run?', a: 'Yes. Code runs in isolated, short-lived containers with networking turned off.' },
+  { q: 'Can a school or team use it?', a: 'Yes. Organizations can create departments, courses and sections, invite members and set assignments.' },
+  { q: 'Will my progress be saved?', a: 'When you sign in, submissions and completed tasks are saved to your account.' },
+]
+
+function useReveal() {
+  const ref = useRef(null)
+  useEffect(() => {
+    const node = ref.current
+    if (!node) return undefined
+    const items = node.querySelectorAll('[data-reveal]')
+    if (!('IntersectionObserver' in window)) {
+      items.forEach((el) => el.classList.add('is-in'))
+      return undefined
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in')
+          io.unobserve(entry.target)
+        }
+      })
+    }, { threshold: 0.12 })
+    items.forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+  return ref
+}
+
+function Heading({ eyebrow, title, sub }) {
   return (
-    <div className="landing-preview" aria-label="VirVerse learning workspace preview">
-      <div className="landing-preview-topbar">
-        <div className="landing-window-dots"><i /><i /><i /></div>
-        <div className="landing-preview-address"><span /> virverse.dev / playground</div>
-        <span className="landing-preview-avatar">VV</span>
-      </div>
-      <div className="landing-preview-body">
-        <aside className="landing-preview-sidebar" aria-hidden="true">
-          <div className="landing-preview-brand"><img src="/brand-mark.svg" alt="" /><span>VirVerse</span></div>
-          <div className="landing-preview-workspace"><span>&lt;/&gt;</span><b>Your workspace</b><small>Keep your momentum</small></div>
-          <div className="landing-preview-nav landing-preview-nav-active"><Icon d={icons.dashboard} /> Dashboard</div>
-          <div className="landing-preview-nav"><Icon d={icons.code} /> C Programming</div>
-          <div className="landing-preview-nav landing-preview-nav-nested">Topics</div>
-          <div className="landing-preview-nav landing-preview-nav-nested">Practice Problems</div>
-          <div className="landing-preview-nav"><Icon d={icons.globe} /> Web Development</div>
-          <div className="landing-preview-nav"><Icon d={icons.tasks} /> My Tasks</div>
-        </aside>
-        <div className="landing-preview-content">
-          <div className="landing-preview-greeting">
-            <div><small>YOUR LEARNING SPACE</small><strong>Welcome back, learner <span>✦</span></strong><p>Ready to make something today?</p></div>
-            <span className="landing-preview-continue">Continue learning <Icon d={icons.arrow} /></span>
-          </div>
-          <div className="landing-preview-stats">
-            <div><small>Questions</small><b>Explore</b><span className="landing-preview-bar landing-preview-bar-purple" /></div>
-            <div><small>Your progress</small><b>Keep going</b><span className="landing-preview-bar landing-preview-bar-blue" /></div>
-            <div><small>Next up</small><b>C Basics</b><span className="landing-preview-bar landing-preview-bar-cyan" /></div>
-          </div>
-          <div className="landing-preview-editor">
-            <div className="landing-preview-editor-head"><span><i /> main.c</span><small>C11 · GCC</small></div>
-            <pre><code><em>#include</em> <b>&lt;stdio.h&gt;</b>{'\n\n'}<strong>int</strong> main() {'{'}{'\n'}  printf(<u>&quot;Hello, VirVerse!&quot;</u>);{'\n'}  <strong>return</strong> 0;{'\n'}{'}'}</code></pre>
-            <div className="landing-preview-run"><span>▶</span> Run Code <kbd>⌘ + Enter</kbd></div>
-          </div>
-        </div>
-      </div>
-      <div className="landing-preview-glow" aria-hidden="true" />
+    <div className="lp-heading" data-reveal>
+      <p className="lp-eyebrow">{eyebrow}</p>
+      <h2>{title}</h2>
+      {sub && <p className="lp-sub">{sub}</p>}
     </div>
   )
 }
 
-function DashboardShot() {
+function HeroMock() {
   return (
-    <div className="landing-shot-window landing-shot-dashboard" aria-hidden="true">
-      <div className="landing-shot-toolbar"><span /><b>VirVerse</b><i>⌕</i><i>◐</i><i>VV</i></div>
-      <div className="landing-shot-layout">
-        <div className="landing-shot-sidebar"><b>VV <span>VirVerse</span></b><i className="selected">⌂　Dashboard</i><i>〈〉　C Programming</i><i className="nested">Topics</i><i className="nested">Practice Problems</i><i>▣　Web Development</i><i>◉　My Tasks</i><i>◷　Submissions</i><small>LEARNER PROFILE</small><strong>DL　Demo Learner</strong></div>
-        <div className="landing-shot-main">
-          <div className="landing-shot-welcome"><small>YOUR LEARNING SPACE</small><b>Welcome back, Demo 👋</b><span>Keep learning, keep coding. You're on the right track!</span><em>Continue learning　→</em></div>
-          <div className="landing-shot-stat-row"><div><small>Total questions</small><b>10</b><span>◉</span></div><div><small>Solved</small><b>4</b><span>✓</span></div><div><small>Remaining</small><b>6</b><span>◷</span></div></div>
-          <div className="landing-shot-activity"><div><b>Recent submissions</b><small>View all →</small></div><span className="landing-shot-activity-icon">&lt;/&gt;</span><strong>Great progress!</strong><small>Your latest coding activity appears here.</small><i /></div>
-        </div>
+    <div className="lp-mock" role="img" aria-label="Preview of the VirVerse editor running a C program that prints Hello, VirVerse">
+      <div className="lp-mock-bar">
+        <span className="lp-dots" aria-hidden="true"><i /><i /><i /></span>
+        <span className="lp-mock-title">main.c</span>
+        <span className="lp-mock-meta">C11 · GCC</span>
       </div>
-    </div>
-  )
-}
-
-function TopicsShot() {
-  return (
-    <div className="landing-shot-window landing-shot-topics" aria-hidden="true">
-      <div className="landing-shot-toolbar"><span /><b>VirVerse</b><i>⌕</i><i>◐</i><i>VV</i></div>
-      <div className="landing-shot-topic-hero"><small>C PROGRAMMING</small><b>C <span>Programming</span></b><p>Build a strong foundation, one topic at a time.</p><div><i><span>35%</span></i><small>4 of 17 topics explored</small></div></div>
-      <div className="landing-shot-topic-grid">
-        {[
-          ['01', 'C Basics & Hello World', 'In progress', '</>'],
-          ['02', 'Variables & Data Types', 'Ready to start', 'int'],
-          ['03', 'Input & Output', 'Ready to start', 'I/O'],
-          ['04', 'Operators', 'Locked', '+'],
-        ].map(([number, title, status, mark]) => (
-          <div className="landing-shot-topic-card" key={number}><i>{number}</i><span>{mark}</span><small>{status}</small><b>{title}</b><em><span /></em></div>
-        ))}
+      <pre className="lp-code" aria-hidden="true"><code>
+        <span className="c-k">#include</span> <span className="c-s">&lt;stdio.h&gt;</span>{'\n\n'}
+        <span className="c-t">int</span> <span className="c-f">main</span>() {'{'}{'\n'}
+        {'  '}<span className="c-f">printf</span>(<span className="c-s">&quot;Hello, VirVerse!\n&quot;</span>);{'\n'}
+        {'  '}<span className="c-k">return</span> 0;{'\n'}
+        {'}'}
+      </code></pre>
+      <div className="lp-mock-run" aria-hidden="true"><span><Icon d={icons.terminal} className="size-4" /> Output</span><b><i /> Exited with code 0</b></div>
+      <pre className="lp-out" aria-hidden="true">Hello, VirVerse!</pre>
+      <div className="lp-mock-cards" aria-hidden="true">
+        <div><small>Solved</small><b>4 / 10</b><span className="lp-bar"><i style={{ width: '40%' }} /></span></div>
+        <div><small>Next up</small><b>Input &amp; Output</b><span className="lp-bar"><i style={{ width: '15%' }} /></span></div>
       </div>
-    </div>
-  )
-}
-
-function PlaygroundShot() {
-  return (
-    <div className="landing-shot-window landing-shot-playground" aria-hidden="true">
-      <div className="landing-shot-toolbar"><span /><b>VirVerse</b><small>C PLAYGROUND</small><i>Copy</i><i>Reset</i></div>
-      <div className="landing-shot-code-head"><b>▤　main.c <span>●</span></b><small>C11 · GCC</small></div>
-      <div className="landing-shot-code">
-        <span>1</span><em>#include</em> <strong>&lt;stdio.h&gt;</strong>
-        <span>2</span>
-        <span>3</span><b>int</b> main() {'{'}
-        <span>4</span><i>　printf(</i><u>&quot;Hello, VirVerse!&quot;</u><i>);</i>
-        <span>5</span><b>　return</b> 0;
-        <span>6</span>{'}'}
-      </div>
-      <div className="landing-shot-run">▶　Run Code <small>⌘ + Enter</small></div>
-      <div className="landing-shot-terminal"><b>⌁　Terminal</b><span>Run details</span><i>Ready</i><small>Run your program. Output appears here when requested.</small></div>
     </div>
   )
 }
 
 export default function LandingPage() {
   const { user, loading, isSuperAdmin } = useAuth()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { theme, toggle } = useTheme()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const rootRef = useReveal()
   const destination = user ? (isSuperAdmin ? '/platform' : '/dashboard') : '/signup'
-  const actionLabel = loading ? 'Checking session…' : user ? 'Go to Dashboard' : 'Get Started'
+  const ctaLabel = loading ? 'Checking session…' : user ? 'Go to dashboard' : 'Start learning'
+  const guard = (event) => { if (loading) event.preventDefault(); else setMenuOpen(false) }
+  const close = () => setMenuOpen(false)
 
   return (
-    <main className="landing-page">
-      <header className="landing-header">
-        <a className="landing-brand" href="#home" aria-label="VirVerse home">
-          <img src="/brand-mark.svg" alt="" />
-          <span>VirVerse</span>
-        </a>
-        <nav id="landing-navigation" className={`landing-nav ${mobileMenuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
-          <a href="#home" className="is-current" onClick={() => setMobileMenuOpen(false)}>Home</a>
-          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Features</a>
-          <a href="#roadmap" onClick={() => setMobileMenuOpen(false)}>Roadmap</a>
-          <a href="#playground" onClick={() => setMobileMenuOpen(false)}>Playground</a>
-          <Link to="/javascript" onClick={() => setMobileMenuOpen(false)}>JavaScript</Link>
-          <Link to="/python" onClick={() => setMobileMenuOpen(false)}>Python</Link>
-          <div className="landing-nav-actions">
-            {!user && !loading && <Link className="landing-nav-login" to="/login" onClick={() => setMobileMenuOpen(false)}>Sign in</Link>}
-            <Link
-              to={destination}
-              className={`landing-nav-cta ${loading ? 'is-loading' : ''}`}
-              onClick={(event) => {
-                if (loading) {
-                  event.preventDefault()
-                  return
-                }
-                setMobileMenuOpen(false)
-              }}
-              aria-disabled={loading}
-            >
-              {actionLabel} {!loading && <Icon d={icons.arrow} className="size-3.5" />}
-            </Link>
+    <div className="lp" ref={rootRef} id="home">
+      <a className="lp-skip" href="#main">Skip to content</a>
+      <header className="lp-header">
+        <div className="lp-wrap lp-header-in">
+          <a className="lp-brand" href="#home" aria-label="VirVerse home"><img src="/brand-mark.svg" alt="" /><span>VirVerse</span></a>
+          <nav id="lp-nav" className={`lp-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
+            <a href="#features" onClick={close}>Features</a>
+            <a href="#tracks" onClick={close}>Tracks</a>
+            <a href="#process" onClick={close}>How it works</a>
+            <a href="#teams" onClick={close}>For teams</a>
+            <a href="#faq" onClick={close}>FAQ</a>
+            {!user && !loading && <Link className="lp-nav-login" to="/login" onClick={close}>Sign in</Link>}
+            <Link to={destination} className="lp-btn lp-btn-primary lp-nav-cta" onClick={guard} aria-disabled={loading}>{ctaLabel}</Link>
+          </nav>
+          <div className="lp-actions">
+            {!user && !loading && <Link className="lp-link lp-hide-sm" to="/login">Sign in</Link>}
+            <button type="button" className="lp-icon-btn" onClick={toggle} aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}>
+              <Icon d={theme === 'dark' ? icons.sun : icons.moon} className="size-4" />
+            </button>
+            <Link to={destination} className="lp-btn lp-btn-primary lp-btn-sm lp-hide-sm" onClick={guard} aria-disabled={loading}>{ctaLabel}</Link>
+            <button type="button" className="lp-icon-btn lp-menu-btn" aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={menuOpen} aria-controls="lp-nav" onClick={() => setMenuOpen((o) => !o)}>
+              <Icon d={menuOpen ? icons.close : icons.menu} className="size-5" />
+            </button>
           </div>
-        </nav>
-        <div className="landing-header-actions">
-          {!user && !loading && <Link className="landing-login-link" to="/login">Sign in</Link>}
-          <Link
-            to={destination}
-            className={`landing-header-cta ${loading ? 'is-loading' : ''}`}
-            onClick={(event) => loading && event.preventDefault()}
-            aria-disabled={loading}
-          >
-            {actionLabel} {!loading && <Icon d={icons.arrow} className="size-3.5" />}
-          </Link>
-          <button
-            type="button"
-            className="landing-mobile-menu"
-            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            aria-expanded={mobileMenuOpen}
-            aria-controls="landing-navigation"
-            onClick={() => setMobileMenuOpen((open) => !open)}
-          >
-            <Icon d={mobileMenuOpen ? icons.check : icons.menu} className="size-5" />
-          </button>
         </div>
       </header>
 
-      <div className="landing-content">
-        <section className="landing-hero" id="home">
-          <div className="landing-hero-copy">
-            <div className="landing-live-pill"><span /> INTERACTIVE · PRACTICE · TRACK PROGRESS</div>
-            <h1>Learn programming<br />by <span>doing.</span></h1>
-            <p className="landing-hero-lede">
-              A modern, interactive platform to learn C, JavaScript, and Python, practice problems, run code in your browser, and build real programming skills step by step.
-            </p>
-            <div className="landing-hero-actions">
-              <Link
-                to={destination}
-                onClick={(event) => loading && event.preventDefault()}
-                aria-disabled={loading}
-                className={`landing-primary-cta ${loading ? 'is-loading' : ''}`}
-              >
-                {user ? 'Go to Dashboard' : loading ? 'Checking session…' : 'Start Learning'}
-                {!loading && <Icon d={icons.arrow} className="size-4" />}
-              </Link>
-              <Link to="/playground" className="landing-secondary-cta"><Icon d={icons.code} className="size-4" /> Visit Playground</Link>
-              <Link to="/javascript" className="landing-secondary-cta">Explore JavaScript <Icon d={icons.arrow} className="size-4" /></Link>
-              <Link to="/python" className="landing-secondary-cta">Explore Python <Icon d={icons.arrow} className="size-4" /></Link>
+      <main id="main">
+        <section className="lp-hero">
+          <div className="lp-wrap lp-hero-in">
+            <div className="lp-hero-copy">
+              <p className="lp-eyebrow lp-eyebrow-pill"><span className="lp-pulse" /> Learn C · JavaScript · Python · HTML</p>
+              <h1>Learn to code by <span className="lp-grad">writing real code.</span></h1>
+              <p className="lp-lede">VirVerse is an interactive platform with guided roadmaps, practice problems and an in-browser editor, so you build real programming skills step by step.</p>
+              <div className="lp-cta-row">
+                <Link to={destination} className="lp-btn lp-btn-primary" onClick={guard} aria-disabled={loading}>{ctaLabel}</Link>
+                <Link to="/playground" className="lp-btn lp-btn-ghost">Try the playground</Link>
+              </div>
+              <ul className="lp-checks">
+                <li><Icon d={icons.check} className="size-4" /> No installs</li>
+                <li><Icon d={icons.check} className="size-4" /> Instant feedback</li>
+                <li><Icon d={icons.check} className="size-4" /> Free to start</li>
+              </ul>
             </div>
-            <div className="landing-hero-highlights">
-              <span><Icon d={icons.code} /> Code in your browser</span>
-              <span><Icon d={icons.list} /> Learn step by step</span>
-              <span><Icon d={icons.check} /> Practice and progress</span>
-            </div>
+            <HeroMock />
           </div>
-          <div className="landing-hero-visual">
-            <div className="landing-hero-scene" aria-hidden="true">
-              <Suspense fallback={null}><LandingScene /></Suspense>
-            </div>
-            <div className="landing-visual-orbit landing-visual-orbit-one" />
-            <div className="landing-visual-orbit landing-visual-orbit-two" />
-            <span className="landing-floating-code landing-floating-code-one">&lt;/&gt;</span>
-            <ProductPreview />
-          </div>
-          <a className="landing-scroll-cue" href="#inside-virverse">
-            <span>SCROLL TO EXPLORE</span>
-            <i><Icon d={icons.arrow} className="size-3.5" /></i>
-          </a>
-        </section>
-
-        <section className="landing-showcase landing-section" id="inside-virverse">
-          <div className="landing-section-heading">
-            <div><p className="landing-section-kicker">✦ A LOOK INSIDE VIRVERSE</p><h2>More than lessons.<br /><span>Your whole learning workspace.</span></h2></div>
-            <p>See what’s waiting for you: guided learning, a real coding workspace, and progress you can actually follow.</p>
-          </div>
-          <div className="landing-shot-grid">
-            <article className="landing-shot-card">
-              <div className="landing-shot-frame"><DashboardShot /></div>
-              <div className="landing-shot-caption"><span>01</span><div><h3>Your learning dashboard</h3><p>Progress, next steps, and submissions in one place.</p></div><Icon d={icons.arrow} className="size-4" /></div>
-            </article>
-            <article className="landing-shot-card">
-              <div className="landing-shot-frame"><TopicsShot /></div>
-              <div className="landing-shot-caption"><span>02</span><div><h3>A roadmap that makes sense</h3><p>Move from C fundamentals to more advanced topics.</p></div><Icon d={icons.arrow} className="size-4" /></div>
-            </article>
-            <article className="landing-shot-card">
-              <div className="landing-shot-frame"><PlaygroundShot /></div>
-              <div className="landing-shot-caption"><span>03</span><div><h3>Code right in your browser</h3><p>Write, run, and learn without a complicated setup.</p></div><Icon d={icons.arrow} className="size-4" /></div>
-            </article>
+          <div className="lp-wrap">
+            <dl className="lp-stats">
+              {stats.map((s) => (
+                <div key={s.label}><dt>{s.label}</dt><dd>{s.value}</dd><small>{s.detail}</small></div>
+              ))}
+            </dl>
           </div>
         </section>
 
-        <section className="landing-features landing-section" id="features">
-          <div className="landing-section-heading">
-            <div><p className="landing-section-kicker">✦ FEATURES</p><h2>Everything you need to<br /><span>master programming.</span></h2></div>
-            <p>Built for learners who prefer hands-on practice. From an in-browser editor to structured topics and real problems, the tools to grow your skills are right here.</p>
+        <section className="lp-marquee" aria-label="What is included">
+          <div className="lp-marquee-track" aria-hidden="true">
+            {[...stack, ...stack].map((item, i) => <span key={i}>{item}</span>)}
           </div>
-          <div className="landing-feature-grid">
-            {features.map((feature) => (
-              <article className={`landing-feature-card accent-${feature.accent}`} key={feature.title}>
-                <span className="landing-feature-icon"><Icon d={feature.icon} className="size-5" /></span>
-                <p>{feature.tag}</p>
-                <h3>{feature.title}</h3>
-                <span className="landing-feature-description">{feature.description}</span>
-                {feature.title === 'Interactive Playground' && (
-                  <Link to="/playground" className="landing-feature-link">Open Playground <Icon d={icons.arrow} className="size-3.5" /></Link>
-                )}
-                {feature.title === 'Practice Problems' && (
-                  <Link to="/practice" className="landing-feature-link">Browse Problems <Icon d={icons.arrow} className="size-3.5" /></Link>
-                )}
-              </article>
-            ))}
-          </div>
+          <p className="lp-sr">{stack.join(', ')}</p>
         </section>
 
-        <section className="landing-roadmap landing-section" id="roadmap">
-          <div className="landing-section-heading">
-            <div><p className="landing-section-kicker">✦ LEARNING ROADMAP</p><h2>From zero to <span>confident coder.</span></h2></div>
-            <p>A clear and structured path to take you from the basics to advanced programming concepts.</p>
-          </div>
-          <div className="landing-roadmap-track">
-            {roadmap.map((step, index) => (
-              <article className="landing-roadmap-step" key={step.number}>
-                <div className="landing-roadmap-node"><span>{step.number}</span><Icon d={step.icon} className="size-4" /></div>
-                {index < roadmap.length - 1 && <span className="landing-roadmap-connector" />}
-                <h3>{step.title}</h3>
-                <p>{step.detail}</p>
-              </article>
-            ))}
-          </div>
-          <div className="landing-roadmap-links">
-            <Link to="/tasks">Explore C topics <Icon d={icons.arrow} className="size-3.5" /></Link>
-            <Link to="/web-development/html">Explore web development <Icon d={icons.arrow} className="size-3.5" /></Link>
-          </div>
-        </section>
-
-        <section className="landing-playground-section landing-section" id="playground">
-          <div className="landing-playground-copy">
-            <p className="landing-section-kicker">✦ TRY IT YOURSELF</p>
-            <h2>Real coding experience<br />in your browser.</h2>
-            <p>No setup. No installation. Just open your workspace and start coding.</p>
-            <div className="landing-playground-actions">
-              <Link to="/playground" className="landing-primary-cta">Open C Playground <Icon d={icons.arrow} className="size-4" /></Link>
-              <Link to="/javascript/playground" className="landing-secondary-cta">Open JavaScript Playground</Link>
-              <Link to="/python/playground" className="landing-secondary-cta">Open Python Playground</Link>
-              <Link to="/practice" className="landing-secondary-cta">View Practice Problems</Link>
+        <section className="lp-section" id="features">
+          <div className="lp-wrap">
+            <Heading eyebrow="Features" title="Everything you need to learn programming." sub="A focused toolkit that replaces a pile of tutorials, installers and scattered notes." />
+            <div className="lp-grid lp-grid-3">
+              {features.map((f) => (
+                <article className="lp-card" key={f.title} data-reveal>
+                  <span className="lp-icon"><Icon d={f.icon} className="size-5" /></span>
+                  <h3>{f.title}</h3>
+                  <p>{f.text}</p>
+                  {f.to && <Link className="lp-more" to={f.to}>{f.cta} <Icon d={icons.arrow} className="size-3.5" /></Link>}
+                </article>
+              ))}
             </div>
           </div>
-          <div className="landing-playground-demo" aria-hidden="true">
-            <div className="landing-demo-top"><span><i /><i /><i /></span><b>main.c</b><small>C11 · GCC</small></div>
-            <pre><code><em>#include</em> <b>&lt;stdio.h&gt;</b>{'\n\n'}<strong>int</strong> main() {'{'}{'\n'}  printf(<u>&quot;Hello, world!&quot;</u>);{'\n'}  <strong>return</strong> 0;{'\n'}{'}'}</code></pre>
-            <div className="landing-demo-button"><span>▶</span> Run Code</div>
-            <div className="landing-demo-terminal"><span>●</span> Interactive terminal <b>Ready</b></div>
+        </section>
+
+        <section className="lp-section lp-alt" id="tracks">
+          <div className="lp-wrap">
+            <Heading eyebrow="Tracks" title="Pick a language and start building." sub="Every track has topics to read, a playground to experiment in and problems to solve." />
+            <div className="lp-grid lp-grid-4">
+              {tracks.map((t) => (
+                <article className="lp-card lp-track" key={t.name} data-reveal>
+                  <span className="lp-badge">{t.tag}</span>
+                  <h3>{t.name}</h3>
+                  <p>{t.text}</p>
+                  <div className="lp-track-links">
+                    <Link className="lp-btn lp-btn-ghost lp-btn-sm" to={t.to}>Open {t.name} topics</Link>
+                    <Link className="lp-more" to={t.practice}>Practice {t.name}</Link>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section className="landing-final-cta">
-          <div className="landing-cta-decoration" aria-hidden="true">&lt;/&gt;</div>
-          <div><p className="landing-section-kicker">✦ YOUR JOURNEY STARTS HERE</p><h2>Ready to start your coding journey?</h2><p>Join VirVerse and take your first step toward building real programming skills.</p></div>
-          <Link to={destination} onClick={(event) => loading && event.preventDefault()} aria-disabled={loading} className={`landing-primary-cta ${loading ? 'is-loading' : ''}`}>
-            {actionLabel} {!loading && <Icon d={icons.arrow} className="size-4" />}
-          </Link>
+        <section className="lp-section" id="process">
+          <div className="lp-wrap">
+            <Heading eyebrow="How it works" title="From first line to confident coder." sub="A simple loop that keeps you moving forward." />
+            <ol className="lp-steps">
+              {steps.map((s, i) => (
+                <li key={s.title} data-reveal>
+                  <span className="lp-step-n">{String(i + 1).padStart(2, '0')}</span>
+                  <h3>{s.title}</h3>
+                  <p>{s.text}</p>
+                </li>
+              ))}
+            </ol>
+            <div className="lp-center" data-reveal><Link to={destination} className="lp-btn lp-btn-primary" onClick={guard} aria-disabled={loading}>{ctaLabel}</Link></div>
+          </div>
         </section>
-      </div>
 
-      <footer className="landing-footer">
-        <a className="landing-brand" href="#home"><img src="/brand-mark.svg" alt="" /><span>VirVerse</span></a>
-        <p>Learn by doing. Build with confidence.</p>
-        <nav aria-label="Footer navigation"><a href="#features">Features</a><a href="#roadmap">Roadmap</a><Link to="/login">Sign in</Link><Link to="/signup">Sign up</Link></nav>
-        <span className="landing-copyright">© {YEAR} VirVerse</span>
+        <section className="lp-section lp-alt" id="teams">
+          <div className="lp-wrap lp-split">
+            <div data-reveal>
+              <p className="lp-eyebrow">For teams and classrooms</p>
+              <h2>Teach a whole group, not one learner at a time.</h2>
+              <p className="lp-sub">Create an organization, split it into departments, courses and sections, invite members and set assignments. Follow how each learner is doing.</p>
+              <ul className="lp-list">
+                <li><Icon d={icons.check} className="size-4" /> Invitations by email</li>
+                <li><Icon d={icons.check} className="size-4" /> Assignments per section</li>
+                <li><Icon d={icons.check} className="size-4" /> Per-learner progress view</li>
+              </ul>
+            </div>
+            <div className="lp-panel" data-reveal aria-hidden="true">
+              <div className="lp-panel-row"><b>Section A · Intro to C</b><span className="lp-badge">Sample</span></div>
+              <div className="lp-panel-row"><span>Assignment: Loops</span><span className="lp-bar"><i style={{ width: '72%' }} /></span></div>
+              <div className="lp-panel-row"><span>Assignment: Arrays</span><span className="lp-bar"><i style={{ width: '38%' }} /></span></div>
+              <div className="lp-panel-row"><span>Assignment: Functions</span><span className="lp-bar"><i style={{ width: '9%' }} /></span></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="lp-section" id="faq">
+          <div className="lp-wrap lp-narrow">
+            <Heading eyebrow="FAQ" title="Questions, answered." />
+            <div className="lp-faq" data-reveal>
+              {faqs.map((f) => (
+                <details key={f.q}><summary>{f.q}</summary><p>{f.a}</p></details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="lp-wrap">
+          <div className="lp-final" data-reveal>
+            <h2>Your next skill is one program away.</h2>
+            <p>Create a free account and run your first program in under a minute.</p>
+            <Link to={destination} className="lp-btn lp-btn-primary" onClick={guard} aria-disabled={loading}>{ctaLabel}</Link>
+          </div>
+        </section>
+      </main>
+
+      <footer className="lp-footer">
+        <div className="lp-wrap lp-footer-in">
+          <div className="lp-footer-brand">
+            <a className="lp-brand" href="#home"><img src="/brand-mark.svg" alt="" /><span>VirVerse</span></a>
+            <p>Learn by doing. Build with confidence.</p>
+          </div>
+          <nav aria-label="Tracks"><h3>Tracks</h3><Link to="/tasks">C programming</Link><Link to="/javascript">JavaScript</Link><Link to="/python">Python</Link><Link to="/web-development/html">Web development</Link></nav>
+          <nav aria-label="Tools"><h3>Tools</h3><Link to="/playground">C playground</Link><Link to="/javascript/playground">JavaScript playground</Link><Link to="/python/playground">Python playground</Link><Link to="/practice">Practice problems</Link></nav>
+          <nav aria-label="Account"><h3>Account</h3><Link to="/login">Sign in</Link><Link to="/signup">Create account</Link><a href="#faq">FAQ</a></nav>
+        </div>
+        <div className="lp-wrap lp-copy">© {YEAR} VirVerse. All rights reserved.</div>
       </footer>
-    </main>
+    </div>
   )
 }

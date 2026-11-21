@@ -10,7 +10,7 @@ const statusStyles = {
   todo: ['To do', 'bg-surface-2 text-fg-muted'],
 }
 
-const base = 'inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium'
+const base = 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium'
 
 export function DifficultyBadge({ level }) {
   return <span className={`${base} ${difficultyStyles[level] || statusStyles.todo[1]}`}>{level}</span>

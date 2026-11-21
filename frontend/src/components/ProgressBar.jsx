@@ -1,7 +1,7 @@
 // Visual states: not started (neutral), in progress (accent), completed (green).
 const fill = {
   'not-started': 'bg-line-strong',
-  'in-progress': 'bg-accent',
+  'in-progress': 'bg-linear-to-r from-accent to-accent-text',
   completed: 'bg-success',
 }
 
@@ -24,7 +24,7 @@ export default function ProgressBar({ percent, label, size = 'h-1.5' }) {
       aria-valuemax={100}
       aria-valuenow={percent}
       aria-label={label}
-      className={`${size} w-full overflow-hidden rounded-full bg-surface-2`}
+      className={`${size} w-full overflow-hidden rounded-full bg-inset`}
     >
       <div className={`h-full rounded-full transition-all duration-500 ${fill[state]}`} style={{ width: `${percent}%` }} />
     </div>

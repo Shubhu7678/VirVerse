@@ -3,7 +3,7 @@ export default function Card({ as: Tag = 'div', interactive = false, padded = tr
   return (
     <Tag
       className={`rounded-card border border-line bg-surface ${padded ? 'p-5' : ''} ${
-        interactive ? 'transition-colors hover:border-line-strong hover:bg-surface-2' : ''
+        interactive ? 'transition-shadow transition-colors hover:border-line-strong hover:shadow-[0_0_0_1px_var(--line-strong)]' : ''
       } ${className}`}
       {...props}
     />
