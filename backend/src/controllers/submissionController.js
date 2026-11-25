@@ -2,13 +2,8 @@ import Task from '../models/Task.js';
 import Submission from '../models/Submission.js';
 import { executeProgram, classifyRun, ExecutorError } from '../services/executor/index.js';
 import { canAccessTask } from '../services/learningAccess.js';
-import Membership from '../models/OrganizationMembership.js';
-import Organization from '../models/Organization.js';
-import Assignment from '../models/Assignment.js';
-import AssignmentTask from '../models/AssignmentTask.js';
-import ClassEnrollment from '../models/ClassEnrollment.js';
-import { hasFeatureAccess } from '../services/subscriptionAccess.js';
 import { awardTaskPoints } from '../services/gamification.js';
+import { logActivity } from '../services/activity.js';
 
 // Ignores trailing spaces on each line and trailing blank lines.
 const normalize = (s) =>
@@ -30,57 +25,15 @@ function judgeCase(testCase, run) {
 }
 
 export async function createSubmission(req, res) {
-  const { taskSlug, code, assignmentId } = req.body;
+  const { taskSlug, code } = req.body;
 
   const task = await Task.findOne({ slug: taskSlug });
   if (!task) return res.status(404).json({ message: 'Task not found' });
-  const selectedOrganizationId = req.get('x-org-id') || null;
-  if (selectedOrganizationId) {
-    const [membership, organization] = await Promise.all([
-      Membership.exists({ user: req.user._id, organization: selectedOrganizationId, status: 'active' }),
-      Organization.exists({ _id: selectedOrganizationId, status: 'active' }),
-    ]);
-    if (!membership || !organization) return res.status(403).json({ message: 'Invalid active organization' });
-  }
-  if (!await canAccessTask(req.user, task, selectedOrganizationId)) {
+  if (!canAccessTask(req.user, task)) {
     return res.status(403).json({
-      message: 'This topic is available to learners who are members of an active VirVerse organization.',
-      code: 'ORGANIZATION_MEMBERSHIP_REQUIRED',
+      message: 'This topic is locked. Ask your admin to unlock it for you.',
+      code: 'ACCESS_LOCKED',
     });
-  }
-  let assignment = null;
-  if (assignmentId) {
-    if (!selectedOrganizationId) return res.status(400).json({ message: 'Select an organization before submitting assignment work' });
-    if (!await hasFeatureAccess(selectedOrganizationId, ['assignments', 'basic-assignments'])) {
-      return res.status(403).json({ message: 'This organization subscription does not currently allow assignment submissions' });
-    }
-    assignment = await Assignment.findOne({
-      _id: assignmentId,
-      organization: selectedOrganizationId,
-      status: 'published',
-    });
-    if (!assignment) return res.status(404).json({ message: 'Assignment not found' });
-    if (assignment.startsAt > new Date()) return res.status(403).json({ message: 'This assignment is not available yet' });
-    const [requiredTask, enrollment, studentMembership] = await Promise.all([
-      AssignmentTask.exists({
-        organization: selectedOrganizationId,
-        assignment: assignment._id,
-        task: task._id,
-      }),
-      ClassEnrollment.exists({
-        organization: selectedOrganizationId,
-        class: assignment.class,
-        student: req.user._id,
-        status: 'active',
-      }),
-      Membership.exists({
-        user: req.user._id,
-        organization: selectedOrganizationId,
-        role: 'student',
-        status: 'active',
-      }),
-    ]);
-    if (!requiredTask || !enrollment || !studentMembership) return res.status(403).json({ message: 'You are not authorized to submit this assignment task' });
   }
   if (task.testCases.length === 0) return res.status(400).json({ message: 'This task has no test cases yet' });
 
@@ -140,9 +93,7 @@ export async function createSubmission(req, res) {
   const passedCount = results.filter((r) => r.passed).length;
   const submission = await Submission.create({
     user: req.user._id,
-    organization: selectedOrganizationId,
     task: task._id,
-    assignment: assignment?._id ?? null,
     code,
     status,
     passedCount,
@@ -150,6 +101,18 @@ export async function createSubmission(req, res) {
     ...(req.user.isDemo ? { expiresAt: req.user.demoExpiresAt } : {}),
   });
   const reward = status === 'Accepted' ? await awardTaskPoints(req.user._id, task) : null;
+  // `reward` is only set the first time a question is solved, so each question is logged once.
+  // Throwaway demo sessions are left out.
+  if (reward && !req.user.isDemo) {
+    const names = { c: 'C', javascript: 'JavaScript', python: 'Python' };
+    await logActivity({
+      type: 'question.completed',
+      actor: req.user._id,
+      target: req.user._id,
+      message: `${req.user.name} completed “${task.title}” (${names[task.language ?? 'c']})`,
+      meta: { task: task.slug, language: task.language ?? 'c' },
+    });
+  }
 
   res.status(201).json({
     submission: {

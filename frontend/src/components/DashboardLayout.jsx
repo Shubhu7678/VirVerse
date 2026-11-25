@@ -1,19 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
-import { ChevronDown, LogOut } from 'lucide-react'
+import { ChevronDown, CircleHelp, LogOut } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { Logo } from './AuthLayout'
 import Icon, { icons } from './Icon'
-import InvitationInbox from './InvitationInbox'
-import Select from './ui/Select'
 import Tooltip from './ui/Tooltip'
-import { useOrg } from '../context/OrgContext'
+import ProductTour from './ProductTour'
+import { STUDENT_TOUR, ADMIN_TOUR } from '../data/tourSteps'
+import { getPageTour } from '../data/pageTours'
 
-const platformNav = [
-  { label: 'Overview', to: '/platform', icon: icons.dashboard, end: true },
-  { label: 'Organizations', to: '/platform/organizations', icon: icons.profile },
-  { label: 'Audit Logs', to: '/platform/audit-logs', icon: icons.submissions },
+const adminNav = [
+  { label: 'Students', to: '/admin', icon: icons.profile, end: true, tour: 'admin-students' },
+  { label: 'Activity log', to: '/admin/logs', icon: icons.submissions, tour: 'admin-logs' },
 ]
 
 // JavaScript and Python are namespaced under their own prefix.
@@ -51,7 +50,11 @@ const sections = [
     label: 'Python',
     icon: icons.terminal,
     match: (p) => p === '/python' || p.startsWith('/python/'),
-    children: trackChildren('/python', 'Python playground'),
+    children: [
+      { label: 'Topics', to: '/python', end: true },
+      { label: 'Guide', to: '/python/guide' },
+      ...trackChildren('/python', 'Python playground').slice(1),
+    ],
   },
   {
     id: 'web',
@@ -78,7 +81,7 @@ const childClass = ({ isActive }) =>
 
 function NavItems({ items, close }) {
   return items.map((item) => (
-    <li key={item.to}>
+    <li key={item.to} data-tour={item.tour}>
       <NavLink to={item.to} end={item.end} className={itemClass} onClick={close}>
         <Icon d={item.icon} className="size-[18px] shrink-0" />
         <span className="min-w-0 flex-1 truncate">{item.label}</span>
@@ -99,7 +102,7 @@ function NavSection({ section, pathname, close }) {
   const panelId = `nav-${section.id}`
 
   return (
-    <li>
+    <li data-tour={section.id}>
       <button
         type="button"
         aria-expanded={open}
@@ -143,7 +146,7 @@ function Avatar({ initials, className = 'size-9 text-sm' }) {
   )
 }
 
-function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
+function Sidebar({ user, logout, isAdmin, close }) {
   const { pathname } = useLocation()
   const userName = user?.name?.trim() || 'Learner'
   const initials = userName.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase()
@@ -155,20 +158,14 @@ function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
       </Link>
 
       <ul className="flex-1 space-y-0.5 overflow-y-auto pb-3">
-        {orgNav.length > 0 && (
+        {isAdmin && (
           <>
-            <GroupLabel>Organization</GroupLabel>
-            <NavItems items={orgNav} close={close} />
+            <GroupLabel>Admin</GroupLabel>
+            <NavItems items={adminNav} close={close} />
+            <GroupLabel>Learning</GroupLabel>
           </>
         )}
-        {isSuperAdmin && (
-          <>
-            <GroupLabel>Platform</GroupLabel>
-            <NavItems items={platformNav} close={close} />
-          </>
-        )}
-        {(orgNav.length > 0 || isSuperAdmin) && <GroupLabel>Learning</GroupLabel>}
-        <NavItems items={[{ label: 'Dashboard', to: '/dashboard', icon: icons.dashboard }]} close={close} />
+        <NavItems items={[{ label: 'Dashboard', to: '/dashboard', icon: icons.dashboard, tour: 'dashboard' }]} close={close} />
         {sections.map((section) => (
           <NavSection key={section.id} section={section} pathname={pathname} close={close} />
         ))}
@@ -176,8 +173,9 @@ function Sidebar({ user, logout, orgNav, isSuperAdmin, close }) {
           items={[
             { label: 'My tasks', to: '/my-tasks', icon: icons.tasks },
             { label: 'Completed', to: '/completed', icon: icons.check },
-            { label: 'Submissions', to: '/submissions', icon: icons.submissions },
-            { label: 'Profile', to: '/profile', icon: icons.profile },
+            { label: 'Submissions', to: '/submissions', icon: icons.submissions, tour: 'submissions' },
+            { label: 'Leaderboard', to: '/leaderboard', icon: icons.dashboard, tour: 'leaderboard' },
+            { label: 'Profile', to: '/profile', icon: icons.profile, tour: 'profile' },
           ]}
           close={close}
         />
@@ -204,50 +202,60 @@ const iconButton =
   'flex size-9 items-center justify-center rounded-full border border-line bg-transparent text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg'
 
 export default function DashboardLayout() {
-  const { user, logout, isSuperAdmin } = useAuth()
-  const { memberships, activeOrganization, selectOrganization } = useOrg()
+  const { user, logout, isAdmin } = useAuth()
   const { theme, toggle } = useTheme()
   const [open, setOpen] = useState(false)
   const location = useLocation()
-  const orgRole = activeOrganization?.role
-  const orgNav = orgRole === 'org_admin'
-    ? [
-        { label: 'Overview', to: '/organization', icon: icons.dashboard, end: true },
-        { label: 'People & performance', to: '/organization/people', icon: icons.profile },
-        { label: 'Departments & classes', to: '/organization/structure', icon: icons.tasks },
-        { label: 'Assignments', to: '/organization/assignments', icon: icons.check },
-      ]
-    : orgRole === 'teacher'
-      ? [
-          { label: 'Teacher overview', to: '/organization', icon: icons.dashboard, end: true },
-          { label: 'My students', to: '/organization/people?role=student', icon: icons.profile },
-          { label: 'My classes', to: '/organization/structure', icon: icons.tasks },
-          { label: 'Assignments', to: '/organization/assignments', icon: icons.check },
-        ]
-      : orgRole === 'student'
-        ? [
-            { label: 'My organization classes', to: '/organization/structure', icon: icons.tasks },
-            { label: 'Assignments', to: '/organization/assignments', icon: icons.check },
-          ]
-        : []
+  const [tourOpen, setTourOpen] = useState(false)
+  const tourKey = `virvese:tour:${user?.id}`
+  // The welcome tour runs once; the ? button explains whichever page is open.
+  const [tourSteps, setTourSteps] = useState(isAdmin ? ADMIN_TOUR : STUDENT_TOUR)
+  const startWelcomeTour = () => {
+    setTourSteps(isAdmin ? ADMIN_TOUR : STUDENT_TOUR)
+    setTourOpen(true)
+  }
+  const startPageTour = () => {
+    setTourSteps(getPageTour(location.pathname, isAdmin))
+    setTourOpen(true)
+  }
 
+  // Show the tour once, the first time someone lands on their home page.
+  useEffect(() => {
+    if (!user || !['/dashboard', '/admin'].includes(location.pathname)) return undefined
+    try {
+      if (localStorage.getItem(tourKey)) return undefined
+    } catch {
+      return undefined
+    }
+    const timer = setTimeout(startWelcomeTour, 700)
+    return () => clearTimeout(timer)
+  }, [user, location.pathname, tourKey])
+
+  const closeTour = () => {
+    setTourOpen(false)
+    // Skipping counts as seen too; it can always be replayed from the help button.
+    try {
+      localStorage.setItem(tourKey, '1')
+    } catch {
+      /* private mode: the tour may show again next visit */
+    }
+  }
   const pageItems = [
-    ...orgNav,
-    ...(isSuperAdmin ? platformNav : []),
+    ...(isAdmin ? adminNav : []),
     { label: 'Dashboard', to: '/dashboard' },
     ...sections.flatMap((section) => section.children.filter((child) => child.to).map((child) => ({ ...child, label: `${section.label} · ${child.label}` }))),
     { label: 'My tasks', to: '/my-tasks' },
     { label: 'Completed', to: '/completed' },
     { label: 'Submissions', to: '/submissions' },
+    { label: 'Leaderboard', to: '/leaderboard' },
     { label: 'Profile', to: '/profile' },
   ]
   const activeItem = pageItems
     .filter((item) => location.pathname === item.to.split('?')[0] || (item.to !== '/dashboard' && item.to !== '/tasks' && location.pathname.startsWith(`${item.to.split('?')[0]}/`)))
     .sort((a, b) => b.to.length - a.to.length)[0]
   const pageTitle = activeItem?.label ?? 'VirVerse'
-  const activeMemberships = memberships.filter((membership) => membership.organization?.status === 'active')
   const closeMenu = () => setOpen(false)
-  const sidebar = <Sidebar user={user} logout={logout} orgNav={orgNav} isSuperAdmin={isSuperAdmin} close={closeMenu} />
+  const sidebar = <Sidebar user={user} logout={logout} isAdmin={isAdmin} close={closeMenu} />
   const userName = user?.name?.trim() || 'Learner'
   const initials = userName.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase()
 
@@ -274,24 +282,14 @@ export default function DashboardLayout() {
 
           <h1 className="min-w-0 flex-1 truncate text-sm font-semibold tracking-tight text-fg sm:text-base">{pageTitle}</h1>
 
-          {activeMemberships.length > 0 && (
-            <Select
-              label="Active organization"
-              value={activeOrganization?.organization?.id ?? ''}
-              onChange={(e) => selectOrganization(e.target.value)}
-              className="hidden w-56 sm:block"
-            >
-              {activeMemberships.map((membership) => (
-                <option key={membership.organization._id} value={membership.organization._id}>
-                  {membership.organization.name} · {membership.role.replaceAll('_', ' ')}
-                </option>
-              ))}
-            </Select>
-          )}
-
-          <InvitationInbox />
+          <Tooltip label="What is on this page?">
+            <button onClick={startPageTour} className={iconButton} aria-label="Explain this page">
+              <CircleHelp className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
+            </button>
+          </Tooltip>
           <Tooltip label={theme === 'dark' ? 'Light theme' : 'Dark theme'}>
             <button
+              data-tour="theme"
               onClick={toggle}
               className={iconButton}
               aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
@@ -304,6 +302,8 @@ export default function DashboardLayout() {
           </Link>
         </div>
       </header>
+
+      <ProductTour steps={tourSteps} open={tourOpen} onClose={closeTour} />
 
       <main key={location.pathname} className="page-enter p-4 sm:p-6 lg:p-8">
         <Outlet />

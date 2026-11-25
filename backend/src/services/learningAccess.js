@@ -1,46 +1,29 @@
-import Membership from '../models/OrganizationMembership.js';
-import Organization from '../models/Organization.js';
-import OrganizationSubscription from '../models/OrganizationSubscription.js';
+// Access rules, in one place:
+//  - Admin (platformRole === 'super_admin') can open everything.
+//  - Everyone else can open the first 10 questions of the first topic in each language.
+//  - A student whose admin unlocked a language can open that whole language.
+//  - Demo sessions are limited to the free questions of one language each.
+export const LANGUAGES = ['c', 'javascript', 'python'];
+export const FREE_QUESTION_LIMIT = 10;
 
-export async function hasOrganizationLearningAccess(user, organizationId) {
-  return hasLanguageLearningAccess(user, organizationId, 'c');
-}
+export const FIRST_CATEGORY = { c: 'basics', javascript: 'js-basics', python: 'python-basics' };
 
-export async function hasLanguageLearningAccess(user, organizationId, language) {
+export const isAdmin = (user) => user?.platformRole === 'super_admin';
+
+export function hasLanguageLearningAccess(user, language) {
   if (user.isDemo) return false;
-  if (user.platformRole === 'super_admin') return true;
-  if (!organizationId) return false;
-  const membership = await Membership.findOne({
-    user: user._id,
-    organization: organizationId,
-    status: 'active',
-  }).lean();
-  if (!membership) return false;
-  const organization = await Organization.findOne({ _id: organizationId, status: 'active' }).select('_id').lean();
-  if (!organization) return false;
-
-  const subscription = await OrganizationSubscription.findOne({
-    organization: organizationId,
-    status: { $in: ['active', 'trial'] },
-    features: language === 'c' ? 'c-programming' : 'multi-language',
-  }).lean();
-  if (!subscription) return false;
-  const now = new Date();
-  if (subscription.status === 'trial') return subscription.trialEndsAt > now;
-  return !subscription.endsAt || subscription.endsAt > now;
+  if (isAdmin(user)) return true;
+  return Boolean(user.unlockedLanguages?.includes(language));
 }
 
-export async function canAccessTask(user, task, organizationId) {
-  if (user.isDemo) {
-    const language = task.language ?? 'c';
-    const firstCategory = language === 'javascript'
-      ? 'js-basics'
-      : language === 'python' ? 'python-basics' : 'basics';
-    return task.category === firstCategory && task.questionOrder >= 1 && task.questionOrder <= 10;
-  }
-  const firstCategory = task.language === 'javascript'
-    ? 'js-basics'
-    : task.language === 'python' ? 'python-basics' : 'basics';
-  if (task.category === firstCategory) return true;
-  return hasLanguageLearningAccess(user, organizationId, task.language ?? 'c');
+export function isFreeTask(task) {
+  const language = task.language ?? 'c';
+  return task.category === FIRST_CATEGORY[language]
+    && task.questionOrder >= 1
+    && task.questionOrder <= FREE_QUESTION_LIMIT;
+}
+
+export function canAccessTask(user, task) {
+  if (isFreeTask(task)) return true;
+  return hasLanguageLearningAccess(user, task.language ?? 'c');
 }

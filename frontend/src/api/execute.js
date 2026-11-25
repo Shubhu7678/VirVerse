@@ -10,4 +10,3 @@ export const fetchSubmissions = () => api.get('/submissions').then((r) => r.data
 
 export const fetchSubmissionActivity = () => api.get('/submissions/activity').then((r) => r.data)
 
-export const fetchOrganizationLeaderboard = () => api.get('/orgs/leaderboard').then((r) => r.data)

@@ -7,7 +7,7 @@ const KEYWORDS = new Set([
   'char', 'double', 'return', 'include', 'scanf', 'printf',
 ])
 
-function HighlightedCode({ code, language }) {
+export function HighlightedCode({ code, language }) {
   const tokenPattern = /\/\/[^\n]*|#[^\n]*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b(?:const|let|var|function|return|if|else|for|while|def|print|input|int|float|import|from|in|range|True|False|None|true|false|null|new|class|void|char|double|include|scanf|printf)\b|\b\d+(?:\.\d+)?\b/g
   const parts = []
   let cursor = 0

@@ -5,7 +5,6 @@ const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
-  const [memberships, setMemberships] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -13,7 +12,6 @@ export function AuthProvider({ children }) {
       .get('/auth/me')
       .then(({ data }) => {
         setUser(data.user)
-        setMemberships(data.memberships ?? [])
       })
       .catch(() => setUser(null))
       .finally(() => setLoading(false))
@@ -22,7 +20,6 @@ export function AuthProvider({ children }) {
   const loadSession = useCallback(async () => {
     const { data } = await api.get('/auth/me')
     setUser(data.user)
-    setMemberships(data.memberships ?? [])
   }, [])
 
   const login = useCallback(async (credentials) => {
@@ -43,7 +40,6 @@ export function AuthProvider({ children }) {
   const logout = useCallback(async () => {
     await api.post('/auth/logout').catch(() => {})
     setUser(null)
-    setMemberships([])
   }, [])
 
   const updateGamification = useCallback(({ points, level }) => {
@@ -51,8 +47,8 @@ export function AuthProvider({ children }) {
   }, [])
 
   const value = useMemo(
-    () => ({ user, memberships, isSuperAdmin: user?.platformRole === 'super_admin', loading, login, startDemo, signup, logout, loadSession, updateGamification }),
-    [user, memberships, loading, login, startDemo, signup, logout, loadSession, updateGamification],
+    () => ({ user, isAdmin: Boolean(user?.isAdmin), loading, login, startDemo, signup, logout, loadSession, updateGamification }),
+    [user, loading, login, startDemo, signup, logout, loadSession, updateGamification],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

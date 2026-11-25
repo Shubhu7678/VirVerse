@@ -12,10 +12,10 @@ export function ProtectedRoute() {
 }
 
 export function GuestRoute() {
-  const { user, loading, isSuperAdmin } = useAuth()
+  const { user, loading, isAdmin } = useAuth()
 
   if (loading) return <FullPageSpinner />
-  if (user) return <Navigate to={isSuperAdmin ? '/platform' : '/dashboard'} replace />
+  if (user) return <Navigate to={isAdmin ? '/admin' : '/dashboard'} replace />
   return <Outlet />
 }
 
@@ -27,7 +27,7 @@ function FullPageSpinner() {
   )
 }
 
-export function SuperAdminRoute() {
-  const { isSuperAdmin } = useAuth()
-  return isSuperAdmin ? <Outlet /> : <Navigate to="/dashboard" replace />
+export function AdminRoute() {
+  const { isAdmin } = useAuth()
+  return isAdmin ? <Outlet /> : <Navigate to="/dashboard" replace />
 }

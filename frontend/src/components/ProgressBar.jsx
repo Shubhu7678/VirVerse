@@ -1,7 +1,7 @@
 // Visual states: not started (neutral), in progress (accent), completed (green).
 const fill = {
   'not-started': 'bg-line-strong',
-  'in-progress': 'bg-linear-to-r from-accent to-accent-text',
+  'in-progress': 'bg-accent',
   completed: 'bg-success',
 }
 

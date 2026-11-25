@@ -178,7 +178,7 @@ function Workspace({ task, assignmentId }) {
 
   return (
     <div className="flex flex-col bg-bg lg:h-[calc(100dvh-3.5rem)]">
-      <header className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-line bg-surface px-4 py-2.5">
+      <header data-tour="ide-progress" className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-line bg-surface px-4 py-2.5">
         <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-2 text-sm text-fg-muted">
           <Link to={topicPath(task.language, task.category)} aria-label="Back to topic" className="rounded-control p-1 transition-colors hover:bg-surface-2 hover:text-fg">
             <Icon d={icons.back} className="size-4" />
@@ -199,7 +199,7 @@ function Workspace({ task, assignmentId }) {
       </header>
 
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row" ref={layoutRef} style={{ '--left': `${split * 100}%` }}>
-        <section className="max-h-[45vh] min-h-70 overflow-auto bg-surface lg:max-h-none lg:w-(--left) lg:flex-none">
+        <section data-tour="ide-problem" className="max-h-[45vh] min-h-70 overflow-auto bg-surface lg:max-h-none lg:w-(--left) lg:flex-none">
           <ProblemPanel task={task} status={status} />
         </section>
 
@@ -255,7 +255,7 @@ function Workspace({ task, assignmentId }) {
             </div>
           </div>
 
-          <div className="min-h-40 flex-1 [&>*]:h-full">
+          <div data-tour="ide-editor" className="min-h-40 flex-1 [&>*]:h-full">
             <CodeEditor
               value={code}
               onChange={updateCode}
@@ -279,7 +279,7 @@ function Workspace({ task, assignmentId }) {
             </div>
           )}
 
-          <div className="flex flex-wrap items-center justify-between gap-3 border-y border-line bg-surface px-3 py-2.5">
+          <div data-tour="ide-actions" className="flex flex-wrap items-center justify-between gap-3 border-y border-line bg-surface px-3 py-2.5">
             <div className="flex flex-wrap items-center gap-2">
               <Button type="button" onClick={handleRun} loading={run.running} disabled={busy} fullWidth={false}>
                 {!run.running && <Play className="size-4" aria-hidden="true" />}
@@ -303,7 +303,7 @@ function Workspace({ task, assignmentId }) {
             onChange={(r) => setConsoleSize(clamp(r, 0.15, 0.7))}
           />
 
-          <div className="min-h-30 flex-none basis-(--console) [&>div]:h-full [&>div]:min-h-0">
+          <div data-tour="ide-console" className="min-h-30 flex-none basis-(--console) [&>div]:h-full [&>div]:min-h-0">
             <ConsolePanel tab={tab} setTab={setTab} stdin={stdin} setStdin={setStdin} run={run} test={test} />
           </div>
         </section>

@@ -1,11 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { fetchTasks } from '../api/tasks'
-import { fetchOrganizationLeaderboard, fetchSubmissionActivity, fetchSubmissions } from '../api/execute'
+import { fetchTaskSummary } from '../api/tasks'
+import { fetchSubmissionActivity, fetchSubmissions } from '../api/execute'
 import useAsync from '../hooks/useAsync'
 import { ErrorBlock, LoadingBlock } from '../components/States'
 import Icon, { icons } from '../components/Icon'
-import { useOrg } from '../context/OrgContext'
 import { taskPath } from '../utils/languageRoutes'
 
 const dateKey = (date) => date.toISOString().slice(0, 10)
@@ -190,32 +189,22 @@ function RecentActivity({ submissions, loading, error }) {
 }
 
 export default function Profile() {
-  const { user, memberships = [] } = useAuth()
-  const { activeOrganization, organizationId } = useOrg()
-  const activeMemberships = memberships.filter((membership) => membership.organization?.status === 'active')
-  const activeRole = activeOrganization?.role
-    ?? memberships.find((membership) => String(membership.organization?._id) === String(organizationId))?.role
-  const showLearnerProgress = user?.platformRole !== 'super_admin'
-    && (activeRole === 'student' || (!activeRole && activeMemberships.length === 0))
+  const { user } = useAuth()
+  const showLearnerProgress = !user?.isAdmin
   const { data, loading, error } = useAsync(
-    showLearnerProgress ? fetchTasks : () => Promise.resolve(null),
+    showLearnerProgress ? () => fetchTaskSummary('c') : () => Promise.resolve(null),
     `profile-progress-${showLearnerProgress}`,
   )
   const activityState = useAsync(fetchSubmissionActivity, 'profile-submission-activity')
   const submissionsState = useAsync(fetchSubmissions, 'profile-recent-submissions')
-  const leaderboardState = useAsync(
-    organizationId ? fetchOrganizationLeaderboard : () => Promise.resolve(null),
-    `profile-leaderboard-${organizationId ?? 'none'}`,
-  )
   const name = user?.name?.trim() || 'Learner'
   const initials = name.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase()
   const joinedDate = user?.createdAt ? new Date(user.createdAt) : null
   const joined = joinedDate && !Number.isNaN(joinedDate.getTime())
     ? joinedDate.toLocaleDateString(undefined, { dateStyle: 'long' })
     : null
-  const roleLabel = user?.platformRole === 'super_admin'
-    ? 'Super admin'
-    : activeRole?.replaceAll('_', ' ') ?? 'Standalone learner'
+  const roleLabel = user?.isAdmin ? 'Admin' : 'Student'
+  const unlockedLanguages = user?.unlockedLanguages ?? []
   const completed = data?.stats?.completed ?? 0
   const available = data?.stats?.total ?? 0
   const percent = data?.stats?.percent ?? 0
@@ -260,7 +249,7 @@ export default function Profile() {
               )}
               <span className="inline-flex items-center gap-1.5">
                 <Icon d={icons.tasks} className="size-3.5 text-slate-400" />
-                {activeMemberships.length ? `${activeMemberships.length} organization${activeMemberships.length === 1 ? '' : 's'}` : 'Independent learner'}
+                {roleLabel}
               </span>
             </div>
           </div>
@@ -306,42 +295,6 @@ export default function Profile() {
         <RecentActivity {...submissionsState} />
       </div>
 
-      {organizationId && leaderboardState.loading && <div className="rounded-2xl border border-slate-200 bg-white p-6"><LoadingBlock label="Loading your organization leaderboard…" /></div>}
-      {organizationId && leaderboardState.error && <ErrorBlock message={leaderboardState.error} />}
-      {organizationId && leaderboardState.data && (
-        <section className="profile-enter rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-200 dark:bg-slate-100 sm:p-6" style={{ animationDelay: '160ms' }}>
-          <div className="flex flex-wrap items-end justify-between gap-2">
-            <div>
-              <p className="text-xs font-semibold tracking-[0.16em] text-brand-600 uppercase">Your organization</p>
-              <h2 className="mt-1 text-xl font-bold tracking-tight text-slate-900">Leaderboard</h2>
-            </div>
-            <p className="text-sm font-semibold text-slate-500">
-              {leaderboardState.data.currentRank
-                ? `You’re #${leaderboardState.data.currentRank} of ${leaderboardState.data.total}`
-                : 'No ranking yet'}
-            </p>
-          </div>
-          {leaderboardState.data.entries.length ? (
-            <ol className="mt-4 divide-y divide-slate-100">
-              {leaderboardState.data.entries.map((entry) => (
-                <li key={entry.id} className={`flex items-center gap-3 py-3 ${entry.id === user?.id ? 'font-semibold text-brand-700' : ''}`}>
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-600">
-                    {entry.rank}
-                  </span>
-                  <span className="min-w-0 flex-1 truncate text-sm">
-                    {entry.name}{entry.id === user?.id ? ' (you)' : ''}
-                  </span>
-                  <span className="shrink-0 text-xs text-slate-500">Level {entry.level}</span>
-                  <span className="w-20 shrink-0 text-right text-sm font-semibold">{entry.points} pts</span>
-                </li>
-              ))}
-            </ol>
-          ) : (
-            <p className="mt-4 text-sm text-slate-500">No active organization members to rank yet.</p>
-          )}
-        </section>
-      )}
-
       {showLearnerProgress && loading && <div className="rounded-2xl border border-slate-200 bg-white p-6"><LoadingBlock label="Loading your progress…" /></div>}
       {showLearnerProgress && error && <ErrorBlock message={error} />}
       {showLearnerProgress && data && (
@@ -356,44 +309,20 @@ export default function Profile() {
               <p className="mt-1 text-lg font-bold text-slate-900 dark:text-slate-900">{data.categories.filter((topic) => !topic.locked).length} <span className="text-xs font-medium text-slate-500">of {data.categories.length}</span></p>
             </div>
           </section>
-          <section className="profile-enter rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-200 dark:bg-slate-100 sm:p-6" style={{ animationDelay: '180ms' }}>
-            <div className="flex items-center gap-3">
-              <span className="flex size-10 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
-                <Icon d={icons.dashboard} className="size-5" />
-              </span>
-              <div>
-                <h2 className="font-bold text-slate-900">Your organizations</h2>
-                <p className="text-xs text-slate-500">Your learning communities</p>
-              </div>
-            </div>
-            {memberships.length ? (
-              <ul className="mt-5 space-y-2">
-                {memberships.map((membership, index) => (
-                  <li key={membership._id ?? membership.organization?._id ?? `${membership.role}-${index}`} className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/70 p-3 transition-colors hover:border-brand-100 hover:bg-brand-50/50">
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-sm font-bold text-brand-700 shadow-sm">
-                      {(membership.organization?.name ?? 'O').trim().charAt(0).toUpperCase()}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-semibold text-slate-800">{membership.organization?.name ?? 'Organization'}</span>
-                      <span className="mt-0.5 block text-xs capitalize text-slate-500">{membership.role?.replaceAll('_', ' ') ?? 'Member'}</span>
-                    </span>
-                    <Icon d={icons.arrow} className="size-4 shrink-0 -rotate-45 text-slate-400" />
+          <section data-tour="profile-access" className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-200 dark:bg-slate-100 sm:p-6">
+            <h2 className="font-bold text-slate-900">Your access</h2>
+            <p className="mt-1 text-xs leading-relaxed text-slate-500">The first 10 questions of every language are free. Your admin can unlock the rest of a language for you.</p>
+            <ul className="mt-4 space-y-2">
+              {[['c', 'C programming'], ['javascript', 'JavaScript'], ['python', 'Python']].map(([key, label]) => {
+                const on = unlockedLanguages.includes(key)
+                return (
+                  <li key={key} className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/70 px-3 py-2.5 text-sm">
+                    <span className="font-medium text-slate-800">{label}</span>
+                    <span className={on ? 'font-semibold text-success' : 'text-slate-500'}>{on ? 'Fully unlocked' : 'First 10 questions'}</span>
                   </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/70 p-5 text-center">
-                <span className="mx-auto flex size-11 items-center justify-center rounded-2xl bg-white text-slate-400 shadow-sm">
-                  <Icon d={icons.profile} />
-                </span>
-                <p className="mt-3 text-sm font-semibold text-slate-800">Learning independently</p>
-                <p className="mt-1 text-xs leading-relaxed text-slate-500">You are not part of an organization yet. Explore your available topics to choose what to learn next.</p>
-              </div>
-            )}
-            <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-xs text-slate-500">
-              <span>Memberships</span>
-              <span className="font-semibold text-slate-700">{memberships.length}</span>
-            </div>
+                )
+              })}
+            </ul>
           </section>
         </>
       )}

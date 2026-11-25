@@ -1,50 +1,53 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { canAccessTask, hasOrganizationLearningAccess } from '../services/learningAccess.js';
+import { canAccessTask, hasLanguageLearningAccess } from '../services/learningAccess.js';
 import User from '../models/User.js';
 import Submission from '../models/Submission.js';
 
-test('demo users can access only the first ten C Basics questions', async () => {
-  const demo = { isDemo: true };
-  const basicsTask = (questionOrder) => ({ category: 'basics', questionOrder });
+const FIRST = { c: 'basics', javascript: 'js-basics', python: 'python-basics' };
+const task = (language, questionOrder, category = FIRST[language]) => ({ language, category, questionOrder });
 
-  assert.equal(await canAccessTask(demo, basicsTask(1)), true);
-  assert.equal(await canAccessTask(demo, basicsTask(10)), true);
-  assert.equal(await canAccessTask(demo, basicsTask(0)), false);
-  assert.equal(await canAccessTask(demo, basicsTask(11)), false);
-  assert.equal(await canAccessTask(demo, { category: 'variables', questionOrder: 1 }), false);
-  assert.equal(await hasOrganizationLearningAccess(demo, 'any-org-id'), false);
+test('everyone can open only the first ten questions of each language', () => {
+  const student = { unlockedLanguages: [] };
+  const demo = { isDemo: true };
+  for (const user of [student, demo]) {
+    for (const language of ['c', 'javascript', 'python']) {
+      assert.equal(canAccessTask(user, task(language, 1)), true);
+      assert.equal(canAccessTask(user, task(language, 10)), true);
+      assert.equal(canAccessTask(user, task(language, 0)), false);
+      assert.equal(canAccessTask(user, task(language, 11)), false);
+      assert.equal(canAccessTask(user, task(language, 1, `${FIRST[language]}-other`)), false);
+    }
+  }
+  // Older C tasks have no language field.
+  assert.equal(canAccessTask(student, { category: 'basics', questionOrder: 3 }), true);
 });
 
-test('demo users can access only the first ten JavaScript Basics questions', async () => {
-  const demo = { isDemo: true };
-  const javascriptTask = (questionOrder, category = 'js-basics') => ({
-    language: 'javascript',
-    category,
-    questionOrder,
-  });
+test('an admin unlocks one language at a time', () => {
+  const student = { unlockedLanguages: ['python'] };
+  assert.equal(hasLanguageLearningAccess(student, 'python'), true);
+  assert.equal(hasLanguageLearningAccess(student, 'c'), false);
+  assert.equal(canAccessTask(student, task('python', 15)), true);
+  assert.equal(canAccessTask(student, task('python', 3, 'python-loops-lists')), true);
+  assert.equal(canAccessTask(student, task('c', 15)), false);
+  assert.equal(canAccessTask(student, task('javascript', 11)), false);
+});
 
-  test('demo users can access only the first ten Python Basics questions', async () => {
-    const demo = { isDemo: true };
-    const pythonTask = (questionOrder, category = 'python-basics') => ({
-      language: 'python',
-      category,
-      questionOrder,
-    });
+test('admins can open everything, demo sessions never unlock more', () => {
+  const admin = { platformRole: 'super_admin' };
+  assert.equal(canAccessTask(admin, task('c', 99, 'arrays')), true);
+  assert.equal(hasLanguageLearningAccess(admin, 'javascript'), true);
+  assert.equal(hasLanguageLearningAccess({ isDemo: true, unlockedLanguages: ['c'] }, 'c'), false);
+});
 
-    assert.equal(await canAccessTask(demo, pythonTask(1)), true);
-    assert.equal(await canAccessTask(demo, pythonTask(10)), true);
-    assert.equal(await canAccessTask(demo, pythonTask(11)), false);
-    assert.equal(await canAccessTask(demo, pythonTask(20)), false);
-    assert.equal(await canAccessTask(demo, pythonTask(1, 'python-numbers')), false);
-  });
-
-  assert.equal(await canAccessTask(demo, javascriptTask(1)), true);
-  assert.equal(await canAccessTask(demo, javascriptTask(5)), true);
-  assert.equal(await canAccessTask(demo, javascriptTask(10)), true);
-  assert.equal(await canAccessTask(demo, javascriptTask(11)), false);
-  assert.equal(await canAccessTask(demo, javascriptTask(20)), false);
-  assert.equal(await canAccessTask(demo, javascriptTask(1, 'js-numbers')), false);
+test('the user model exposes admin and unlocked languages', () => {
+  const user = new User({ name: 'A', email: 'a@example.com', password: 'password1', unlockedLanguages: ['c'] });
+  const safe = user.toSafeObject();
+  assert.equal(safe.isAdmin, false);
+  assert.deepEqual(safe.unlockedLanguages, ['c']);
+  assert.equal(new User({ name: 'B', email: 'b@example.com', password: 'password1', platformRole: 'super_admin' }).toSafeObject().isAdmin, true);
+  const invalid = new User({ name: 'C', email: 'c@example.com', password: 'password1', unlockedLanguages: ['ruby'] });
+  assert.ok(invalid.validateSync()?.errors, 'unknown languages are rejected');
 });
 
 test('demo user and submission records expire automatically', () => {

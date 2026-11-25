@@ -19,7 +19,6 @@ const submitLimiter = rateLimit({
 
 const rules = [
   body('taskSlug').isString().notEmpty().withMessage('Task is required'),
-  body('assignmentId').optional().isMongoId().withMessage('Assignment is invalid'),
   body('code')
     .isString()
     .withMessage('Code is required')

@@ -3,11 +3,12 @@ import Submission from '../models/Submission.js';
 import { CATEGORIES } from '../config/categories.js';
 import { JAVASCRIPT_CATEGORIES } from '../config/javascriptCategories.js';
 import { PYTHON_CATEGORIES } from '../config/pythonCategories.js';
-import { canAccessTask, hasLanguageLearningAccess } from '../services/learningAccess.js';
+import { guideForQuestion } from '../data/guides/index.js';
+import { canAccessTask, hasLanguageLearningAccess, FIRST_CATEGORY, FREE_QUESTION_LIMIT } from '../services/learningAccess.js';
 
 // Maps task id -> { status: 'completed' | 'attempted', lastAt } for the given user.
 // A task counts as completed once it has at least one Accepted submission (counted once).
-async function getStatusMap(userId) {
+export async function getStatusMap(userId) {
   const rows = await Submission.aggregate([
     { $match: { user: userId } },
     {
@@ -33,21 +34,23 @@ export async function listTasks(req, res) {
   const categoriesForLanguage = language === 'javascript'
     ? JAVASCRIPT_CATEGORIES
     : language === 'python' ? PYTHON_CATEGORIES : CATEGORIES;
-  const expandedAccess = await hasLanguageLearningAccess(req.user, req.get('x-org-id'), language);
-  const accessFilter = req.user.isDemo
-    ? { category: categoriesForLanguage[0].slug, questionOrder: { $gte: 1, $lte: 10 } }
-    : expandedAccess
-      ? {}
-      : { category: categoriesForLanguage[0].slug };
+  const expandedAccess = hasLanguageLearningAccess(req.user, language);
+  // Without an unlock only the free questions are returned; the rest are not visible at all.
+  const accessFilter = expandedAccess
+    ? {}
+    : { category: FIRST_CATEGORY[language], questionOrder: { $gte: 1, $lte: FREE_QUESTION_LIMIT } };
   const languageFilter = language === 'c'
     ? { $or: [{ language: 'c' }, { language: { $exists: false } }] }
     : { language };
   const taskFilter = { ...languageFilter, ...accessFilter };
-  const [tasks, statusMap] = await Promise.all([
+  const [tasks, statusMap, categoryCounts] = await Promise.all([
     Task.find(taskFilter)
-      .select('-testCases -description -starterCode').sort({ order: 1 }).lean(),
+      .select('slug title category order difficulty questionOrder').sort({ order: 1 }).lean(),
     getStatusMap(req.user._id),
+    // Real size of every topic, so locked topics can say how much is inside without exposing questions.
+    Task.aggregate([{ $match: languageFilter }, { $group: { _id: '$category', n: { $sum: 1 } } }]),
   ]);
+  const questionCounts = new Map(categoryCounts.map((c) => [c._id, c.n]));
 
   const withStatus = tasks.map((t) => ({
     id: t._id,
@@ -70,6 +73,7 @@ export async function listTasks(req, res) {
     return {
       ...c,
       total: inCategory.length,
+      questionCount: questionCounts.get(c.slug) ?? 0,
       completed,
       percent,
       locked: !expandedAccess && c.slug !== categoriesForLanguage[0].slug,
@@ -87,8 +91,21 @@ export async function listTasks(req, res) {
     .sort((a, b) => new Date(b.lastAttemptAt) - new Date(a.lastAttemptAt))[0];
   const continueTask = lastAttempted || withStatus.find((t) => t.status === 'todo') || null;
 
+  // ?summary=true leaves the question list out (counts, categories and "continue" only).
+  // ?category=<slug> returns only that topic's questions. ?resumeSlug=<slug> adds that
+  // question as `resumeTask` when it exists and is unfinished.
+  const summaryOnly = req.query.summary === 'true';
+  const onlyCategory = typeof req.query.category === 'string' ? req.query.category : null;
+  const resumeTask = typeof req.query.resumeSlug === 'string'
+    ? withStatus.find((t) => t.slug === req.query.resumeSlug && t.status !== 'completed')
+    : null;
+  const tasksOut = summaryOnly
+    ? undefined
+    : onlyCategory ? withStatus.filter((t) => t.category === onlyCategory) : withStatus;
+
   res.json({
-    tasks: withStatus,
+    ...(tasksOut && { tasks: tasksOut }),
+    ...(resumeTask && { resumeTask: { slug: resumeTask.slug, title: resumeTask.title, category: resumeTask.category } }),
     categories,
     stats: {
       total: withStatus.length,
@@ -110,22 +127,19 @@ export async function listTasks(req, res) {
 export async function getTask(req, res) {
   const task = await Task.findOne({ slug: req.params.slug }).lean();
   if (!task) return res.status(404).json({ message: 'Task not found' });
-  if (!await canAccessTask(req.user, task, req.get('x-org-id'))) {
+  if (!canAccessTask(req.user, task)) {
     return res.status(403).json({
-      message: 'This topic is available to learners who are members of an active VirVerse organization.',
-      code: 'ORGANIZATION_MEMBERSHIP_REQUIRED',
+      message: 'This topic is locked. Ask your admin to unlock it for you.',
+      code: 'ACCESS_LOCKED',
     });
   }
 
   const statusMap = await getStatusMap(req.user._id);
   const language = task.language ?? 'c';
-  const category = language === 'javascript'
-    ? 'js-basics'
-    : language === 'python' ? 'python-basics' : CATEGORIES[0].slug;
-  const nextFilter = req.user.isDemo
+  const nextFilter = !hasLanguageLearningAccess(req.user, language)
     ? {
-      category,
-      questionOrder: { $gt: task.questionOrder, $lte: 10 },
+      category: FIRST_CATEGORY[language],
+      questionOrder: { $gt: task.questionOrder, $lte: FREE_QUESTION_LIMIT },
       ...(language === 'c'
         ? { $or: [{ language: 'c' }, { language: { $exists: false } }] }
         : { language }),
@@ -145,6 +159,7 @@ export async function getTask(req, res) {
       slug: task.slug,
       title: task.title,
       category: task.category,
+      questionOrder: task.questionOrder,
       language,
       difficulty: task.difficulty,
       description: task.description,
@@ -157,6 +172,7 @@ export async function getTask(req, res) {
       starterCode: task.starterCode,
       sampleTests,
       hiddenTestCount: task.testCases.length - sampleTests.length,
+      ...(guideForQuestion(language, task.slug) && { guide: guideForQuestion(language, task.slug) }),
       solutionAvailable: task.questionOrder >= 1 && task.questionOrder <= 20
         && (language !== 'c' || task.category === 'basics'),
       status: statusMap.get(String(task._id))?.status || 'todo',
@@ -176,10 +192,10 @@ export async function getTaskSolution(req, res) {
   if (!supportedSolution) {
     return res.status(404).json({ message: 'A worked solution is not available for this task' });
   }
-  if (!await canAccessTask(req.user, task, req.get('x-org-id'))) {
+  if (!canAccessTask(req.user, task)) {
     return res.status(403).json({
-      message: 'This topic is available to learners who are members of an active VirVerse organization.',
-      code: 'ORGANIZATION_MEMBERSHIP_REQUIRED',
+      message: 'This topic is locked. Ask your admin to unlock it for you.',
+      code: 'ACCESS_LOCKED',
     });
   }
   if (!task.solution || !task.solutionNotes) {

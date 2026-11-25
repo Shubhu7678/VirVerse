@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { fetchTasks } from '../api/tasks'
+import { fetchTaskSummary } from '../api/tasks'
 import { fetchSubmissions } from '../api/execute'
 import useAsync from '../hooks/useAsync'
 import { LoadingBlock, ErrorBlock, EmptyState } from '../components/States'
@@ -11,7 +11,6 @@ import { DifficultyBadge } from '../components/Badges'
 import { buttonClasses } from '../components/buttonStyles'
 import Card from '../components/ui/Card'
 import { taskPath } from '../utils/languageRoutes'
-import useCountUp from '../hooks/useCountUp'
 
 const verdictTone = {
   Accepted: 'bg-success-soft text-success',
@@ -19,23 +18,6 @@ const verdictTone = {
   'Compilation Error': 'bg-warn-soft text-warn',
   'Runtime Error': 'bg-danger-soft text-danger',
   'Time Limit Exceeded': 'bg-warn-soft text-warn',
-}
-
-function Stat({ label, value, hint, icon, children, index = 0 }) {
-  const isNumber = typeof value === 'number'
-  const counted = useCountUp(isNumber ? value : parseInt(value, 10))
-  const shown = isNumber ? counted : `${counted}%`
-  return (
-    <Card className="lift relative overflow-hidden" style={{ '--i': index }}>
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-fg-muted">{label}</p>
-        {icon && <span className="flex size-8 items-center justify-center rounded-lg border border-accent-border bg-accent-soft text-accent-text"><Icon d={icon} className="size-4" /></span>}
-      </div>
-      <p className="mt-2 text-3xl font-semibold tracking-tight text-fg tabular-nums">{shown}</p>
-      {hint && <p className="mt-1 text-xs text-fg-subtle">{hint}</p>}
-      {children && <div className="mt-3">{children}</div>}
-    </Card>
-  )
 }
 
 function PathCard({ to, mark, title, state, index = 0 }) {
@@ -65,9 +47,9 @@ function PathCard({ to, mark, title, state, index = 0 }) {
 export default function Dashboard() {
   const { user } = useAuth()
   const [showDemoGuide, setShowDemoGuide] = useState(true)
-  const { data, loading, error } = useAsync(fetchTasks, 'dashboard')
-  const javascript = useAsync(() => fetchTasks('javascript'), 'dashboard-javascript')
-  const python = useAsync(() => fetchTasks('python'), 'dashboard-python')
+  const { data, loading, error } = useAsync(() => fetchTaskSummary('c'), 'dashboard')
+  const javascript = useAsync(() => fetchTaskSummary('javascript'), 'dashboard-javascript')
+  const python = useAsync(() => fetchTaskSummary('python'), 'dashboard-python')
   const subs = useAsync(fetchSubmissions, 'dashboard-subs')
 
   if (loading) return <LoadingBlock />
@@ -75,8 +57,6 @@ export default function Dashboard() {
 
   const { stats, continueTask } = data
   const recent = (subs.data || []).slice(0, 5)
-  const basics = data.categories.find((category) => category.slug === 'basics')
-  const isDemoComplete = Boolean(user.isDemo && basics && basics.completed === basics.total)
   const firstName = user.name?.trim().split(/\s+/)[0] || 'Learner'
 
   const pathState = (result) => ({
@@ -89,63 +69,62 @@ export default function Dashboard() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">
-      <section className="flex flex-col gap-5 rounded-[1.25rem] border border-line bg-surface p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8" style={{ backgroundImage: 'radial-gradient(34rem 14rem at 100% 0, var(--accent-soft), transparent 70%)' }}>
-        <div className="min-w-0">
-          <p className="mb-2 text-xs font-semibold text-accent-text">Your learning space</p>
-          <h2 className="text-3xl font-semibold tracking-tight text-fg">Welcome back, {firstName}</h2>
-          <p className="mt-1 text-fg-muted">
-            {continueTask
-              ? continueTask.attempted
-                ? `Ready to pick up “${continueTask.title}”?`
-                : `Your next challenge is “${continueTask.title}”.`
-              : 'You have completed every question.'}
-          </p>
-        </div>
-        {continueTask && (
-          <Link to={`/tasks/${continueTask.slug}`} className={buttonClasses({ size: 'lg', className: 'shrink-0' })}>
-            Continue learning <Icon d={icons.arrow} className="size-4" />
-          </Link>
-        )}
-      </section>
-
       {user.isDemo && showDemoGuide && (
-        <Card className="border-accent/40 bg-accent-soft">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <h2 className="font-semibold text-fg">Your C learning session starts here</h2>
-              <p className="mt-0.5 text-sm text-fg-muted">Private demo · 10 questions · progress expires after 24 hours</p>
-            </div>
-            <button type="button" onClick={() => setShowDemoGuide(false)} className="text-sm text-fg-muted transition-colors hover:text-fg">
-              Dismiss
-            </button>
-          </div>
-          <ol className="mt-4 grid gap-3 text-sm text-fg sm:grid-cols-3">
-            {['Open a C Basics question', 'Run your code and check the output', 'Submit to save your progress'].map((step, index) => (
-              <li key={step} className="flex items-start gap-3">
-                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-surface font-mono text-xs text-accent-text">{index + 1}</span>
-                {step}
-              </li>
-            ))}
-          </ol>
-          {basics?.nextSlug && (
-            <Link to={`/tasks/${basics.nextSlug}`} className={buttonClasses({ className: 'mt-4' })}>
-              {isDemoComplete ? 'Review C Basics' : continueTask?.attempted || basics.completed ? 'Continue C Basics' : 'Start question 1'}
-              <Icon d={icons.arrow} className="size-4" />
-            </Link>
-          )}
-        </Card>
+        <aside className="flex items-center justify-between gap-4 rounded-card border border-line bg-surface-2 px-4 py-2.5 text-sm text-fg-muted">
+          <p><strong className="font-medium text-fg">Private demo</strong> · 10 C questions · progress is cleared after 24 hours</p>
+          <button type="button" onClick={() => setShowDemoGuide(false)} className="shrink-0 transition-colors hover:text-fg" aria-label="Dismiss demo notice">Dismiss</button>
+        </aside>
       )}
 
-      <section aria-label="Learning statistics" className="stagger grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Stat label="Total questions" value={stats.total} icon={icons.list} index={0} />
-        <Stat label="Solved" value={stats.completed} icon={icons.check} index={1} />
-        <Stat label="Remaining" value={stats.pending} icon={icons.tasks} index={2} />
-        <Stat label="Overall completion" value={`${stats.percent}%`} icon={icons.dashboard} index={3}>
-          <ProgressBar percent={stats.percent} label="Overall completion" />
-        </Stat>
+      <header>
+        <h2 className="text-2xl font-semibold tracking-tight text-fg">Welcome back, {firstName}</h2>
+        <p className="mt-1 text-fg-muted">Pick up where you left off, or start a new path below.</p>
+      </header>
+
+      <section aria-label="Continue learning" className="grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+        <div className="flex flex-col justify-between gap-6 rounded-card border border-line bg-surface p-6">
+          {continueTask ? (
+            <>
+              <div>
+                <p className="text-sm text-fg-subtle">{continueTask.attempted ? 'Continue where you stopped' : 'Up next'}</p>
+                <h3 className="mt-1 text-xl font-semibold tracking-tight text-fg">{continueTask.title}</h3>
+                <p className="mt-2 flex items-center gap-2 text-sm text-fg-muted">
+                  C programming <DifficultyBadge level={continueTask.difficulty} />
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link to={`/tasks/${continueTask.slug}`} className={buttonClasses({ size: 'lg' })}>
+                  {continueTask.attempted ? 'Continue' : 'Start'} question <Icon d={icons.arrow} className="size-4" />
+                </Link>
+              </div>
+            </>
+          ) : (
+            <div>
+              <h3 className="text-xl font-semibold text-fg">All caught up</h3>
+              <p className="mt-1 text-sm text-fg-muted">You have completed every available question.</p>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col justify-between gap-6 rounded-card border border-line bg-surface p-6">
+          <div>
+            <p className="text-sm text-fg-subtle">C programming progress</p>
+            <p className="mt-1 flex items-baseline gap-1.5 tabular-nums">
+              <span className="text-3xl font-semibold tracking-tight text-fg">{stats.completed}</span>
+              <span className="text-fg-muted">of {stats.total} solved</span>
+            </p>
+          </div>
+          <div>
+            <ProgressBar percent={stats.percent} label="C programming progress" />
+            <p className="mt-2 flex justify-between text-xs text-fg-subtle tabular-nums">
+              <span>{stats.pending} remaining</span>
+              <span>{stats.percent}%</span>
+            </p>
+          </div>
+        </div>
       </section>
 
-      <section>
+      <section data-tour="dash-paths">
         <h2 className="text-lg font-semibold text-fg">Learning paths</h2>
         <div className="stagger mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <PathCard to="/tasks" index={0} mark="C" title="C programming" state={{ loading: false, completed: stats.completed, total: stats.total, topics: data.categories.length }} />
@@ -154,7 +133,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <section>
+      <section data-tour="dash-recent">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-fg">Recent submissions</h2>
           <Link to="/submissions" className="inline-flex items-center gap-1 text-sm text-accent-text hover:underline">

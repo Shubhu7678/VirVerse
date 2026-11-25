@@ -84,7 +84,7 @@ export default function DocumentationDrawer({ task, open, onClose, triggerRef })
             <span className="docs-book-icon"><Icon d={icons.bookOpen} className="size-5" /></span>
             <div>
               <h2 id={titleId}>Documentation</h2>
-              <p>Learn the concepts behind this problem</p>
+              <p>Only what this problem needs</p>
             </div>
           </div>
           <button
@@ -101,34 +101,12 @@ export default function DocumentationDrawer({ task, open, onClose, triggerRef })
         <div className="docs-drawer-context">
           <span className="docs-language-badge">{getLanguageLabel(task.language)}</span>
           <div>
-            <span className="docs-context-label">{task.category.replaceAll('-', ' ')}</span>
+            <span className="docs-context-label">Question {task.questionOrder}</span>
             <h3>{task.title}</h3>
           </div>
         </div>
 
         <div className="docs-drawer-body">
-          <section className="docs-overview">
-            <div className="docs-overview-heading">
-              <span aria-hidden="true">✦</span>
-              <h3>What you’ll learn</h3>
-            </div>
-            <p>
-              Review the concepts behind <strong>{task.title}</strong>. Examples focus on these
-              building blocks without giving away the complete solution.
-            </p>
-            <div className="docs-concept-pills" aria-label="Concepts in this problem">
-              {concepts.map((concept) => <span key={concept.id}>{concept.title}</span>)}
-            </div>
-          </section>
-
-          <div className="docs-concepts-heading">
-            <div>
-              <h3>Concept guide</h3>
-              <p>{concepts.length} short lessons · open any section to explore</p>
-            </div>
-            <span>{getLanguageLabel(task.language)}</span>
-          </div>
-
           <div className="docs-concept-list">
             {concepts.map((concept, index) => (
               <ConceptSection
@@ -138,10 +116,6 @@ export default function DocumentationDrawer({ task, open, onClose, triggerRef })
               />
             ))}
           </div>
-
-          <p className="docs-drawer-footer">
-            Use these examples as a guide, then write your own solution in the editor.
-          </p>
         </div>
       </aside>
     </div>,

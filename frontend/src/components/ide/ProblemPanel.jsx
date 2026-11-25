@@ -5,6 +5,7 @@ import { getErrorMessage } from '../../api/client'
 import { Lightbulb } from 'lucide-react'
 import Icon, { icons } from '../Icon'
 import DocumentationDrawer from './DocumentationDrawer'
+import { Link } from 'react-router-dom'
 
 function CodeBlock({ label, children }) {
   return (
@@ -118,6 +119,8 @@ export default function ProblemPanel({ task, status }) {
     }
   }
 
+  const guideLesson = task.guide
+
   return (
     <div className="space-y-6 p-5 text-sm leading-relaxed">
       <div className="space-y-3">
@@ -140,6 +143,11 @@ export default function ProblemPanel({ task, status }) {
           <DifficultyBadge level={task.difficulty} />
           <StatusBadge status={status} />
         </div>
+        {guideLesson && (
+          <Link to={`/python/guide/${guideLesson.slug}`} className="inline-flex items-center gap-1.5 text-xs font-medium text-accent-text hover:underline">
+            New to this? Read lesson {guideLesson.n}: {guideLesson.title}
+          </Link>
+        )}
       </div>
 
       <section>

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { fetchTasks } from '../api/tasks'
+import { fetchTopicTasks } from '../api/tasks'
 import useAsync from '../hooks/useAsync'
 import { LoadingBlock, ErrorBlock, EmptyState } from '../components/States'
 import QuestionList from '../components/QuestionList'
@@ -40,7 +40,7 @@ function Fact({ label, value, hint }) {
 export default function TopicDetail({ language = 'c' }) {
   const { category } = useParams()
   const prefix = language === 'c' ? '' : `/${language}`
-  const { data, loading, error } = useAsync(() => fetchTasks(language), `topic-${language}`)
+  const { data, loading, error } = useAsync(() => fetchTopicTasks(language, category), `topic-${language}-${category}`)
   const [selectedTab, setSelectedTab] = useState({ category: null, id: 'questions' })
 
   const topic = data?.categories.find((item) => item.slug === category)
@@ -80,7 +80,7 @@ export default function TopicDetail({ language = 'c' }) {
         <div className="mt-6 rounded-card border border-warn/40 bg-warn-soft p-6">
           <h2 className="text-xl font-semibold text-fg">{topic.name} is locked</h2>
           <p className="mt-2 text-sm text-fg-muted">
-            Standalone learner access includes Topic 1. Join an organization with an active VirVerse subscription to unlock the remaining question bank.
+            The first 10 questions are free. Ask your admin to unlock this language to open the remaining topics.
           </p>
         </div>
       </div>

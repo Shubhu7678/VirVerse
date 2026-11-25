@@ -35,9 +35,10 @@ test('Python Basics introduces printing and input in small steps', () => {
     basics.slice(0, 5).map((question) => question.title),
     ['Print Hello, World!', 'Greet the Learner', 'Echo a Message', 'Print a Number', 'Add Two Integers'],
   );
-  assert.match(basics[0].description, /No input is provided/);
-  assert.match(basics[1].starterCode, /^name = input\(\)/);
-  assert.match(basics[2].starterCode, /^message = input\(\)/);
-  assert.match(basics[3].starterCode, /^number = int\(input\(\)\)/);
-  assert.match(basics[4].starterCode, /^first, second = map\(int, input\(\)\.split\(\)\)/);
+  assert.match(basics[0].description, /There is no input/);
+  assert.match(basics[1].starterCode, /^name = input\(\)/m);
+  assert.match(basics[2].starterCode, /^message = input\(\)/m);
+  assert.match(basics[3].starterCode, /^number = int\(input\(\)\)/m);
+  assert.match(basics[4].starterCode, /^first, second = map\(int, input\(\)\.split\(\)\)/m);
+  assert.ok(basics.slice(0, 10).every((question) => /^New idea|^Practice/.test(question.description)));
 });

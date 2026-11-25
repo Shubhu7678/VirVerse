@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true, minlength: 8, select: false },
     // Set only by the create-superadmin script; never by any API.
     platformRole: { type: String, enum: ['super_admin', null], default: null },
+    // Languages the admin has fully unlocked for this student. The first 10 questions of every language are always free.
+    unlockedLanguages: { type: [{ type: String, enum: ['c', 'javascript', 'python'] }], default: [] },
+    // Refreshed at most once a minute while the student is using the app.
+    lastActiveAt: { type: Date, default: null },
     isDemo: { type: Boolean, default: false },
     demoExpiresAt: { type: Date, default: null },
     points: { type: Number, default: 0, min: 0 },
@@ -38,6 +42,8 @@ userSchema.methods.toSafeObject = function () {
     name: this.name,
     email: this.email,
     platformRole: this.platformRole ?? null,
+    isAdmin: this.platformRole === 'super_admin',
+    unlockedLanguages: this.unlockedLanguages ?? [],
     points: this.points ?? 0,
     level: this.level ?? 1,
     isDemo: this.isDemo,

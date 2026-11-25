@@ -931,16 +931,16 @@ const conceptsByCategory = {
 
 const questionConcepts = {
   'python:python-basics': {
-    1: ['py-print', 'py-beginner-mistakes'],
-    2: ['py-input', 'py-print', 'py-variables', 'py-fstrings', 'py-beginner-mistakes'],
-    3: ['py-input', 'py-print', 'py-strings'],
-    4: ['py-input', 'py-integers', 'py-print'],
-    5: ['py-input', 'py-integers', 'py-arithmetic', 'py-print'],
-    6: ['py-input', 'py-integers', 'py-geometry', 'py-arithmetic'],
-    7: ['py-input', 'py-integers', 'py-temperature', 'py-arithmetic'],
-    8: ['py-input', 'py-integers', 'py-arithmetic', 'py-variables'],
-    9: ['py-input', 'py-geometry', 'py-arithmetic'],
-    10: ['py-input', 'py-unit-conversion', 'py-arithmetic'],
+    1: ['py-print'],
+    2: ['py-input', 'py-fstrings'],
+    3: ['py-input', 'py-print'],
+    4: ['py-integers'],
+    5: ['py-integers', 'py-arithmetic'],
+    6: ['py-geometry'],
+    7: ['py-temperature'],
+    8: ['py-arithmetic'],
+    9: ['py-geometry'],
+    10: ['py-unit-conversion'],
     11: ['py-input', 'py-swap', 'py-variables'],
     12: ['py-input', 'py-integers', 'py-remainder'],
     13: ['py-input', 'py-integers', 'py-remainder'],
@@ -1078,8 +1078,12 @@ export function getConceptIdsForTask(task) {
   return conceptsByCategory[language]?.[task.category] || ['problem-solving']
 }
 
+// Docs stay focused on the question: at most this many concept lessons.
+const MAX_CONCEPTS_PER_TASK = 2
+
 export function getConceptsForTask(task) {
   const resolved = getConceptIdsForTask(task)
+    .slice(0, MAX_CONCEPTS_PER_TASK)
     .map((id) => conceptsById.get(id))
     .filter(Boolean)
 

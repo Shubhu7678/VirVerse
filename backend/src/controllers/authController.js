@@ -1,6 +1,6 @@
 import { randomBytes, randomUUID } from 'node:crypto';
 import User from '../models/User.js';
-import Membership from '../models/OrganizationMembership.js';
+import { logActivity } from '../services/activity.js';
 import { setAuthCookie, clearAuthCookie } from '../utils/token.js';
 
 const DEMO_SESSION_MS = 24 * 60 * 60 * 1000;
@@ -15,6 +15,7 @@ export async function signup(req, res) {
   }
 
   const user = await User.create({ name, email, password });
+  await logActivity({ type: 'student.signup', target: user._id, message: `${user.name} (${user.email}) signed up` });
   setAuthCookie(res, user._id);
   res.status(201).json({ user: user.toSafeObject() });
 }
@@ -36,16 +37,8 @@ export function logout(_req, res) {
   res.json({ message: 'Logged out' });
 }
 
-export async function me(req, res) {
-  const memberships = await Membership.find({ user: req.user._id, status: 'active' })
-    .populate('organization', 'name slug status')
-    .lean();
-  res.json({
-    user: req.user.toSafeObject(),
-    memberships: memberships
-      .filter((m) => m.organization)
-      .map((m) => ({ organization: m.organization, role: m.role })),
-  });
+export function me(req, res) {
+  res.json({ user: req.user.toSafeObject() });
 }
 
 export async function startDemoSession(_req, res) {

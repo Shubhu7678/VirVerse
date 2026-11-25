@@ -21,12 +21,12 @@
   --fg-muted: #515154;
   --fg-subtle: #6e6e73;
 
-  --accent: #4f46e5;
-  --accent-hover: #4338ca;
+  --accent: #0d7a5f;
+  --accent-hover: #0b6b53;
   --accent-fg: #ffffff;
-  --accent-soft: #4f46e514;
-  --accent-border: #4f46e538;
-  --accent-text: #4338ca;
+  --accent-soft: #0d7a5f14;
+  --accent-border: #0d7a5f38;
+  --accent-text: #0b6b53;
 
   --cta: #000000;
   --cta-fg: #ffffff;
@@ -54,12 +54,12 @@
   --fg-muted: #a1a1a6;
   --fg-subtle: #8e8e93;
 
-  --accent: #7c7ff8;
-  --accent-hover: #9a9cfa;
-  --accent-fg: #0a0a14;
-  --accent-soft: #7c7ff829;
-  --accent-border: #7c7ff852;
-  --accent-text: #a5a7fb;
+  --accent: #3ecf8e;
+  --accent-hover: #6ddfaa;
+  --accent-fg: #04140d;
+  --accent-soft: #3ecf8e29;
+  --accent-border: #3ecf8e52;
+  --accent-text: #7ee3b0;
 
   --cta: #ffffff;
   --cta-fg: #000000;
@@ -125,8 +125,8 @@
   --text-2xl--line-height: 2.25rem;
 }
 
-/* Soft indigo glow behind app pages */
-.app-glow { background: radial-gradient(56rem 22rem at 70% -6rem, var(--accent-soft), transparent 70%); }
+/* Glow disabled (kept as a hook) */
+.app-glow { background: none; }
 
 body {
   background-color: var(--bg);
@@ -212,39 +212,39 @@ h1, h2 { font-family: var(--font-display); }
   --color-slate-800: #2a2a2d;
   --color-slate-900: #1d1d1f;
 
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
+  --color-brand-50: #ecfdf5;
+  --color-brand-100: #d1fae5;
+  --color-brand-500: #10b981;
+  --color-brand-600: #0d7a5f;
+  --color-brand-700: #0b6b53;
 
-  --color-indigo-50: #eef2ff;
-  --color-indigo-100: #e0e7ff;
-  --color-indigo-200: #c7d2fe;
-  --color-indigo-300: #a5b4fc;
-  --color-indigo-400: #818cf8;
-  --color-indigo-500: #6366f1;
-  --color-indigo-600: #4f46e5;
-  --color-indigo-700: #4338ca;
-  --color-indigo-900: #312e81;
-  --color-violet-50: #eef2ff;
-  --color-violet-100: #e0e7ff;
-  --color-violet-200: #c7d2fe;
-  --color-violet-300: #a5b4fc;
-  --color-violet-400: #818cf8;
-  --color-violet-500: #6366f1;
-  --color-violet-600: #4f46e5;
-  --color-violet-700: #4338ca;
-  --color-violet-900: #312e81;
-  --color-blue-50: #eef2ff;
-  --color-blue-100: #e0e7ff;
-  --color-blue-200: #c7d2fe;
-  --color-blue-300: #a5b4fc;
-  --color-blue-400: #818cf8;
-  --color-blue-500: #6366f1;
-  --color-blue-600: #4f46e5;
-  --color-blue-700: #4338ca;
-  --color-blue-900: #312e81;
+  --color-indigo-50: #ecfdf5;
+  --color-indigo-100: #d1fae5;
+  --color-indigo-200: #a7f3d0;
+  --color-indigo-300: #6ee7b7;
+  --color-indigo-400: #34d399;
+  --color-indigo-500: #10b981;
+  --color-indigo-600: #0d7a5f;
+  --color-indigo-700: #0b6b53;
+  --color-indigo-900: #064e3b;
+  --color-violet-50: #ecfdf5;
+  --color-violet-100: #d1fae5;
+  --color-violet-200: #a7f3d0;
+  --color-violet-300: #6ee7b7;
+  --color-violet-400: #34d399;
+  --color-violet-500: #10b981;
+  --color-violet-600: #0d7a5f;
+  --color-violet-700: #0b6b53;
+  --color-violet-900: #064e3b;
+  --color-blue-50: #ecfdf5;
+  --color-blue-100: #d1fae5;
+  --color-blue-200: #a7f3d0;
+  --color-blue-300: #6ee7b7;
+  --color-blue-400: #34d399;
+  --color-blue-500: #10b981;
+  --color-blue-600: #0d7a5f;
+  --color-blue-700: #0b6b53;
+  --color-blue-900: #064e3b;
 }
 
 .dark {
@@ -259,30 +259,30 @@ h1, h2 { font-family: var(--font-display); }
   --color-slate-800: #e5e5ea;
   --color-slate-900: #f5f5f7;
 
-  --color-brand-50: #7c7ff814;
-  --color-brand-100: #7c7ff829;
-  --color-brand-500: #7c7ff8;
-  --color-brand-600: #7c7ff8;
-  --color-brand-700: #a5a7fb;
+  --color-brand-50: #3ecf8e14;
+  --color-brand-100: #3ecf8e29;
+  --color-brand-500: #3ecf8e;
+  --color-brand-600: #3ecf8e;
+  --color-brand-700: #7ee3b0;
 
-  --color-indigo-50: #7c7ff814;
-  --color-indigo-200: #7c7ff852;
-  --color-indigo-500: #7c7ff8;
-  --color-indigo-600: #7c7ff8;
-  --color-indigo-700: #a5a7fb;
-  --color-indigo-900: #e0e7ff;
-  --color-violet-50: #7c7ff814;
-  --color-violet-200: #7c7ff852;
-  --color-violet-500: #7c7ff8;
-  --color-violet-600: #7c7ff8;
-  --color-violet-700: #a5a7fb;
-  --color-violet-900: #e0e7ff;
-  --color-blue-50: #7c7ff814;
-  --color-blue-200: #7c7ff852;
-  --color-blue-500: #7c7ff8;
-  --color-blue-600: #7c7ff8;
-  --color-blue-700: #a5a7fb;
-  --color-blue-900: #e0e7ff;
+  --color-indigo-50: #3ecf8e14;
+  --color-indigo-200: #3ecf8e52;
+  --color-indigo-500: #3ecf8e;
+  --color-indigo-600: #3ecf8e;
+  --color-indigo-700: #7ee3b0;
+  --color-indigo-900: #d1fae5;
+  --color-violet-50: #3ecf8e14;
+  --color-violet-200: #3ecf8e52;
+  --color-violet-500: #3ecf8e;
+  --color-violet-600: #3ecf8e;
+  --color-violet-700: #7ee3b0;
+  --color-violet-900: #d1fae5;
+  --color-blue-50: #3ecf8e14;
+  --color-blue-200: #3ecf8e52;
+  --color-blue-500: #3ecf8e;
+  --color-blue-600: #3ecf8e;
+  --color-blue-700: #7ee3b0;
+  --color-blue-900: #d1fae5;
   --color-emerald-50: #12261a;
   --color-amber-50: #2a2308;
   --color-red-50: #301618;

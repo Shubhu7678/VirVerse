@@ -20,7 +20,7 @@ const stats = [
   { value: '0', label: 'Setup required', detail: 'Everything runs in the browser' },
 ]
 
-const stack = ['C', 'JavaScript', 'Python', 'HTML', 'Monaco editor', 'Docker sandbox', 'Instant feedback', 'Progress tracking', 'Classroom tools']
+const stack = ['C', 'JavaScript', 'Python', 'HTML', 'Monaco editor', 'Docker sandbox', 'Instant feedback', 'Progress tracking']
 
 const features = [
   { key: 'play', visual: <PlaygroundVisual />, title: 'Write, run, see it work', text: 'A real editor with instant output for C, JavaScript and Python. No installs, no configuration.', to: '/playground', cta: 'Open the playground' },
@@ -28,14 +28,14 @@ const features = [
   { key: 'practice', visual: <PracticeVisual />, title: 'Graded practice', text: 'Submit against hidden test cases and get a verdict in seconds.', to: '/practice', cta: 'Browse problems' },
   { key: 'progress', visual: <ProgressVisual />, title: 'Progress you can see', text: 'Streaks, solved tasks and a clear next step, always saved to your account.' },
   { key: 'box', visual: <SandboxVisual />, title: 'Sandboxed by default', text: 'Every run is a short-lived, network-isolated container, so experiments never break anything.' },
-  { key: 'class', visual: <ClassroomVisual />, title: 'Built for classrooms', text: 'Organizations, sections and assignments let teachers guide a whole group of learners.' },
+  { key: 'class', visual: <ClassroomVisual />, title: 'Guided by an admin', text: 'Start free with 10 questions in every language. Your admin unlocks more when you are ready.' },
 ]
 
 const tracks = [
-  { name: 'C Programming', tag: '17 topics', text: 'Variables, control flow, arrays, strings and functions.', to: '/tasks', practice: '/practice' },
-  { name: 'JavaScript', tag: 'Playground + practice', text: 'Core language fundamentals, functions, arrays and objects.', to: '/javascript', practice: '/javascript/practice' },
-  { name: 'Python', tag: 'Playground + practice', text: 'Readable syntax, data structures and problem solving.', to: '/python', practice: '/python/practice' },
-  { name: 'Web development', tag: 'HTML first', text: 'Learn HTML with guided tasks. CSS and JavaScript are coming soon.', to: '/web-development/html', practice: '/web-development/html-basics' },
+  { name: 'C Programming', glyph: 'C', tag: '17 topics', text: 'Variables, control flow, arrays, strings and functions.', to: '/tasks', practice: '/practice' },
+  { name: 'JavaScript', glyph: 'JS', tag: 'Playground + practice', text: 'Core language fundamentals, functions, arrays and objects.', to: '/javascript', practice: '/javascript/practice' },
+  { name: 'Python', glyph: 'Py', tag: 'Playground + practice', text: 'Readable syntax, data structures and problem solving.', to: '/python', practice: '/python/practice' },
+  { name: 'Web development', glyph: '</>', tag: 'HTML first', text: 'Learn HTML with guided tasks. CSS and JavaScript are coming soon.', to: '/web-development/html', practice: '/web-development/html-basics' },
 ]
 
 const steps = [
@@ -49,7 +49,7 @@ const faqs = [
   { q: 'Do I need to install anything?', a: 'No. The editor, compiler and interpreters run for you. Open a playground and start typing.' },
   { q: 'Which languages can I learn?', a: 'C, JavaScript and Python have full tracks and playgrounds. Web development currently covers HTML, with CSS and JavaScript on the way.' },
   { q: 'Is my code safe to run?', a: 'Yes. Code runs in isolated, short-lived containers with networking turned off.' },
-  { q: 'Can a school or team use it?', a: 'Yes. Organizations can create departments, courses and sections, invite members and set assignments.' },
+  { q: 'What is free, and how do I get more?', a: 'Every account can open the first 10 questions of C, JavaScript and Python. An admin can unlock the full set for a language on your account.' },
   { q: 'Will my progress be saved?', a: 'When you sign in, submissions and completed tasks are saved to your account.' },
 ]
 
@@ -94,7 +94,7 @@ function HeroMock() {
 }
 
 export default function LandingPage() {
-  const { user, loading, isSuperAdmin } = useAuth()
+  const { user, loading, isAdmin } = useAuth()
   const { theme, toggle } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
   const rootRef = useReveal()
@@ -106,7 +106,7 @@ export default function LandingPage() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-  const destination = user ? (isSuperAdmin ? '/platform' : '/dashboard') : '/signup'
+  const destination = user ? (isAdmin ? '/admin' : '/dashboard') : '/signup'
   const ctaLabel = loading ? 'Checking session…' : user ? 'Go to dashboard' : 'Start learning'
   const guard = (event) => { if (loading) event.preventDefault(); else setMenuOpen(false) }
   const close = () => setMenuOpen(false)
@@ -121,7 +121,7 @@ export default function LandingPage() {
             <a href="#features" onClick={close}>Features</a>
             <a href="#tracks" onClick={close}>Tracks</a>
             <a href="#process" onClick={close}>How it works</a>
-            <a href="#teams" onClick={close}>For teams</a>
+            <a href="#teams" onClick={close}>Access</a>
             <a href="#faq" onClick={close}>FAQ</a>
             {!user && !loading && <Link className="lp-nav-login" to="/login" onClick={close}>Sign in</Link>}
             <Link to={destination} className="lp-btn lp-btn-primary lp-nav-cta" onClick={guard} aria-disabled={loading}>{ctaLabel}</Link>
@@ -157,7 +157,7 @@ export default function LandingPage() {
                 <li><Icon d={icons.check} className="size-4" /> Free to start</li>
               </ul>
             </div>
-            <div className="lp-hero-visual"><span className="lp-orbit" aria-hidden="true" /><HeroMock /></div>
+            <div className="lp-hero-visual"><HeroMock /></div>
           </div>
           <div className="lp-wrap">
             <dl className="lp-stats">
@@ -196,19 +196,24 @@ export default function LandingPage() {
         <section className="lp-section lp-alt" id="tracks">
           <div className="lp-wrap">
             <Heading eyebrow="Tracks" title="Pick a language and start building." sub="Every track has topics to read, a playground to experiment in and problems to solve." />
-            <div className="lp-grid lp-grid-4">
-              {tracks.map((t) => (
-                <article className="lp-card lp-track" key={t.name} data-reveal style={{ transitionDelay: `${tracks.indexOf(t) * 80}ms` }}>
-                  <span className="lp-badge">{t.tag}</span>
-                  <h3>{t.name}</h3>
-                  <p>{t.text}</p>
-                  <div className="lp-track-links">
-                    <Link className="lp-btn lp-btn-ghost lp-btn-sm" to={t.to}>Open {t.name} topics</Link>
-                    <Link className="lp-more" to={t.practice}>Practice {t.name}</Link>
+            <ul className="lp-tracklist">
+              {tracks.map((t, i) => (
+                <li className="lp-trackrow" key={t.name} data-reveal style={{ transitionDelay: `${i * 70}ms` }}>
+                  <span className="lp-track-glyph" aria-hidden="true">{t.glyph}</span>
+                  <div className="lp-track-main">
+                    <div className="lp-track-head">
+                      <h3>{t.name}</h3>
+                      <span className="lp-badge">{t.tag}</span>
+                    </div>
+                    <p>{t.text}</p>
                   </div>
-                </article>
+                  <div className="lp-track-actions">
+                    <Link className="lp-more" to={t.practice}>Practice</Link>
+                    <Link className="lp-btn lp-btn-ghost lp-btn-sm" to={t.to} aria-label={`Open ${t.name} topics`}>Topics <Icon d={icons.arrow} className="size-3.5" /></Link>
+                  </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
 
@@ -231,20 +236,20 @@ export default function LandingPage() {
         <section className="lp-section lp-alt" id="teams">
           <div className="lp-wrap lp-split">
             <div data-reveal>
-              <p className="lp-eyebrow">For teams and classrooms</p>
-              <h2>Teach a whole group, not one learner at a time.</h2>
-              <p className="lp-sub">Create an organization, split it into departments, courses and sections, invite members and set assignments. Follow how each learner is doing.</p>
+              <p className="lp-eyebrow">Free to start</p>
+              <h2>Start with 10 free questions in every language.</h2>
+              <p className="lp-sub">Sign up and begin straight away. When you want the full question set for a language, your admin can unlock it for you and follow your progress.</p>
               <ul className="lp-list">
-                <li><Icon d={icons.check} className="size-4" /> Invitations by email</li>
-                <li><Icon d={icons.check} className="size-4" /> Assignments per section</li>
-                <li><Icon d={icons.check} className="size-4" /> Per-learner progress view</li>
+                <li><Icon d={icons.check} className="size-4" /> Create an account in seconds</li>
+                <li><Icon d={icons.check} className="size-4" /> Admin unlocks a language at a time</li>
+                <li><Icon d={icons.check} className="size-4" /> Your admin can see your progress</li>
               </ul>
             </div>
             <div className="lp-panel" data-reveal aria-hidden="true">
-              <div className="lp-panel-row"><b>Section A · Intro to C</b><span className="lp-badge">Sample</span></div>
-              <div className="lp-panel-row"><span>Assignment: Loops</span><span className="lp-bar"><i style={{ width: '72%' }} /></span></div>
-              <div className="lp-panel-row"><span>Assignment: Arrays</span><span className="lp-bar"><i style={{ width: '38%' }} /></span></div>
-              <div className="lp-panel-row"><span>Assignment: Functions</span><span className="lp-bar"><i style={{ width: '9%' }} /></span></div>
+              <div className="lp-panel-row"><b>Your access</b><span className="lp-badge">Sample</span></div>
+              <div className="lp-panel-row"><span>C · first 10 questions</span><span className="lp-bar"><i style={{ width: '72%' }} /></span></div>
+              <div className="lp-panel-row"><span>JavaScript · first 10 questions</span><span className="lp-bar"><i style={{ width: '38%' }} /></span></div>
+              <div className="lp-panel-row"><span>Python · unlocked</span><span className="lp-bar"><i style={{ width: '9%' }} /></span></div>
             </div>
           </div>
         </section>

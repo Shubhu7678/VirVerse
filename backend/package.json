@@ -9,9 +9,9 @@
     "seed": "node src/scripts/seed.js",
     "seed:javascript": "node src/scripts/seedJavascript.js",
     "seed:python": "node src/scripts/seedPython.js",
-    "migrate": "node src/scripts/migrate.js",
     "create-superadmin": "node src/scripts/createSuperAdmin.js",
     "test": "node --test src/tests/*.test.js",
+    "guide:verify": "node src/scripts/verifyGuide.js",
     "questions:build": "node src/scripts/buildQuestions.js",
     "questions:verify": "node src/scripts/verifyQuestions.js"
   },

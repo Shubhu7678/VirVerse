@@ -47,7 +47,7 @@ export default function PathScene({ className = '', scale = 1, offsetX = 0 }) {
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100)
     camera.position.set(0, 0, 14)
 
-    let accent = cssColor('--accent', '#7c7ff8')
+    let accent = cssColor('--accent', '#3ecf8e')
     let fg = cssColor('--fg', '#f5f5f7')
 
     const group = new THREE.Group()
@@ -98,7 +98,7 @@ export default function PathScene({ className = '', scale = 1, offsetX = 0 }) {
     })
 
     const recolor = () => {
-      accent = cssColor('--accent', '#7c7ff8'); fg = cssColor('--fg', '#f5f5f7')
+      accent = cssColor('--accent', '#3ecf8e'); fg = cssColor('--fg', '#f5f5f7')
       tubeMat.color.copy(accent); glowMat.color.copy(accent)
       nodes.forEach(({ wire, core, sprite }, i) => {
         wire.material.color.copy(accent); core.material.color.copy(accent)
