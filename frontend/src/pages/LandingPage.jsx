@@ -117,7 +117,7 @@ export default function LandingPage() {
       <a className="lp-skip" href="#main">Skip to content</a>
       <header className={`lp-header ${scrolled ? 'is-scrolled' : ''}`}>
         <div className="lp-wrap lp-header-in">
-          <a className="lp-brand" href="#home" aria-label="VirVerse home"><img src="/brand-mark.svg" alt="" /><span>VirVerse</span></a>
+          <a className="lp-brand" href="#home" aria-label="VirVerse home"><img src="/brand-mark.png" alt="" /><span>VirVerse</span></a>
           <nav id="lp-nav" className={`lp-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
             <a href="#demo" onClick={close}>See it</a>
             <a href="#features" onClick={close}>Features</a>
@@ -286,14 +286,22 @@ export default function LandingPage() {
       <footer className="lp-footer">
         <div className="lp-wrap lp-footer-in">
           <div className="lp-footer-brand">
-            <a className="lp-brand" href="#home"><img src="/brand-mark.svg" alt="" /><span>VirVerse</span></a>
-            <p>Learn by doing. Build with confidence.</p>
+            <a className="lp-brand" href="#home"><img src="/brand-mark.png" alt="" /><span>VirVerse</span></a>
+            <p>Learn C, JavaScript and Python by writing real code in your browser. No setup, no installs.</p>
+            <div className="lp-footer-chips" aria-label="Languages">
+              <span>C</span><span>JavaScript</span><span>Python</span><span>HTML</span>
+            </div>
+            <Link to={destination} className="lp-footer-cta" onClick={guard} aria-disabled={loading}>{ctaLabel} <span aria-hidden="true">→</span></Link>
           </div>
           <nav aria-label="Tracks"><h3>Tracks</h3><Link to="/tasks">C programming</Link><Link to="/javascript">JavaScript</Link><Link to="/python">Python</Link><Link to="/web-development/html">Web development</Link></nav>
           <nav aria-label="Tools"><h3>Tools</h3><Link to="/playground">C playground</Link><Link to="/javascript/playground">JavaScript playground</Link><Link to="/python/playground">Python playground</Link><Link to="/practice">Practice problems</Link></nav>
-          <nav aria-label="Account"><h3>Account</h3><Link to="/login">Sign in</Link><Link to="/signup">Create account</Link><a href="#faq">FAQ</a></nav>
+          <nav aria-label="Account"><h3>Account</h3><Link to="/login">Sign in</Link><Link to="/signup">Create account</Link><Link to="/forgot-password">Forgot password</Link><a href="#faq">FAQ</a></nav>
         </div>
-        <div className="lp-wrap lp-copy">© {YEAR} VirVerse. All rights reserved.</div>
+        <div className="lp-wrap lp-copy">
+          <span>© {YEAR} VirVerse. All rights reserved.</span>
+          <span className="lp-copy-tag">Learn by doing. Build with confidence.</span>
+          <a href="#home" className="lp-top">Back to top <span aria-hidden="true">↑</span></a>
+        </div>
       </footer>
     </div>
   )

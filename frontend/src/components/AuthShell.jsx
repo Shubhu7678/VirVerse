@@ -20,7 +20,7 @@ export default function AuthShell({ title, subtitle, footer, children }) {
     <div className="au">
       <aside className="au-side" aria-label="About VirVerse">
         <Suspense fallback={null}><PathScene className="au-scene" scale={0.55} /></Suspense>
-        <Link to="/" className="au-brand" aria-label="VirVerse home"><img src="/brand-mark.svg" alt="" /><span>VirVerse</span></Link>
+        <Link to="/" className="au-brand" aria-label="VirVerse home"><img src="/brand-mark.png" alt="" /><span>VirVerse</span></Link>
         <div className="au-side-body">
           <h2>Learn to code by <span>writing real code.</span></h2>
           <ul>
@@ -42,7 +42,7 @@ export default function AuthShell({ title, subtitle, footer, children }) {
           </button>
         </div>
         <div className="au-card">
-          <Link to="/" className="au-brand au-brand-mobile" aria-label="VirVerse home"><img src="/brand-mark.svg" alt="" /><span>VirVerse</span></Link>
+          <Link to="/" className="au-brand au-brand-mobile" aria-label="VirVerse home"><img src="/brand-mark.png" alt="" /><span>VirVerse</span></Link>
           <h1>{title}</h1>
           <p className="au-sub">{subtitle}</p>
           {children}
