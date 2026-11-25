@@ -145,7 +145,7 @@ body {
 
 @keyframes vv-pop { 0% { transform: scale(.96); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
 .animate-pop { animation: vv-pop .18s ease-out; }
-@keyframes vv-toast-in { 0% { transform: translateY(8px); opacity: 0 } 100% { transform: translateY(0); opacity: 1 } }
+@keyframes vv-toast-in { 0% { transform: translateY(-10px); opacity: 0 } 100% { transform: translateY(0); opacity: 1 } }
 .animate-toast { animation: vv-toast-in .2s ease-out; }
 @keyframes vv-profile-enter { 0% { transform: translateY(10px); opacity: 0 } 100% { transform: translateY(0); opacity: 1 } }
 .profile-enter { animation: vv-profile-enter .45s cubic-bezier(.2,.75,.25,1) both; }

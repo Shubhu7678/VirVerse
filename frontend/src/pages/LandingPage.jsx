@@ -9,6 +9,7 @@ import useLandingMotion from '../hooks/useLandingMotion'
 import { PlaygroundVisual, RoadmapVisual, PracticeVisual, ProgressVisual, SandboxVisual, ClassroomVisual } from '../components/FeatureVisuals'
 const PathScene = lazy(() => import('../components/PathScene'))
 import useCountUp from '../hooks/useCountUp'
+import ProductDemo from '../components/ProductDemo'
 import './landing.css'
 
 const YEAR = new Date().getFullYear()
@@ -118,6 +119,7 @@ export default function LandingPage() {
         <div className="lp-wrap lp-header-in">
           <a className="lp-brand" href="#home" aria-label="VirVerse home"><img src="/brand-mark.svg" alt="" /><span>VirVerse</span></a>
           <nav id="lp-nav" className={`lp-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
+            <a href="#demo" onClick={close}>See it</a>
             <a href="#features" onClick={close}>Features</a>
             <a href="#tracks" onClick={close}>Tracks</a>
             <a href="#process" onClick={close}>How it works</a>
@@ -173,6 +175,13 @@ export default function LandingPage() {
             {[...stack, ...stack].map((item, i) => <span key={i}>{item}</span>)}
           </div>
           <p className="lp-sr">{stack.join(', ')}</p>
+        </section>
+
+        <section className="lp-section lp-alt" id="demo">
+          <div className="lp-wrap">
+            <Heading eyebrow="See it in action" title="From your first line to a solved question." sub="A quick look at what you get inside: guided lessons, a real editor, instant results and points." />
+            <ProductDemo />
+          </div>
         </section>
 
         <section className="lp-section" id="features">

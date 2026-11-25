@@ -30,13 +30,18 @@ export function LanguageChips({ unlocked }) {
   )
 }
 
-function Summary({ label, value }) {
-  return (
-    <div className="rounded-card border border-line bg-surface p-4">
+function Summary({ label, value, hint, to }) {
+  const body = (
+    <>
       <p className="text-sm text-fg-subtle">{label}</p>
       <p className="mt-1 text-2xl font-semibold tabular-nums text-fg">{value}</p>
-    </div>
+      {hint && <p className="mt-0.5 text-xs text-fg-subtle">{hint}</p>}
+    </>
   )
+  const cls = 'rounded-card border border-line bg-surface p-4'
+  return to
+    ? <Link to={to} className={`${cls} transition-colors hover:border-line-strong hover:bg-surface-2`}>{body}</Link>
+    : <div className={cls}>{body}</div>
 }
 
 export default function AdminStudents() {
@@ -44,11 +49,12 @@ export default function AdminStudents() {
   const [query, setQuery] = useState('')
   const [access, setAccess] = useState('')
   const [sort, setSort] = useState('active')
+  const [status, setStatus] = useState('')
   const [page, setPage] = useState(1)
   const stats = useAsync(fetchAdminStats, 'admin-stats')
   const { data, loading, error } = useAsync(
-    () => fetchStudents({ search: query, access, sort, page, limit: PAGE_SIZE }),
-    `admin-students-${query}-${access}-${sort}-${page}`,
+    () => fetchStudents({ search: query, access, status, sort, page, limit: PAGE_SIZE }),
+    `admin-students-${query}-${access}-${status}-${sort}-${page}`,
   )
 
   const submit = (e) => {
@@ -66,10 +72,11 @@ export default function AdminStudents() {
       </header>
 
       {stats.data && (
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <Summary label="Students" value={stats.data.students} />
           <Summary label="With extra access" value={stats.data.unlocked} />
           <Summary label="Free only" value={stats.data.locked} />
+          <Summary label="Emails sent today" value={stats.data.emails.sent} hint={stats.data.emails.failed ? `${stats.data.emails.failed} failed · see details` : `of about ${stats.data.emails.limit} a day`} to="/admin/emails" />
         </div>
       )}
 
@@ -92,6 +99,14 @@ export default function AdminStudents() {
           <select value={sort} onChange={(e) => { setSort(e.target.value); setPage(1) }} className="h-9 rounded-control border border-line-strong bg-surface px-2 text-sm text-fg">
             <option value="active">Last active</option>
             <option value="new">Newest</option>
+          </select>
+        </label>
+        <label className="flex items-center gap-2 text-sm text-fg-muted">
+          Status
+          <select value={status} onChange={(e) => { setStatus(e.target.value); setPage(1) }} className="h-9 rounded-control border border-line-strong bg-surface px-2 text-sm text-fg">
+            <option value="">All</option>
+            <option value="active">Active</option>
+            <option value="disabled">Disabled</option>
           </select>
         </label>
         <div className="flex gap-1 rounded-control border border-line p-0.5" role="group" aria-label="Filter by access">
@@ -124,7 +139,7 @@ export default function AdminStudents() {
                 <li key={s.id}>
                   <Link to={`/admin/students/${s.id}`} className="group flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-line px-4 py-3.5 transition-colors last:border-b-0 hover:bg-surface-2">
                     <div className="min-w-0 flex-1 basis-56">
-                      <p className="truncate font-medium text-fg">{s.name}</p>
+                      <p className="flex items-center gap-2 truncate font-medium text-fg">{s.name}{s.disabled && <span className="rounded-full bg-danger-soft px-2 py-0.5 text-xs font-medium text-danger">Disabled</span>}</p>
                       <p className="truncate text-sm text-fg-muted">{s.email}</p>
                     </div>
                     <LanguageChips unlocked={s.unlockedLanguages} />

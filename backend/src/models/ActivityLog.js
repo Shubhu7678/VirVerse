@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export const ACTIVITY_TYPES = ['student.signup', 'access.updated', 'question.completed'];
+export const ACTIVITY_TYPES = ['student.signup', 'access.updated', 'question.completed', 'password.reset', 'student.updated', 'student.disabled', 'student.enabled', 'student.deleted'];
 
 // Append-only record of things worth an admin's attention. Names are copied in
 // so an entry still reads correctly if the account is later deleted.

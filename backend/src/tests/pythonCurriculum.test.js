@@ -42,3 +42,17 @@ test('Python Basics introduces printing and input in small steps', () => {
   assert.match(basics[4].starterCode, /^first, second = map\(int, input\(\)\.split\(\)\)/m);
   assert.ok(basics.slice(0, 10).every((question) => /^New idea|^Practice/.test(question.description)));
 });
+
+test('the first forty Python questions have beginner-friendly statements', () => {
+  const first40 = PYTHON_QUESTIONS.filter((q) => (q.category === 'python-basics') || (q.category === 'python-numbers' && q.questionOrder <= 20))
+    .sort((a, b) => a.order - b.order);
+  assert.equal(first40.length, 40);
+  for (const q of first40) {
+    assert.match(q.description, /\nInput\n/, `${q.slug} explains its input`);
+    assert.match(q.description, /\nOutput\n/, `${q.slug} explains its output`);
+    if (q.slug !== 'python-python-basics-01') assert.match(q.description, /\nExample\n/, `${q.slug} has an example`);
+    assert.doesNotMatch(q.description, /Read the values from standard input/, `${q.slug} still has the generic statement`);
+    assert.doesNotMatch(q.solution, /sys\.stdin/, `${q.slug} solution should use plain input()`);
+  }
+});
+

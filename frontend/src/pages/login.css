@@ -69,3 +69,7 @@
 .au-foot a { color: var(--accent-text); font-weight: 600; }
 .au-foot a:hover { text-decoration: underline; }
 @media (prefers-reduced-motion: reduce) { .au-card, .au-form > *, .au-or, .au-hint, .au-side h2, .au-side li, .au-code pre, .au-error { animation: none; } }
+
+/* Text-style button used for "Go back" and "Send a new code" */
+.au-link-button { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; color: var(--accent-text); cursor: pointer; }
+.au-link-button:hover { text-decoration: underline; }

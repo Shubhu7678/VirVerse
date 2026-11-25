@@ -16,6 +16,12 @@ const userSchema = new mongoose.Schema(
     platformRole: { type: String, enum: ['super_admin', null], default: null },
     // Languages the admin has fully unlocked for this student. The first 10 questions of every language are always free.
     unlockedLanguages: { type: [{ type: String, enum: ['c', 'javascript', 'python'] }], default: [] },
+    // Disabled accounts cannot sign in. Data is kept, so an admin can enable the account again.
+    disabled: { type: Boolean, default: false },
+    passwordResetHash: { type: String, default: null, select: false },
+    passwordResetExpiresAt: { type: Date, default: null, select: false },
+    // Sessions issued before this moment stop working (set when the password is reset).
+    passwordChangedAt: { type: Date, default: null },
     // Refreshed at most once a minute while the student is using the app.
     lastActiveAt: { type: Date, default: null },
     isDemo: { type: Boolean, default: false },

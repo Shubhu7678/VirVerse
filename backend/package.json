@@ -11,6 +11,7 @@
     "seed:python": "node src/scripts/seedPython.js",
     "create-superadmin": "node src/scripts/createSuperAdmin.js",
     "test": "node --test src/tests/*.test.js",
+    "python:verify": "node src/scripts/verifyPythonQuestions.js",
     "guide:verify": "node src/scripts/verifyGuide.js",
     "questions:build": "node src/scripts/buildQuestions.js",
     "questions:verify": "node src/scripts/verifyQuestions.js"
@@ -30,6 +31,7 @@
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.11.2",
+    "nodemailer": "^10.6.1",
     "ws": "^8.22.0"
   },
   "devDependencies": {

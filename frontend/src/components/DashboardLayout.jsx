@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
-import { ChevronDown, CircleHelp, LogOut } from 'lucide-react'
+import { ChevronDown, ChevronRight, CircleHelp, LogOut } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { Logo } from './AuthLayout'
@@ -13,6 +13,7 @@ import { getPageTour } from '../data/pageTours'
 const adminNav = [
   { label: 'Students', to: '/admin', icon: icons.profile, end: true, tour: 'admin-students' },
   { label: 'Activity log', to: '/admin/logs', icon: icons.submissions, tour: 'admin-logs' },
+  { label: 'Emails', to: '/admin/emails', icon: icons.list, tour: 'admin-emails' },
 ]
 
 // JavaScript and Python are namespaced under their own prefix.
@@ -20,7 +21,6 @@ const trackChildren = (base, playgroundLabel) => [
   { label: 'Topics', to: base, end: true },
   { label: 'Practice problems', to: `${base}/practice` },
   { label: playgroundLabel, to: `${base}/playground` },
-  { label: 'My tasks', to: `${base}/my-tasks` },
   { label: 'Completed', to: `${base}/completed` },
 ]
 
@@ -31,7 +31,7 @@ const sections = [
     label: 'C programming',
     icon: icons.code,
     match: (p) => p === '/tasks' || p.startsWith('/topics/') || p === '/practice' || p === '/playground',
-    // The C track keeps its original un-namespaced routes; My tasks / Completed are top-level items.
+    // The C track keeps its original un-namespaced routes; Completed is a top-level item.
     children: [
       { label: 'Topics', to: '/tasks', end: true },
       { label: 'Practice problems', to: '/practice' },
@@ -171,24 +171,29 @@ function Sidebar({ user, logout, isAdmin, close }) {
         ))}
         <NavItems
           items={[
-            { label: 'My tasks', to: '/my-tasks', icon: icons.tasks },
             { label: 'Completed', to: '/completed', icon: icons.check },
             { label: 'Submissions', to: '/submissions', icon: icons.submissions, tour: 'submissions' },
             { label: 'Leaderboard', to: '/leaderboard', icon: icons.dashboard, tour: 'leaderboard' },
-            { label: 'Profile', to: '/profile', icon: icons.profile, tour: 'profile' },
           ]}
           close={close}
         />
       </ul>
 
       <div className="border-t border-line pt-3">
-        <div className="mb-2 flex items-center gap-3 rounded-card border border-line bg-surface-2 p-2.5">
+        <NavLink
+          to="/profile"
+          data-tour="profile"
+          onClick={close}
+          aria-label={`Open your profile, signed in as ${userName}`}
+          className={({ isActive }) => `mb-2 flex items-center gap-3 rounded-card border p-2.5 transition-colors ${isActive ? 'border-accent-border bg-accent-soft' : 'border-line bg-surface-2 hover:border-line-strong hover:bg-surface'}`}
+        >
           <Avatar initials={initials} />
           <span className="min-w-0 flex-1">
             <span className="block truncate text-sm font-medium text-fg">{userName}</span>
             <span className="block truncate text-xs text-fg-muted">{user?.email}</span>
           </span>
-        </div>
+          <ChevronRight className="size-4 shrink-0 text-fg-subtle" aria-hidden="true" />
+        </NavLink>
         <button onClick={logout} className={`${rowBase} h-9 text-fg-muted hover:bg-danger-soft hover:text-danger`}>
           <LogOut className="size-[18px]" strokeWidth={1.75} aria-hidden="true" />
           Sign out
@@ -244,7 +249,6 @@ export default function DashboardLayout() {
     ...(isAdmin ? adminNav : []),
     { label: 'Dashboard', to: '/dashboard' },
     ...sections.flatMap((section) => section.children.filter((child) => child.to).map((child) => ({ ...child, label: `${section.label} · ${child.label}` }))),
-    { label: 'My tasks', to: '/my-tasks' },
     { label: 'Completed', to: '/completed' },
     { label: 'Submissions', to: '/submissions' },
     { label: 'Leaderboard', to: '/leaderboard' },

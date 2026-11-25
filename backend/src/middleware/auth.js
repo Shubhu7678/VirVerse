@@ -9,9 +9,14 @@ export default async function protect(req, res, next) {
     const token = req.cookies?.[COOKIE_NAME];
     if (!token) return res.status(401).json({ message: 'Not authenticated' });
 
-    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    const { id, iat } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(id);
     if (!user) return res.status(401).json({ message: 'Not authenticated' });
+    if (user.disabled) return res.status(401).json({ message: 'This account is disabled. Contact your admin.' });
+    // A password reset signs out every session that was created before it.
+    if (user.passwordChangedAt && iat < Math.floor(user.passwordChangedAt.getTime() / 1000)) {
+      return res.status(401).json({ message: 'Your password was changed. Please sign in again.' });
+    }
     if (user.isDemo && (!user.demoExpiresAt || user.demoExpiresAt <= new Date())) {
       return res.status(401).json({ message: 'This demo session has expired. Start a new demo to continue.' });
     }

@@ -32,8 +32,8 @@ export const STUDENT_TOUR = [
   },
   {
     target: '[data-tour="profile"]',
-    title: 'Profile and access',
-    body: 'Your activity and the languages you have unlocked are here. Need more than the 10 free questions? Ask your admin to unlock a language for you.',
+    title: 'Your profile',
+    body: 'Click your name here to open your profile: your activity and the languages you have unlocked. Need more than the 10 free questions? Ask your admin to unlock a language for you.',
   },
   {
     target: '[data-tour="theme"]',

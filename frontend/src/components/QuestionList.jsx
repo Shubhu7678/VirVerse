@@ -30,7 +30,7 @@ export function StatusIcon({ status }) {
 
 /**
  * Searchable, filterable question list.
- * `fixedStatus` hides the status filter for pages that already scope by status (My Tasks / Completed).
+ * `fixedStatus` hides the status filter for pages that already scope by status (Completed).
  */
 export default function QuestionList({
   tasks, topicNames, showTopic = false, fixedStatus = null, hideStatusFilter = false,

@@ -7,7 +7,6 @@ import ProgressBar from '../components/ProgressBar'
 
 const views = {
   all: { title: 'Practice problems' },
-  pending: { title: 'My tasks', subtitle: 'Questions you have not completed yet.' },
   completed: { title: 'Completed tasks', subtitle: 'Questions you have solved.' },
 }
 

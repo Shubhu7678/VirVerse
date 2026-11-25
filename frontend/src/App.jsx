@@ -5,6 +5,8 @@ import { GuestRoute, ProtectedRoute, AdminRoute } from './components/RouteGuards
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import LandingPage from './pages/LandingPage'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 import Dashboard from './pages/Dashboard'
 import Tasks from './pages/Tasks'
 import Topics from './pages/Topics'
@@ -12,6 +14,7 @@ import TopicDetail from './pages/TopicDetail'
 import AdminStudents from './pages/admin/Students'
 import AdminStudentDetail from './pages/admin/StudentDetail'
 import AdminLogs from './pages/admin/Logs'
+import AdminEmails from './pages/admin/Emails'
 import Leaderboard from './pages/Leaderboard'
 import { PythonGuideIndex, PythonGuideLesson } from './pages/PythonGuide'
 import { LoadingBlock } from './components/States'
@@ -31,6 +34,8 @@ export default function App() {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route element={<GuestRoute />}>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
@@ -41,6 +46,7 @@ export default function App() {
                 <Route path="/admin" element={<AdminStudents />} />
                 <Route path="/admin/students/:id" element={<AdminStudentDetail />} />
                 <Route path="/admin/logs" element={<AdminLogs />} />
+                <Route path="/admin/emails" element={<AdminEmails />} />
               </Route>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
@@ -53,8 +59,6 @@ export default function App() {
               <Route path="/python/topics/:category" element={<TopicDetail language="python" />} />
               <Route path="/javascript/practice" element={<Tasks language="javascript" />} />
               <Route path="/python/practice" element={<Tasks language="python" />} />
-              <Route path="/javascript/my-tasks" element={<Tasks language="javascript" view="pending" />} />
-              <Route path="/python/my-tasks" element={<Tasks language="python" view="pending" />} />
               <Route path="/javascript/completed" element={<Tasks language="javascript" view="completed" />} />
               <Route path="/python/completed" element={<Tasks language="python" view="completed" />} />
               <Route
@@ -110,7 +114,6 @@ export default function App() {
                   </Suspense>
                 }
               />
-              <Route path="/my-tasks" element={<Tasks view="pending" />} />
               <Route path="/completed" element={<Tasks view="completed" />} />
               <Route path="/submissions" element={<Submissions />} />
               <Route path="/profile" element={<Profile />} />

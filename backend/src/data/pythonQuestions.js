@@ -1,5 +1,6 @@
 import { JAVASCRIPT_QUESTIONS } from './javascriptQuestions.js'
 import { pythonSolutionProgram } from './pythonSolutionPrograms.js'
+import { BASICS_11_20, NUMBERS_1_20 } from './pythonBeginnerQuestions.js'
 
 const categoryMap = {
   'js-basics': 'python-basics',
@@ -299,10 +300,16 @@ const beginnerLessons = {
   },
 }
 
+// Questions that have a hand-written beginner statement, hint, starter code and solution.
+const lessonsByCategory = {
+  'python-basics': { ...beginnerLessons, ...BASICS_11_20 },
+  'python-numbers': NUMBERS_1_20,
+};
+
 export const PYTHON_QUESTIONS = [...questionsFromSharedCurriculum, ...introductoryQuestions]
   .sort((a, b) => a.order - b.order)
   .map((question) => {
-    const lesson = question.category === 'python-basics' ? beginnerLessons[question.questionOrder] : null
+    const lesson = lessonsByCategory[question.category]?.[question.questionOrder] ?? null
     if (lesson) {
       return {
         ...question,

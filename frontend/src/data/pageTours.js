@@ -12,7 +12,18 @@ const PAGES = [
     steps: [
       intro('Student details', 'Everything about one student: their access, their progress and what they submitted recently.'),
       { target: 'section[aria-labelledby="languages-heading"]', title: 'Access and progress', body: 'One card per language. The switch unlocks every topic of that language for this student, and turns it back off. It saves immediately. Without it they only see the first 10 questions.' },
+      { target: '[data-tour="admin-account"]', title: 'Account tools', body: 'Fix a name or email, send a password reset link, disable the account (reversible), or delete it for good after typing their email to confirm.' },
       { target: 'section[aria-labelledby="recent-heading"]', title: 'Recent submissions', body: 'Their latest attempts and whether each one passed.' },
+      close,
+    ],
+  },
+  {
+    match: /^\/admin\/emails$/,
+    steps: [
+      intro('Emails', 'Every email VirVerse sends: sign-up codes, forgot-password links and admin resets.'),
+      { target: '[data-tour="email-today"]', title: 'Sent today', body: 'How many emails went out since midnight, split by type, with failures and how close you are to the daily limit.' },
+      { target: '[aria-label="Filter emails"]', title: 'Filter', body: 'Show everything, only emails that were sent, or only the ones that failed.' },
+      { target: 'main ol', title: 'Latest 10', body: 'Who each email went to, what it was for, and when. Use Newer and Older for the rest.' },
       close,
     ],
   },
@@ -125,7 +136,7 @@ const PAGES = [
     ],
   },
   {
-    match: /^\/(javascript\/|python\/)?(practice|my-tasks|completed)$|^\/(my-tasks|completed)$/,
+    match: /^\/(javascript\/|python\/)?(practice|completed)$|^\/completed$/,
     steps: [
       intro('Question list', 'Every question you can open, in one place.'),
       { target: '[aria-label="Search questions"]', title: 'Search and filters', body: 'Search by name, then narrow by topic, difficulty or status, and sort the list.' },

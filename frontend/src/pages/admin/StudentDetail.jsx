@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { fetchStudent, setStudentAccess } from '../../api/admin'
 import { getErrorMessage } from '../../api/client'
+import { useToast } from '../../components/ui/Toast'
 import useAsync from '../../hooks/useAsync'
 import { LoadingBlock, ErrorBlock } from '../../components/States'
 import Icon, { icons } from '../../components/Icon'
 import ProgressBar from '../../components/ProgressBar'
 import { DifficultyBadge } from '../../components/Badges'
 import { LANGUAGE_LABELS } from './Students'
+import AccountCard from './AccountCard'
 import { isOnline, timeAgo } from '../../utils/timeAgo'
 
 const verdictTone = {
@@ -38,10 +40,12 @@ function Toggle({ on, busy, label, onChange }) {
 
 export default function AdminStudentDetail() {
   const { id } = useParams()
+  const toast = useToast()
   const { data, loading, error } = useAsync(() => fetchStudent(id), `admin-student-${id}`)
   const [unlocked, setUnlocked] = useState(null)
   const [busy, setBusy] = useState(null)
   const [saveError, setSaveError] = useState('')
+  const [edits, setEdits] = useState({})
 
   if (loading) return <LoadingBlock label="Loading student…" />
   if (error) return <ErrorBlock message={error} />
@@ -54,6 +58,7 @@ export default function AdminStudentDetail() {
     try {
       const res = await setStudentAccess(id, next)
       setUnlocked(res.unlockedLanguages)
+      toast.success(`${LANGUAGE_LABELS[language]} ${on ? 'unlocked' : 'locked'} for ${data.student.name}`)
     } catch (err) {
       setSaveError(getErrorMessage(err, 'Could not save access'))
     } finally {
@@ -61,7 +66,8 @@ export default function AdminStudentDetail() {
     }
   }
 
-  const { student, languages, recent } = data
+  const student = { ...data.student, ...edits }
+  const { languages, recent } = data
   const initials = student.name.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase()
   const totalSolved = languages.reduce((n, l) => n + l.solved, 0)
   const facts = [
@@ -95,6 +101,8 @@ export default function AdminStudentDetail() {
           ))}
         </dl>
       </header>
+
+      {student.disabled && <p role="status" className="rounded-card border border-danger/40 bg-danger-soft px-4 py-3 text-sm text-danger">This account is disabled. The student cannot sign in.</p>}
 
       <section aria-labelledby="languages-heading" className="space-y-3">
         <div>
@@ -135,6 +143,8 @@ export default function AdminStudentDetail() {
         </div>
         {saveError && <p role="alert" className="text-sm text-danger">{saveError}</p>}
       </section>
+
+      <AccountCard key={student.id} student={student} onChange={(patch) => setEdits((e) => ({ ...e, ...patch }))} />
 
       {languages.some((l) => l.solved > 0) && (
         <section aria-labelledby="topics-heading" className="space-y-3">
