@@ -3,6 +3,7 @@ import { createServer } from 'node:http';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
@@ -20,6 +21,7 @@ const server = createServer(app);
 attachInteractiveExecution(server);
 
 app.use(helmet());
+app.use(compression());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json({ limit: '64kb' }));
 app.use(cookieParser());

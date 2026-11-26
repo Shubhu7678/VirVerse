@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { ChevronDown, ChevronRight, CircleHelp, LogOut } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
@@ -9,6 +9,9 @@ import Tooltip from './ui/Tooltip'
 import ProductTour from './ProductTour'
 import { STUDENT_TOUR, ADMIN_TOUR } from '../data/tourSteps'
 import { getPageTour } from '../data/pageTours'
+import { LoadingBlock } from './States'
+import ErrorBoundary from './ErrorBoundary'
+import { prefetchRoute } from '../utils/prefetch'
 
 const adminNav = [
   { label: 'Students', to: '/admin', icon: icons.profile, end: true, tour: 'admin-students' },
@@ -72,17 +75,17 @@ const sections = [
 const rowBase = 'flex w-full items-center gap-3 rounded-control px-3 text-sm font-medium transition-colors'
 
 const itemClass = ({ isActive }) =>
-  `${rowBase} h-9 ${isActive ? 'bg-accent-soft text-accent-text ring-1 ring-accent-border' : 'text-fg-muted hover:bg-surface-2 hover:text-fg'}`
+  `${rowBase} h-9 ${isActive ? 'bg-surface-2 text-fg' : 'text-fg-muted hover:bg-surface-2 hover:text-fg'}`
 
 const childClass = ({ isActive }) =>
   `flex h-8 items-center rounded-control pr-3 pl-3 text-sm transition-colors ${
-    isActive ? 'bg-accent-soft font-medium text-accent-text' : 'text-fg-muted hover:bg-surface-2 hover:text-fg'
+    isActive ? 'bg-surface-2 font-medium text-fg' : 'text-fg-muted hover:bg-surface-2 hover:text-fg'
   }`
 
 function NavItems({ items, close }) {
   return items.map((item) => (
     <li key={item.to} data-tour={item.tour}>
-      <NavLink to={item.to} end={item.end} className={itemClass} onClick={close}>
+      <NavLink to={item.to} end={item.end} className={itemClass} onClick={close} onMouseEnter={() => prefetchRoute(item.to)} onFocus={() => prefetchRoute(item.to)}>
         <Icon d={item.icon} className="size-[18px] shrink-0" />
         <span className="min-w-0 flex-1 truncate">{item.label}</span>
       </NavLink>
@@ -110,7 +113,7 @@ function NavSection({ section, pathname, close }) {
         onClick={() => setManual({ pathname, open: !open })}
         className={`${rowBase} h-9 ${active ? 'text-fg' : 'text-fg-muted hover:bg-surface-2 hover:text-fg'}`}
       >
-        <Icon d={section.icon} className={`size-[18px] shrink-0 ${active ? 'text-accent-text' : ''}`} />
+        <Icon d={section.icon} className={`size-[18px] shrink-0 ${active ? 'text-fg' : ''}`} />
         <span className="flex-1 text-left">{section.label}</span>
         <ChevronDown className={`size-4 text-fg-subtle transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>
@@ -120,12 +123,12 @@ function NavSection({ section, pathname, close }) {
             {section.children.map((child) => (
               <li key={child.label}>
                 {child.soon ? (
-                  <div className="flex h-8 items-center justify-between pr-3 text-sm text-fg-subtle" aria-disabled="true">
+                  <div className="flex h-8 items-center justify-between rounded-control pr-3 pl-3 text-sm text-fg-subtle" aria-disabled="true">
                     {child.label}
                     <span className="rounded-md bg-surface-2 px-1.5 py-0.5 text-xs">Soon</span>
                   </div>
                 ) : (
-                  <NavLink to={child.to} end={child.end} className={childClass} onClick={close}>
+                  <NavLink to={child.to} end={child.end} className={childClass} onClick={close} onMouseEnter={() => prefetchRoute(child.to)} onFocus={() => prefetchRoute(child.to)}>
                     <span className="truncate">{child.label}</span>
                   </NavLink>
                 )}
@@ -140,7 +143,7 @@ function NavSection({ section, pathname, close }) {
 
 function Avatar({ initials, className = 'size-9 text-sm' }) {
   return (
-    <span className={`flex shrink-0 items-center justify-center rounded-full bg-accent-soft font-semibold text-accent-text ${className}`}>
+    <span className={`flex shrink-0 items-center justify-center rounded-full bg-inset font-semibold text-fg-muted ${className}`}>
       {initials}
     </span>
   )
@@ -157,7 +160,7 @@ function Sidebar({ user, logout, isAdmin, close }) {
         <Logo />
       </Link>
 
-      <ul className="flex-1 space-y-0.5 overflow-y-auto pb-3">
+      <ul className="flex-1 space-y-0.5 sidebar-scroll -mr-3 overflow-y-auto pr-3 pb-3">
         {isAdmin && (
           <>
             <GroupLabel>Admin</GroupLabel>
@@ -185,7 +188,7 @@ function Sidebar({ user, logout, isAdmin, close }) {
           data-tour="profile"
           onClick={close}
           aria-label={`Open your profile, signed in as ${userName}`}
-          className={({ isActive }) => `mb-2 flex items-center gap-3 rounded-card border p-2.5 transition-colors ${isActive ? 'border-accent-border bg-accent-soft' : 'border-line bg-surface-2 hover:border-line-strong hover:bg-surface'}`}
+          className={({ isActive }) => `mb-2 flex items-center gap-3 rounded-card border p-2.5 transition-colors ${isActive ? 'border-line-strong bg-inset' : 'border-line bg-surface-2 hover:border-line-strong hover:bg-surface'}`}
         >
           <Avatar initials={initials} />
           <span className="min-w-0 flex-1">
@@ -211,6 +214,22 @@ export default function DashboardLayout() {
   const { theme, toggle } = useTheme()
   const [open, setOpen] = useState(false)
   const location = useLocation()
+
+  // While the mobile menu is open: Escape closes it and the page behind does not scroll.
+  useEffect(() => {
+    if (!open) return undefined
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false) }
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = previous
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+
+  // Each page opens at the top rather than keeping the previous page's scroll offset.
+  useEffect(() => { window.scrollTo(0, 0) }, [location.pathname])
   const [tourOpen, setTourOpen] = useState(false)
   const tourKey = `virvese:tour:${user?.id}`
   // The welcome tour runs once; the ? button explains whichever page is open.
@@ -226,13 +245,14 @@ export default function DashboardLayout() {
 
   // Show the tour once, the first time someone lands on their home page.
   useEffect(() => {
-    if (!user || !['/dashboard', '/admin'].includes(location.pathname)) return undefined
+    // Not for throwaway demo accounts, and not on phones where the sidebar it points at is hidden.
+    if (!user || user.isDemo || window.innerWidth < 1024 || !['/dashboard', '/admin'].includes(location.pathname)) return undefined
     try {
       if (localStorage.getItem(tourKey)) return undefined
     } catch {
       return undefined
     }
-    const timer = setTimeout(startWelcomeTour, 700)
+    const timer = setTimeout(startWelcomeTour, 1500)
     return () => clearTimeout(timer)
   }, [user, location.pathname, tourKey])
 
@@ -272,7 +292,7 @@ export default function DashboardLayout() {
       {open && (
         <div className="dashboard-mobile-nav fixed inset-0 z-50">
           <button className="absolute inset-0" style={{ background: 'var(--overlay)' }} onClick={closeMenu} aria-label="Close navigation" />
-          <aside className="animate-pop absolute inset-y-0 left-0 w-64 border-r border-line shadow-pop">
+          <aside role="dialog" aria-modal="true" aria-label="Navigation" className="animate-pop absolute inset-y-0 left-0 w-64 border-r border-line shadow-pop">
             {sidebar}
           </aside>
         </div>
@@ -310,7 +330,11 @@ export default function DashboardLayout() {
       <ProductTour steps={tourSteps} open={tourOpen} onClose={closeTour} />
 
       <main key={location.pathname} className="page-enter p-4 sm:p-6 lg:p-8">
-        <Outlet />
+        <ErrorBoundary key={location.pathname}>
+          <Suspense fallback={<LoadingBlock />}>
+            <Outlet />
+          </Suspense>
+        </ErrorBoundary>
       </main>
     </div>
   )

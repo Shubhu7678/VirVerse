@@ -1,8 +1,8 @@
-export const LAST_TASK_KEY = 'virvese:last-task'
+export const lastTaskKey = (userId) => `virvese:last-task:${userId}`
 
-export function rememberTask(slug, title) {
+export function rememberTask(userId, slug, title) {
   try {
-    localStorage.setItem(LAST_TASK_KEY, JSON.stringify({ slug, title }))
+    localStorage.setItem(lastTaskKey(userId), JSON.stringify({ slug, title }))
   } catch {
     // storage unavailable: resume simply will not be offered
   }

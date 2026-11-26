@@ -1,19 +1,35 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { ArrowRight, BookOpen, Check, ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react'
 import CodeEditor from '../components/ide/CodeEditor'
 import ResizeHandle from '../components/ide/ResizeHandle'
-import Icon, { icons } from '../components/Icon'
+import ConfirmModal from '../components/ConfirmModal'
+import ProgressBar from '../components/ProgressBar'
+import HtmlDocsDrawer from '../components/HtmlDocsDrawer'
+import { docsForTask } from '../data/htmlDocsMap'
 import { useTheme } from '../context/ThemeContext'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../components/ui/Toast'
+import { clearAsyncCache } from '../hooks/useAsync'
 import { fetchHtmlProgress, saveHtmlProgress } from '../api/webDevelopment'
 import { getErrorMessage } from '../api/client'
-import { HTML_DOCUMENTATION, HTML_LESSONS, HTML_PROJECTS, HTML_TASKS } from '../data/htmlBasics'
+import { HTML_LESSONS, HTML_PROJECTS, HTML_TASKS } from '../data/htmlBasics'
 import { validateHtmlTask } from '../utils/htmlTaskValidation'
-import './web-development.css'
 
 const STORAGE_PREFIX = 'virverse:web-html:'
+// Matches the server: each HTML lesson or project pays this once.
+const HTML_TASK_POINTS = 20
 const PREVIEW_DELAY = 300
 const SAVE_DELAY = 700
+const COURSE_PATH = '/web-development/html'
+
+// Compact, square-cornered controls with 13px text, like a macOS toolbar.
+const btn = 'inline-flex h-7 items-center justify-center gap-1.5 rounded-md border px-2.5 text-[13px] font-medium whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-50'
+const btnSecondary = `${btn} border-line bg-surface text-fg hover:bg-surface-2`
+const btnGhost = `${btn} border-transparent text-fg-muted hover:bg-surface-2 hover:text-fg`
+const btnPrimary = `${btn} border-transparent bg-cta text-cta-fg hover:bg-cta-hover`
+
+const clamp = (n, min, max) => Math.min(Math.max(n, min), max)
 
 function storageKey(userId, taskId) {
   return `${STORAGE_PREFIX}${userId}:${taskId}`
@@ -40,163 +56,138 @@ function createPreviewDocument(code) {
   return `<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="${policy}"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>${code}</body></html>`
 }
 
-function TaskCheck({ results, task, completed, containerRef, announcement }) {
+// What to add, as a short checklist that fills in as the learner types.
+function TaskCheck({ results, task, completed, containerRef, announcement, onContinue, hasNext, busy, earnsPoints }) {
   const passedCount = results.checks.filter((item) => item.passed).length
-  const remainingCount = results.checks.length - passedCount
+  const total = results.checks.length
+  const remaining = total - passedCount + (results.unclosed?.length ? 1 : 0)
+  const noun = task.category === 'project' ? 'project' : 'lesson'
+
   return (
-    <section ref={containerRef} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5" aria-labelledby="task-checklist-title">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="grid size-8 place-items-center rounded-lg bg-brand-50 text-brand-700">
-              <Icon d={icons.check} className="size-4" />
-            </span>
-            <div>
-              <h3 id="task-checklist-title" className="text-sm font-bold text-slate-900">What to add for this task</h3>
-              <p className="mt-0.5 text-xs text-slate-500">For “{task.title}” · checklist updates as you edit.</p>
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          {completed && (
-            <span className="html-completion-check inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-200">
-              <span aria-hidden="true">✓</span> {task.category === 'project' ? 'Project' : 'Lesson'} marked done
-            </span>
-          )}
-          <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-            remainingCount === 0 ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-200' : 'bg-amber-50 text-amber-800'
-          }`}>
-            {remainingCount === 0 ? 'Ready to finish' : `${remainingCount} ${remainingCount === 1 ? 'item' : 'items'} left`}
-          </span>
-        </div>
+    <section ref={containerRef} aria-labelledby="task-checklist-title" className="scroll-mt-4">
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 id="task-checklist-title" className="text-[13px] font-semibold text-fg">Checklist</h2>
+        <span className="text-xs text-fg-subtle tabular-nums">{passedCount} of {total}</span>
       </div>
-      <div className="mt-4 flex items-center gap-3">
-        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100">
-          <div
-            className={`h-full rounded-full transition-[width] duration-300 ${remainingCount === 0 ? 'bg-emerald-500' : 'bg-brand-500'}`}
-            style={{ width: `${(passedCount / results.checks.length) * 100}%` }}
-          />
-        </div>
-        <span className="shrink-0 text-[11px] font-medium tabular-nums text-slate-500">{passedCount} of {results.checks.length} complete</span>
+      <div className="mt-2">
+        <ProgressBar percent={Math.round((passedCount / total) * 100)} label="Checklist completion" />
       </div>
-      <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+      {results.unclosed?.length > 0 && (
+        <p role="status" className="mt-3 rounded-md bg-warn-soft px-3 py-2 text-xs leading-relaxed text-warn">
+          Close {results.unclosed.length === 1 ? 'this tag' : 'these tags'} to finish:{' '}
+          {results.unclosed.map((name, index) => (
+            <span key={name}>{index > 0 && ', '}<code className="font-mono">{`</${name}>`}</code></span>
+          ))}
+        </p>
+      )}
+      <ul className="mt-3 space-y-1">
         {results.checks.map((item) => (
-          <li key={item.label} className={`flex min-h-16 items-start gap-2.5 rounded-lg border p-2.5 transition-colors ${
-            item.passed ? 'border-emerald-100 bg-emerald-50/60 dark:border-emerald-900 dark:bg-emerald-950/40' : 'border-slate-200 bg-slate-50/70'
-          }`}>
-            <span className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-full ${
-              item.passed ? 'bg-emerald-500 text-white' : 'border border-slate-300 bg-white text-slate-400'
-            }`} aria-hidden="true">
-              {item.passed ? <Icon d={icons.check} className="size-3.5" /> : <span className="size-1.5 rounded-full bg-current" />}
+          <li key={item.label} className="flex items-start gap-2.5 rounded-md bg-surface-2/60 px-3 py-2">
+            <span aria-hidden="true" className="mt-px grid size-4 shrink-0 place-items-center">
+              {item.passed
+                ? <Check className="size-4 text-success" strokeWidth={2.5} />
+                : <span className="size-3.5 rounded-full border border-line-strong" />}
             </span>
             <span className="min-w-0">
-              <span className={`block text-xs font-semibold ${item.passed ? 'text-emerald-800 dark:text-emerald-200' : 'text-slate-700'}`}>
+              <span className={`block text-[13px] leading-snug ${item.passed ? 'text-fg-muted' : 'font-medium text-fg'}`}>
                 {item.label}
-                <span className={`ml-1.5 text-[10px] font-medium ${item.passed ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-400'}`}>
-                  {item.passed ? 'Done' : 'To do'}
-                </span>
+                <span className="sr-only">{item.passed ? ' — done' : ' — to do'}</span>
               </span>
-              <span className={`mt-1 block text-[11px] leading-relaxed ${item.passed ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500'}`}>
-                {item.passed ? 'This requirement is in your code.' : item.hint}
-              </span>
+              {!item.passed && <span className="mt-0.5 block text-xs leading-relaxed text-fg-subtle">{item.hint}</span>}
             </span>
           </li>
         ))}
       </ul>
       <p className="sr-only" aria-live="polite">{announcement}</p>
-      {remainingCount === 0 && (
-        <p className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200">
-          Nice work — every requirement is in place. You can now mark the lesson done or keep practicing.
-        </p>
+      {remaining === 0 && (
+        <div className="mt-3 rounded-md border border-line bg-surface-2 p-3">
+          <p className="flex items-center gap-1.5 text-[13px] font-medium text-fg">
+            <Check className="size-4 text-success" strokeWidth={2.5} aria-hidden="true" />
+            {completed ? 'Done. Nice work.' : 'Every requirement is in place.'}
+          </p>
+          <p className="mt-1 text-xs text-fg-muted">
+            {hasNext
+              ? completed ? 'Ready for the next one?' : `Mark this ${noun} done${earnsPoints ? ` to earn ${HTML_TASK_POINTS} points` : ''} and move on.`
+              : completed ? 'That was the last one in the course.' : `Mark this ${noun} done${earnsPoints ? ` to earn ${HTML_TASK_POINTS} points` : ' when you are ready'}.`}
+          </p>
+          {(hasNext || !completed) && (
+            <button type="button" onClick={onContinue} disabled={busy} className={`${btnPrimary} mt-2.5`}>
+              {busy ? 'Saving…' : hasNext ? <>{completed ? 'Next lesson' : 'Mark done and continue'} <ArrowRight className="size-3.5" aria-hidden="true" /></> : 'Mark done'}
+            </button>
+          )}
+        </div>
       )}
     </section>
   )
 }
 
-function LessonPanel({ task, tab, setTab }) {
+// Opens the docs drawer, and says which topic it will open on.
+function DocsCard({ task, onOpen, triggerRef }) {
+  const topics = docsForTask(task.id).own.map((concept) => concept.title).join(', ')
   return (
-    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-      <div className="flex items-center gap-1 border-b border-slate-200 px-3" role="tablist" aria-label="Lesson resources">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={tab === 'instructions'}
-          onClick={() => setTab('instructions')}
-          className={`border-b-2 px-3 py-2.5 text-xs font-semibold transition-colors ${tab === 'instructions' ? 'border-brand-500 text-brand-700' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
-        >
-          Task instructions
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={tab === 'documentation'}
-          onClick={() => setTab('documentation')}
-          className={`border-b-2 px-3 py-2.5 text-xs font-semibold transition-colors ${tab === 'documentation' ? 'border-brand-500 text-brand-700' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
-        >
-          HTML documentation
-        </button>
-      </div>
+    <button
+      ref={triggerRef}
+      type="button"
+      onClick={onOpen}
+      aria-haspopup="dialog"
+      className="group flex w-full items-center gap-3 rounded-md border border-line bg-surface px-3 py-2.5 text-left transition-colors hover:bg-surface-2"
+    >
+      <span className="grid size-8 shrink-0 place-items-center rounded-md bg-surface-2 text-fg-muted transition-colors group-hover:bg-inset group-hover:text-fg">
+        <BookOpen className="size-4" aria-hidden="true" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-[13px] font-medium text-fg">Read the docs</span>
+        <span className="block truncate text-xs text-fg-subtle">{topics}</span>
+      </span>
+      <ChevronRight className="size-4 shrink-0 text-fg-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-fg" aria-hidden="true" />
+    </button>
+  )
+}
 
-      {tab === 'instructions' ? (
-        <div className="grid gap-4 p-4 md:grid-cols-[minmax(0,1fr)_minmax(16rem,0.8fr)]">
-          <div>
-            <p className="text-sm leading-relaxed text-slate-700">{task.instructions}</p>
-            <h3 className="mt-3 text-xs font-bold text-slate-700">You’ll practice</h3>
-            <ul className="mt-1.5 flex flex-wrap gap-2">
-              {task.objectives.map((objective) => (
-                <li key={objective} className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-2.5 py-1 text-xs text-brand-700">
-                  <span aria-hidden="true">•</span>{objective}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="rounded-lg bg-slate-50 p-3">
-            <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">Expected behavior</h3>
-            <p className="mt-1.5 text-xs leading-relaxed text-slate-700">{task.expectedBehavior}</p>
-            <p className="mt-2 text-xs leading-relaxed text-slate-500">{task.documentation}</p>
-          </div>
-        </div>
-      ) : (
-        <div className="html-doc-scroll max-h-80 overflow-y-auto p-4">
-          <div className="mb-4 rounded-lg border border-brand-100 bg-brand-50/60 p-3">
-            <p className="text-[11px] font-bold uppercase tracking-wide text-brand-700">For this task</p>
-            <p className="mt-1 text-sm leading-relaxed text-slate-700">{task.documentation}</p>
-            <pre className="mt-2 overflow-x-auto rounded-lg bg-slate-900 p-3 text-xs leading-relaxed text-slate-100"><code>{task.example}</code></pre>
-          </div>
-          <div className="grid gap-3 lg:grid-cols-2">
-            {HTML_DOCUMENTATION.map((concept) => (
-              <article key={concept.title} className="rounded-lg border border-slate-200 p-3">
-                <h3 className="text-sm font-semibold text-slate-800">{concept.title}</h3>
-                <p className="mt-1.5 text-xs leading-relaxed text-slate-600">{concept.explanation}</p>
-                <p className="mt-2 font-mono text-[11px] text-brand-700">{concept.syntax}</p>
-                <pre className="mt-2 overflow-x-auto rounded-md bg-slate-900 p-2.5 text-[11px] leading-relaxed text-slate-100"><code>{concept.example}</code></pre>
-                <p className="mt-2 text-xs text-slate-500"><span className="font-semibold text-slate-600">Result:</span> {concept.result}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      )}
-    </section>
+function Instructions({ task, onOpenDocs, docsTriggerRef }) {
+  return (
+    <div className="space-y-4">
+      <p className="text-[13px] leading-relaxed text-fg">{task.instructions}</p>
+      <div>
+        <h3 className="text-xs text-fg-subtle">You will practise</h3>
+        <ul className="mt-1.5 space-y-1">
+          {task.objectives.map((objective) => (
+            <li key={objective} className="flex items-start gap-2 text-[13px] text-fg-muted">
+              <span aria-hidden="true" className="mt-[7px] size-1 shrink-0 rounded-full bg-fg-subtle" />
+              {objective}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <DocsCard task={task} onOpen={onOpenDocs} triggerRef={docsTriggerRef} />
+      <div className="rounded-md border border-line bg-surface-2/60 px-3 py-2.5">
+        <h3 className="text-xs text-fg-subtle">What you should see</h3>
+        <p className="mt-1 text-[13px] leading-relaxed text-fg">{task.expectedBehavior}</p>
+      </div>
+    </div>
   )
 }
 
 export default function WebDevelopment() {
   const navigate = useNavigate()
   const { taskId } = useParams()
-  const { user } = useAuth()
+  const { user, updateGamification } = useAuth()
+  const toast = useToast()
   const activeTask = HTML_TASKS.find((task) => task.id === taskId) ?? HTML_TASKS[0]
   const [codeByTask, setCodeByTask] = useState(() => Object.fromEntries(
     HTML_TASKS.map((task) => [task.id, readDraft(user.id, task.id, task.starterCode)]),
   ))
   const [progressByTask, setProgressByTask] = useState({})
-  const [lessonTab, setLessonTab] = useState('instructions')
+  const [docsOpen, setDocsOpen] = useState(false)
+  const docsTriggerRef = useRef(null)
   const [preview, setPreview] = useState(() => createPreviewDocument(activeTask.starterCode))
-  const [split, setSplit] = useState(0.5)
+  const [previewSize, setPreviewSize] = useState(0.4)
   const [loadState, setLoadState] = useState('loading')
   const [saveState, setSaveState] = useState('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [completionBusy, setCompletionBusy] = useState(false)
   const [checkAnnouncement, setCheckAnnouncement] = useState('')
+  const [confirmReset, setConfirmReset] = useState(false)
   const workspaceRef = useRef(null)
   const checklistRef = useRef(null)
   const saveQueueRef = useRef(Promise.resolve())
@@ -220,12 +211,16 @@ export default function WebDevelopment() {
   useEffect(() => {
     let mounted = true
     fetchHtmlProgress()
-      .then((records) => {
+      .then(({ progress: records, reward }) => {
+        if (reward) {
+          updateGamification({ points: reward.totalPoints, level: reward.level })
+          clearAsyncCache()
+        }
         if (!mounted) return
         const progress = {}
         const savedCode = {}
         for (const record of records) {
-          progress[record.taskId] = { completed: record.completed, updatedAt: record.updatedAt }
+          progress[record.taskId] = { completed: record.completed, pointsAwarded: record.pointsAwarded, updatedAt: record.updatedAt }
           if (typeof record.code === 'string' && !editedBeforeLoadRef.current.has(record.taskId)) {
             savedCode[record.taskId] = record.code
             writeDraft(user.id, record.taskId, record.code)
@@ -242,7 +237,7 @@ export default function WebDevelopment() {
         setErrorMessage(getErrorMessage(error, 'Could not load saved HTML progress. Your local drafts are still available.'))
       })
     return () => { mounted = false }
-  }, [user.id])
+  }, [user.id, updateGamification])
 
   useEffect(() => {
     const timer = setTimeout(() => setPreview(createPreviewDocument(code)), PREVIEW_DELAY)
@@ -253,6 +248,14 @@ export default function WebDevelopment() {
     const operation = saveQueueRef.current.then(async () => {
       setSaveState('saving')
       const saved = await saveHtmlProgress(taskId, payload)
+      // Finishing or reopening a task changes the submissions list, so drop the cached copies.
+      if (typeof payload.completed === 'boolean') clearAsyncCache()
+      if (saved.reward) {
+        updateGamification({ points: saved.reward.totalPoints, level: saved.reward.level })
+        toast.success(saved.reward.levelUp
+          ? `Level up! You reached level ${saved.reward.level} and earned ${saved.reward.points} points.`
+          : `+${saved.reward.points} points. You now have ${saved.reward.totalPoints} points.`)
+      }
       if (typeof payload.code === 'string' && revision === editRevisionsRef.current[taskId]) {
         editedTasksRef.current.delete(taskId)
       }
@@ -266,7 +269,7 @@ export default function WebDevelopment() {
     })
     saveQueueRef.current = operation
     return operation
-  }, [])
+  }, [toast, updateGamification])
 
   useEffect(() => {
     if (loadState !== 'ready' || !editedTasksRef.current.has(activeTask.id)) return undefined
@@ -291,7 +294,7 @@ export default function WebDevelopment() {
     setCheckAnnouncement(remaining === 0
       ? 'All task requirements are complete.'
       : `${remaining} task ${remaining === 1 ? 'requirement remains' : 'requirements remain'}. See the checklist for what to add.`)
-    checklistRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    checklistRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }, [validation])
 
   const selectTask = (task) => {
@@ -299,11 +302,11 @@ export default function WebDevelopment() {
       enqueueSave(activeTask.id, { code }, editRevisionsRef.current[activeTask.id])
     }
     navigate(`/web-development/html-basics/${task.id}`)
-    setLessonTab('instructions')
+    setDocsOpen(false)
   }
 
   const toggleCompletion = async () => {
-    if (completionBusy || loadState !== 'ready') return
+    if (completionBusy || loadState !== 'ready') return false
     const wasCompleted = Boolean(progressByTask[activeTask.id]?.completed)
     const completed = !wasCompleted
     setCompletionBusy(true)
@@ -318,14 +321,36 @@ export default function WebDevelopment() {
         ...current,
         [activeTask.id]: { ...current[activeTask.id], completed: wasCompleted },
       }))
+    } else {
+      setProgressByTask((current) => ({
+        ...current,
+        [activeTask.id]: { ...current[activeTask.id], pointsAwarded: saved.progress?.pointsAwarded },
+      }))
     }
     setCompletionBusy(false)
+    return Boolean(saved)
   }
 
-  const resetCode = () => {
-    if (!window.confirm('Reset this task to its starter code? Your completion status will not change.')) return
+  // Resetting also reopens the task: the starter code no longer satisfies it, so it should not stay marked done.
+  const resetCode = async () => {
     changeCode(activeTask.starterCode)
     setCheckAnnouncement('')
+    const taskId = activeTask.id
+    if (!progressByTask[taskId]?.completed) return
+    setProgressByTask((current) => ({ ...current, [taskId]: { ...current[taskId], completed: false } }))
+    const saved = await enqueueSave(taskId, { code: activeTask.starterCode, completed: false }, editRevisionsRef.current[taskId])
+    if (!saved) {
+      setProgressByTask((current) => ({ ...current, [taskId]: { ...current[taskId], completed: true } }))
+    }
+  }
+
+  // Marks the lesson done (if it is not yet) and opens the next one.
+  const finishAndContinue = async () => {
+    if (!progressByTask[activeTask.id]?.completed) {
+      const saved = await toggleCompletion()
+      if (!saved) return
+    }
+    setTaskByOffset(1)
   }
 
   const setTaskByOffset = (offset) => {
@@ -338,178 +363,151 @@ export default function WebDevelopment() {
     return <Navigate to="/web-development/html-basics" replace />
   }
 
+  const isProject = activeTask.category === 'project'
+  const kind = isProject ? 'Project' : 'Lesson'
+  const kindList = isProject ? HTML_PROJECTS : HTML_LESSONS
+  const position = kindList.indexOf(activeTask) + 1
+  const done = Boolean(progressByTask[activeTask.id]?.completed)
+  const activeIndex = HTML_TASKS.findIndex((task) => task.id === activeTask.id)
+  const saveLabel = saveState === 'saving' || saveState === 'pending'
+    ? 'Saving…'
+    : saveState === 'saved' ? 'Saved' : saveState === 'error' ? 'Not saved' : loadState === 'loading' ? 'Loading…' : ''
+
   return (
-    <div className="mx-auto max-w-[1600px] space-y-4">
-      <header className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="min-w-0">
-            <button
-              type="button"
-              onClick={() => navigate('/web-development/html', { state: { expandLessons: true } })}
-              className="mb-2 inline-flex items-center gap-1.5 rounded-md text-xs font-semibold text-slate-500 transition hover:text-brand-700 focus-visible:outline-brand-500"
-            >
-              <Icon d={icons.back} className="size-3.5" />
-              Back to HTML lessons
-            </button>
-            <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500">
-              <span>Web Development</span><span aria-hidden="true">/</span><span>HTML</span>
-              {activeTask.category === 'project' && <><span aria-hidden="true">/</span><span>Projects</span></>}
-              <span className="rounded-full bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-700">Beginner</span>
-              <span>{activeTask.category === 'project' ? 'Guided project' : 'Beginner lesson'}</span>
-            </div>
-            <h1 className="mt-1.5 text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">{activeTask.title}</h1>
-            <p className="mt-1 max-w-3xl text-sm leading-relaxed text-slate-500">
-              {activeTask.category === 'project'
-                ? 'Bring the HTML concepts together in a guided project. Follow the checklist, build at your own pace, and preview your work.'
-                : 'Learn how to structure web pages with HTML, then practice each concept in a live coding workspace.'}
-            </p>
-          </div>
-          <div className="min-w-52 sm:w-64" aria-label={`${completedCount} of ${HTML_TASKS.length} learning activities completed`}>
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-700">Your progress</span>
-              <span className="tabular-nums text-slate-500">{completedCount} / {HTML_TASKS.length}</span>
-            </div>
-            <div
-              className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100"
-              role="progressbar"
-              aria-label="HTML Basics completion"
-              aria-valuemin={0}
-              aria-valuemax={HTML_TASKS.length}
-              aria-valuenow={completedCount}
-            >
-              <div className="html-progress-fill h-full rounded-full bg-brand-600" style={{ width: `${(completedCount / HTML_TASKS.length) * 100}%` }} />
-            </div>
-            <p className="mt-1.5 text-right text-[11px] text-slate-400">{HTML_LESSONS.length} lessons · {HTML_PROJECTS.length} projects</p>
-          </div>
+    <div className="-m-4 flex flex-col bg-bg sm:-m-6 lg:-m-8 lg:h-[calc(100dvh-3.5rem)]">
+      {confirmReset && (
+        <ConfirmModal
+          title="Reset this task?"
+          message={done ? 'Your code goes back to the starter code and this task is marked not done. Points you already earned stay.' : 'Your code goes back to the starter code.'}
+          onConfirm={resetCode}
+          onClose={() => setConfirmReset(false)}
+        />
+      )}
+
+      <HtmlDocsDrawer task={activeTask} open={docsOpen} onClose={() => setDocsOpen(false)} triggerRef={docsTriggerRef} />
+
+      <header className="flex h-12 shrink-0 items-center gap-3 border-b border-line bg-surface px-3">
+        <Link to={COURSE_PATH} className={btnGhost}>
+          <ChevronLeft className="-ml-1 size-4" aria-hidden="true" /> Lessons
+        </Link>
+        <span className="hidden h-4 w-px bg-line sm:block" aria-hidden="true" />
+        <div className="flex min-w-0 flex-1 items-baseline gap-2.5">
+          <h1 className="truncate text-[13px] font-semibold text-fg">{activeTask.title}</h1>
+          <span className="hidden shrink-0 text-xs text-fg-subtle tabular-nums sm:inline">{kind} {position} of {kindList.length}</span>
+        </div>
+        <div className="hidden items-center gap-2 md:flex" aria-label={`${completedCount} of ${HTML_TASKS.length} activities done`}>
+          <div className="w-20"><ProgressBar percent={Math.round((completedCount / HTML_TASKS.length) * 100)} label="HTML course completion" /></div>
+          <span className="text-xs text-fg-subtle tabular-nums">{completedCount}/{HTML_TASKS.length}</span>
+        </div>
+        <div className="inline-flex overflow-hidden rounded-md border border-line">
+          <button
+            type="button"
+            onClick={() => setTaskByOffset(-1)}
+            disabled={activeIndex === 0}
+            aria-label="Previous task"
+            className="grid h-7 w-8 place-items-center text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg disabled:opacity-40 disabled:hover:bg-transparent"
+          >
+            <ChevronLeft className="size-4" aria-hidden="true" />
+          </button>
+          <span className="w-px bg-line" aria-hidden="true" />
+          <button
+            type="button"
+            onClick={() => setTaskByOffset(1)}
+            disabled={activeIndex === HTML_TASKS.length - 1}
+            aria-label="Next task"
+            className="grid h-7 w-8 place-items-center text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg disabled:opacity-40 disabled:hover:bg-transparent"
+          >
+            <ChevronRight className="size-4" aria-hidden="true" />
+          </button>
         </div>
       </header>
 
       {errorMessage && (
-        <div role="alert" className="flex items-start justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        <div role="alert" className="flex items-start justify-between gap-3 border-b border-warn/30 bg-warn-soft px-4 py-2.5 text-sm text-warn">
           <span>{errorMessage}</span>
           {loadState === 'error' && <span className="shrink-0 text-xs">Code is kept in this browser.</span>}
         </div>
       )}
 
-      <section className="min-w-0 space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 shadow-sm sm:px-4">
-            <div className="flex min-w-0 items-center gap-2">
-              <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-brand-50 text-xs font-bold text-brand-700">
-                {activeTask.category === 'project'
-                  ? `P${String(HTML_PROJECTS.indexOf(activeTask) + 1).padStart(2, '0')}`
-                  : String(HTML_LESSONS.indexOf(activeTask) + 1).padStart(2, '0')}
-              </span>
-              <div className="min-w-0">
-                <h2 className="truncate text-sm font-bold text-slate-800">{activeTask.title}</h2>
-                <p className="text-[11px] text-slate-500">Edit the HTML, then check your work.</p>
-              </div>
+      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+        <aside className="flex flex-col gap-5 border-b border-line bg-surface p-4 lg:w-[22rem] lg:flex-none lg:overflow-y-auto lg:border-r lg:border-b-0 xl:w-[25rem]">
+          <Instructions task={activeTask} onOpenDocs={() => setDocsOpen(true)} docsTriggerRef={docsTriggerRef} />
+          <div className="border-t border-line pt-4">
+            <TaskCheck
+              results={validation}
+              task={activeTask}
+              completed={done}
+              containerRef={checklistRef}
+              announcement={checkAnnouncement}
+              onContinue={finishAndContinue}
+              hasNext={activeIndex < HTML_TASKS.length - 1}
+              busy={completionBusy}
+              earnsPoints={!progressByTask[activeTask.id]?.pointsAwarded}
+            />
+          </div>
+        </aside>
+
+        <section className="flex min-h-0 min-w-0 flex-1 flex-col" aria-label="Workspace">
+          <div className="flex h-10 shrink-0 items-center justify-between gap-2 border-b border-line bg-surface px-3">
+            <div className="flex items-center gap-3">
+              <span className="rounded-md bg-surface-2 px-2 py-0.5 font-mono text-xs text-fg">index.html</span>
+              <span className="text-xs text-fg-subtle" aria-live="polite">{saveLabel}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-slate-400" aria-live="polite">
-                {saveState === 'saving' || saveState === 'pending' ? 'Saving…' : saveState === 'saved' ? 'Saved' : loadState === 'loading' ? 'Loading progress…' : ''}
-              </span>
-              <button type="button" onClick={resetCode} className="rounded-lg border border-slate-200 px-2.5 py-2 text-xs font-medium text-slate-600 transition hover:bg-slate-50">
-                Reset code
+            <div className="flex items-center gap-1.5">
+              <button type="button" onClick={() => setConfirmReset(true)} className={btnGhost}>
+                <RotateCcw className="size-3.5" aria-hidden="true" /> Reset
               </button>
-              <button
-                type="button"
-                onClick={checkTask}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-brand-700"
-              >
-                <Icon d={icons.check} className="size-4" />
+              <button type="button" onClick={checkTask} title="Check your work (Ctrl or Cmd + Enter)" className={btnSecondary}>
                 Check task
               </button>
-              <button
-                type="button"
-                onClick={toggleCompletion}
-                disabled={loadState !== 'ready' || completionBusy}
-                aria-pressed={Boolean(progressByTask[activeTask.id]?.completed)}
-                title={progressByTask[activeTask.id]?.completed ? 'Reopen this lesson' : 'Mark this lesson done'}
-                className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition disabled:cursor-wait disabled:opacity-60 ${
-                  progressByTask[activeTask.id]?.completed
-                    ? 'border border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 dark:border-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-200 dark:hover:bg-emerald-900'
-                    : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
-                }`}
-              >
-                {completionBusy ? 'Saving…' : progressByTask[activeTask.id]?.completed ? '✓ Done · Reopen' : `Mark ${activeTask.category === 'project' ? 'project' : 'lesson'} done`}
-              </button>
+              {(validation.passed || done) && (
+                <button
+                  type="button"
+                  onClick={toggleCompletion}
+                  disabled={loadState !== 'ready' || completionBusy}
+                  aria-pressed={done}
+                  title={done ? 'Reopen this task' : `Mark this ${kind.toLowerCase()} done`}
+                  className={done ? btnSecondary : btnPrimary}
+                >
+                  {completionBusy ? 'Saving…' : done ? <><Check className="size-3.5 text-success" aria-hidden="true" /> Done · Reopen</> : `Mark ${kind.toLowerCase()} done`}
+                </button>
+              )}
             </div>
           </div>
 
-          <LessonPanel task={activeTask} tab={lessonTab} setTab={setLessonTab} />
-          <TaskCheck
-            results={validation}
-            task={activeTask}
-            completed={Boolean(progressByTask[activeTask.id]?.completed)}
-            containerRef={checklistRef}
-            announcement={checkAnnouncement}
-          />
-
-          <div className="overflow-hidden rounded-xl border border-slate-300 bg-slate-950 shadow-sm">
-            <div className="flex items-center justify-between border-b border-slate-700 bg-slate-900 px-3 py-2">
-              <div className="flex items-center gap-2">
-                <span className="size-2 rounded-full bg-orange-400" />
-                <span className="font-mono text-xs font-medium text-slate-200">index.html</span>
-              </div>
-              <span className="text-[10px] font-medium uppercase tracking-wide text-slate-500">HTML editor · Live preview</span>
-            </div>
-            <div
-              ref={workspaceRef}
-              className="html-workspace-grid"
-              style={{ '--editor-width': `${split * 100}%` }}
-            >
-              <section className="html-editor-pane min-w-0" aria-label="HTML code editor">
-                <CodeEditor
-                  language="html"
-                  value={code}
-                  onChange={changeCode}
-                  theme={theme}
-                  onRun={checkTask}
-                  fontSize={14}
-                  wordWrap
-                />
-              </section>
-              <ResizeHandle
-                direction="horizontal"
-                containerRef={workspaceRef}
-                onChange={(ratio) => setSplit(Math.min(Math.max(ratio, 0.25), 0.75))}
+          <div ref={workspaceRef} className="flex min-h-0 flex-1 flex-col" style={{ '--preview': `${previewSize * 100}%` }}>
+            <div className="h-80 min-h-0 flex-none lg:h-auto lg:flex-1" aria-label="HTML code editor">
+              <CodeEditor
+                language="html"
+                value={code}
+                onChange={changeCode}
+                theme={theme}
+                onRun={checkTask}
+                fontSize={13}
+                wordWrap
               />
-              <section className="html-preview-pane min-w-0 border-t border-slate-700 lg:border-t-0 lg:border-l" aria-label="Live browser preview">
-                <div className="flex h-9 items-center justify-between border-b border-slate-700 bg-slate-900 px-3">
-                  <span className="text-[11px] font-semibold text-slate-300">Preview</span>
-                  <span className="text-[10px] text-slate-500">Scripts disabled · isolated sandbox</span>
-                </div>
-                <iframe
-                  title="Live HTML preview"
-                  sandbox=""
-                  srcDoc={preview}
-                  className="block size-full min-h-[280px] bg-white"
-                  referrerPolicy="no-referrer"
-                />
-              </section>
             </div>
-          </div>
-
-          <div className="flex items-center justify-between gap-3">
-            <button
-              type="button"
-              onClick={() => setTaskByOffset(-1)}
-              disabled={HTML_TASKS[0].id === activeTask.id}
-              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 disabled:opacity-40"
-            >
-              ← Previous task
-            </button>
-            <p className="text-center text-[11px] text-slate-400">Your code is saved automatically for this task.</p>
-            <button
-              type="button"
-              onClick={() => setTaskByOffset(1)}
-              disabled={HTML_TASKS[HTML_TASKS.length - 1].id === activeTask.id}
-              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 disabled:opacity-40"
-            >
-              Next task →
-            </button>
+            <ResizeHandle
+              direction="vertical"
+              containerRef={workspaceRef}
+              onChange={(ratio) => setPreviewSize(clamp(ratio, 0.2, 0.7))}
+            />
+            <div className="flex h-72 min-h-0 flex-none flex-col border-t border-line lg:h-auto lg:basis-(--preview) lg:border-t-0" aria-label="Live browser preview">
+              <div className="flex h-8 shrink-0 items-center justify-between border-b border-line bg-surface px-3">
+                <span className="text-xs text-fg-muted">Preview</span>
+                <span className="text-xs text-fg-subtle">Scripts are turned off here</span>
+              </div>
+              <iframe
+                title="Live HTML preview"
+                sandbox=""
+                srcDoc={preview}
+                className="block min-h-0 w-full flex-1 bg-white"
+                referrerPolicy="no-referrer"
+              />
+            </div>
           </div>
         </section>
       </div>
+    </div>
   )
 }

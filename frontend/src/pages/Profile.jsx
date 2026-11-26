@@ -1,13 +1,31 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { fetchTaskSummary } from '../api/tasks'
+import { fetchOverview } from '../api/tasks'
 import { fetchSubmissionActivity, fetchSubmissions } from '../api/execute'
 import useAsync from '../hooks/useAsync'
-import { ErrorBlock, LoadingBlock } from '../components/States'
+import { EmptyState, ErrorBlock } from '../components/States'
 import Icon, { icons } from '../components/Icon'
-import { taskPath } from '../utils/languageRoutes'
+import Card from '../components/ui/Card'
+import ProgressBar from '../components/ProgressBar'
+import { buttonClasses } from '../components/buttonStyles'
+import { submissionView } from '../utils/submissionView'
 
 const dateKey = (date) => date.toISOString().slice(0, 10)
+
+const LANGUAGES = [
+  ['c', 'C programming'],
+  ['javascript', 'JavaScript'],
+  ['python', 'Python'],
+]
+
+const verdictTone = {
+  Accepted: 'bg-success-soft text-success',
+  'Wrong Answer': 'bg-danger-soft text-danger',
+  'Compilation Error': 'bg-warn-soft text-warn',
+  'Runtime Error': 'bg-danger-soft text-danger',
+  'Time Limit Exceeded': 'bg-warn-soft text-warn',
+  Completed: 'bg-success-soft text-success',
+}
 
 function getActivitySummary(asOf, activity) {
   const todayUtc = new Date(`${asOf}T00:00:00.000Z`)
@@ -21,6 +39,15 @@ function getActivitySummary(asOf, activity) {
     submissions: recentActivity.reduce((total, { count }) => total + count, 0),
     activeDays: recentActivity.filter(({ count }) => count > 0).length,
   }
+}
+
+// Five steps of the accent colour, so the heatmap follows the light and dark themes.
+const levelClass = (count) => {
+  if (!count) return 'bg-inset'
+  if (count === 1) return 'bg-accent/25'
+  if (count === 2) return 'bg-accent/50'
+  if (count === 3) return 'bg-accent/75'
+  return 'bg-accent'
 }
 
 function ActivityHeatmap({ asOf, activity }) {
@@ -39,12 +66,7 @@ function ActivityHeatmap({ asOf, activity }) {
       const date = new Date(cursor)
       const key = dateKey(date)
       const inRange = date >= rangeStart && date <= todayUtc
-      week.push({
-        date,
-        key,
-        count: inRange ? activityByDate.get(key) ?? 0 : 0,
-        inRange,
-      })
+      week.push({ date, key, count: inRange ? activityByDate.get(key) ?? 0 : 0, inRange })
       cursor.setUTCDate(cursor.getUTCDate() + 1)
     }
     weeks.push(week)
@@ -57,13 +79,6 @@ function ActivityHeatmap({ asOf, activity }) {
       ? new Intl.DateTimeFormat(undefined, { month: 'short', timeZone: 'UTC' }).format(week[0].date)
       : ''
   })
-  const levelClass = (count) => {
-    if (!count) return 'bg-slate-100 dark:bg-slate-800'
-    if (count === 1) return 'bg-emerald-200 dark:bg-emerald-950'
-    if (count === 2) return 'bg-emerald-400 dark:bg-emerald-800'
-    if (count === 3) return 'bg-emerald-600 dark:bg-emerald-600'
-    return 'bg-emerald-800 dark:bg-emerald-400'
-  }
   const formatDate = (date) => new Intl.DateTimeFormat(undefined, {
     month: 'short',
     day: 'numeric',
@@ -72,30 +87,23 @@ function ActivityHeatmap({ asOf, activity }) {
   }).format(date)
 
   return (
-    <section className="profile-enter rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-200 dark:bg-slate-100 sm:p-6" style={{ animationDelay: '120ms' }}>
-      <div className="flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <div className="flex items-center gap-2">
-            <Icon d={icons.check} className="size-4 text-brand-500" />
-            <p className="text-sm font-semibold text-slate-800 dark:text-slate-800">Learning Activity</p>
-          </div>
-          <h2 className="mt-2 text-lg font-bold tracking-tight text-slate-900 dark:text-slate-900">{yearTotal} submissions in the last year</h2>
-          <p className="mt-1 text-sm text-slate-500">Each square marks a day you submitted a solution.</p>
-        </div>
-        <span className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-500 dark:border-slate-300">
-          {activeDays} active days
-        </span>
+    <Card as="section" aria-label="Learning activity">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h2 className="text-lg font-semibold text-fg">
+          {yearTotal} submission{yearTotal === 1 ? '' : 's'} <span className="font-normal text-fg-muted">in the last year</span>
+        </h2>
+        <p className="text-sm text-fg-subtle tabular-nums">{activeDays} active day{activeDays === 1 ? '' : 's'}</p>
       </div>
-      <div className="mt-5 overflow-x-auto pb-2" role="region" aria-label="Submission activity over the last year" tabIndex={0}>
-        <div className="min-w-[760px]">
-          <div className="mb-2 grid grid-cols-[2rem_1fr] gap-2">
+      <div className="mt-4 overflow-x-auto pb-1" role="region" aria-label="Submission activity over the last year" tabIndex={0}>
+        <div className="min-w-[720px]">
+          <div className="mb-1.5 grid grid-cols-[2rem_1fr] gap-2">
             <span aria-hidden="true" />
             <div className="grid" style={{ gridTemplateColumns: `repeat(${weeks.length}, minmax(0, 1fr))` }}>
-              {monthLabels.map((label, index) => <span key={index} className="h-4 text-[10px] text-slate-500">{label}</span>)}
+              {monthLabels.map((label, index) => <span key={index} className="h-4 text-xs text-fg-subtle">{label}</span>)}
             </div>
           </div>
           <div className="grid grid-cols-[2rem_1fr] gap-2">
-            <div className="grid grid-rows-7 text-[10px] text-slate-500">
+            <div className="grid grid-rows-7 text-xs text-fg-subtle">
               {['', 'Mon', '', 'Wed', '', 'Fri', ''].map((label, index) => <span key={index} className="flex h-3 items-center">{label}</span>)}
             </div>
             <div className="grid gap-x-1" style={{ gridTemplateColumns: `repeat(${weeks.length}, minmax(0, 1fr))` }}>
@@ -114,7 +122,7 @@ function ActivityHeatmap({ asOf, activity }) {
               ))}
             </div>
           </div>
-          <div className="mt-4 flex items-center justify-end gap-1.5 text-[10px] text-slate-500">
+          <div className="mt-3 flex items-center justify-end gap-1.5 text-xs text-fg-subtle">
             <span className="mr-1">Less</span>
             {[0, 1, 2, 3, 4].map((count) => (
               <span key={count} aria-hidden="true" className={`size-3 rounded-[3px] ${levelClass(count)}`} />
@@ -123,67 +131,78 @@ function ActivityHeatmap({ asOf, activity }) {
           </div>
         </div>
       </div>
-    </section>
+    </Card>
   )
 }
 
-function Stat({ label, value, detail, icon, tone }) {
+function Stat({ label, value, detail }) {
   return (
-    <div className="group rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-brand-100 hover:shadow-md dark:border-slate-200 dark:bg-slate-100">
-      <span className={`flex size-9 items-center justify-center rounded-xl ${tone}`}>
-        <Icon d={icon} className="size-5" />
-      </span>
-      <p className="mt-3 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-900">{value}</p>
-      <p className="mt-0.5 text-xs font-semibold text-slate-700 dark:text-slate-700">{label}</p>
-      <p className="mt-1 text-[11px] text-slate-500">{detail}</p>
+    <div className="bg-surface px-5 py-4">
+      <p className="text-sm text-fg-subtle">{label}</p>
+      <p className="mt-1 text-2xl font-semibold tracking-tight text-fg tabular-nums">{value}</p>
+      <p className="mt-0.5 text-xs text-fg-subtle">{detail}</p>
     </div>
   )
 }
 
-function RecentActivity({ submissions, loading, error }) {
-  const recentSubmissions = submissions?.slice(0, 4) ?? []
-
+function RecentSubmissions({ data, loading, error }) {
   return (
-    <section className="profile-enter rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-200 dark:bg-slate-100 sm:p-6" style={{ animationDelay: '180ms' }}>
-      <div className="flex items-center gap-2 border-b border-slate-100 pb-4 dark:border-slate-200">
-        <Icon d={icons.submissions} className="size-4 text-brand-500" />
-        <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-800">Recent Activity</h2>
+    <section aria-label="Recent submissions" className="min-w-0">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-fg">Recent submissions</h2>
+        <Link to="/submissions" className="inline-flex items-center gap-1 text-sm text-accent-text hover:underline">
+          View all <Icon d={icons.arrow} className="size-3.5" />
+        </Link>
       </div>
-      {loading ? (
-        <LoadingBlock label="Loading recent activity…" />
-      ) : error ? (
-        <div className="pt-4"><ErrorBlock message={error} /></div>
-      ) : recentSubmissions.length ? (
-        <ul className="divide-y divide-slate-100 dark:divide-slate-200">
-          {recentSubmissions.map((submission) => (
-            <li key={submission.id} className="flex items-center gap-3 py-3">
-              <span className={`flex size-9 shrink-0 items-center justify-center rounded-xl ${submission.status === 'Accepted' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950' : 'bg-slate-100 text-slate-500 dark:bg-slate-200'}`}>
-                <Icon d={submission.status === 'Accepted' ? icons.check : icons.code} className="size-4" />
-              </span>
-              <span className="min-w-0 flex-1">
-                <Link to={taskPath(submission.task.language || 'c', submission.task.slug)} className="block truncate text-sm font-semibold text-slate-800 hover:text-brand-600 dark:text-slate-800">
-                  {submission.task.title}
+      <div className="mt-3">
+        {loading ? (
+          <div className="skeleton h-48" role="status" aria-label="Loading recent submissions" />
+        ) : error ? (
+          <ErrorBlock message={error} />
+        ) : !data?.length ? (
+          <EmptyState title="No submissions yet" text="Solve a question and your latest attempts will show up here.">
+            <Link to="/tasks" className={buttonClasses({ variant: 'secondary' })}>
+              Browse questions <Icon d={icons.arrow} className="size-4" />
+            </Link>
+          </EmptyState>
+        ) : (
+          <Card padded={false} className="divide-y divide-line">
+            {data.map((s) => (
+              <div key={s.id} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-4 py-3">
+                <Link to={submissionView(s).to} className="min-w-0 flex-1 basis-40 truncate font-medium text-fg hover:text-accent-text">
+                  {submissionView(s).title}
                 </Link>
-                <span className="mt-0.5 block text-xs text-slate-500">{submission.status}</span>
+                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${verdictTone[s.status] || 'bg-surface-2 text-fg-muted'}`}>{s.status}</span>
+                <time dateTime={s.createdAt} className="text-xs text-fg-subtle tabular-nums">
+                  {new Date(s.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                </time>
+              </div>
+            ))}
+          </Card>
+        )}
+      </div>
+    </section>
+  )
+}
+
+function AccessCard({ unlocked }) {
+  return (
+    <section data-tour="profile-access" aria-label="Your access" className="min-w-0">
+      <h2 className="text-lg font-semibold text-fg">Your access</h2>
+      <Card padded={false} className="mt-3 divide-y divide-line">
+        {LANGUAGES.map(([key, label]) => {
+          const on = unlocked.includes(key)
+          return (
+            <div key={key} className="flex items-center justify-between gap-3 px-4 py-3">
+              <span className="font-medium text-fg">{label}</span>
+              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${on ? 'bg-success-soft text-success' : 'bg-surface-2 text-fg-muted'}`}>
+                {on ? 'Fully unlocked' : 'First 10 free'}
               </span>
-              <time className="shrink-0 text-[11px] text-slate-500" dateTime={submission.createdAt}>
-                {new Date(submission.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-              </time>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div className="flex min-h-44 flex-col items-center justify-center py-7 text-center">
-          <span className="flex size-12 items-center justify-center rounded-2xl border border-slate-200 text-slate-400 dark:border-slate-300">
-            <Icon d={icons.submissions} className="size-6" />
-          </span>
-          <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-slate-700">No activity yet</p>
-          <p className="mt-1 text-xs text-slate-500">Start solving tasks to see your activity here.</p>
-          <Link to="/tasks" className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-brand-700">
-            Browse tasks <Icon d={icons.arrow} className="size-3.5" />
-          </Link>
-        </div>
-      )}
+            </div>
+          )
+        })}
+      </Card>
+      <p className="mt-2 text-xs text-fg-subtle">Your admin can unlock the rest of a language for you.</p>
     </section>
   )
 }
@@ -192,140 +211,85 @@ export default function Profile() {
   const { user } = useAuth()
   const showLearnerProgress = !user?.isAdmin
   const { data, loading, error } = useAsync(
-    showLearnerProgress ? () => fetchTaskSummary('c') : () => Promise.resolve(null),
-    `profile-progress-${showLearnerProgress}`,
+    showLearnerProgress ? fetchOverview : () => Promise.resolve(null),
+    showLearnerProgress ? 'overview' : 'profile-no-progress',
   )
   const activityState = useAsync(fetchSubmissionActivity, 'profile-submission-activity')
-  const submissionsState = useAsync(fetchSubmissions, 'profile-recent-submissions')
+  const submissionsState = useAsync(() => fetchSubmissions(5), 'recent-submissions-5')
+
   const name = user?.name?.trim() || 'Learner'
   const initials = name.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase()
   const joinedDate = user?.createdAt ? new Date(user.createdAt) : null
   const joined = joinedDate && !Number.isNaN(joinedDate.getTime())
     ? joinedDate.toLocaleDateString(undefined, { dateStyle: 'long' })
     : null
-  const roleLabel = user?.isAdmin ? 'Admin' : 'Student'
-  const unlockedLanguages = user?.unlockedLanguages ?? []
-  const completed = data?.stats?.completed ?? 0
-  const available = data?.stats?.total ?? 0
-  const percent = data?.stats?.percent ?? 0
+  const roleLabel = user?.isAdmin ? 'Admin' : user?.isDemo ? 'Demo' : 'Student'
   const points = user?.points ?? 0
   const level = user?.level ?? 1
   const nextLevelProgress = points % 100
+  const c = data?.c
   const activitySummary = activityState.data
     ? getActivitySummary(activityState.data.asOf, activityState.data.activity)
-    : { submissions: 0, activeDays: 0 }
+    : null
 
   return (
-    <div className="mx-auto max-w-6xl space-y-5">
-      <div className="profile-enter">
-        <p className="text-[10px] font-bold tracking-[0.18em] text-brand-600 uppercase">Account</p>
-        <div className="mt-1 flex flex-wrap items-end justify-between gap-2">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-900">Your Profile</h1>
-          <p className="pb-1 text-xs text-slate-500">A snapshot of your learning journey</p>
-        </div>
-      </div>
-
-      <section className="profile-enter relative isolate overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-200 dark:bg-slate-100" style={{ animationDelay: '60ms' }}>
-        <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 bg-linear-to-br from-brand-50 via-transparent to-emerald-100/70 dark:from-brand-100/30 dark:to-emerald-950/40" />
-        <div className="flex flex-col gap-5 p-4 sm:flex-row sm:items-center sm:p-5">
-          <div className="relative flex size-16 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-brand-600 to-teal-500 text-xl font-bold text-white shadow-lg shadow-brand-600/20 ring-4 ring-white dark:ring-slate-100 sm:size-[72px]">
+    <div className="mx-auto max-w-5xl space-y-6">
+      <Card as="section" aria-label="Account" className="!p-0 overflow-hidden">
+        <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:p-6">
+          <span className="flex size-16 shrink-0 items-center justify-center rounded-full border border-accent-border bg-accent-soft text-xl font-semibold text-accent-text" aria-hidden="true">
             {initials}
-            <span className="absolute -right-1 -bottom-1 flex size-5 items-center justify-center rounded-full border-2 border-white bg-emerald-500 text-white dark:border-slate-100">
-              <Icon d={icons.check} className="size-3" />
-            </span>
-          </div>
+          </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="break-words text-xl font-bold tracking-tight text-slate-900 dark:text-slate-900">{name}</h2>
-              <span className="rounded-full border border-brand-100 bg-brand-50 px-2.5 py-1 text-[10px] font-semibold capitalize text-brand-700 dark:border-brand-200 dark:bg-brand-50">{roleLabel}</span>
+              <h1 className="break-words text-2xl font-semibold tracking-tight text-fg">{name}</h1>
+              <span className="rounded-full bg-surface-2 px-2.5 py-0.5 text-xs font-medium text-fg-muted">{roleLabel}</span>
             </div>
-            <p className="mt-1 break-all text-xs text-slate-500">{user?.email}</p>
-            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-[11px] text-slate-500">
-              {joined && (
-                <span className="inline-flex items-center gap-1.5">
-                  <Icon d={icons.submissions} className="size-3.5 text-slate-400" />
-                  Joined {joined}
-                </span>
-              )}
-              <span className="inline-flex items-center gap-1.5">
-                <Icon d={icons.tasks} className="size-3.5 text-slate-400" />
-                {roleLabel}
-              </span>
-            </div>
-          </div>
-          {showLearnerProgress && <div className="flex shrink-0 items-center gap-3 border-l border-slate-200 pl-5 dark:border-slate-300">
-            <div className="relative flex size-12 items-center justify-center rounded-full bg-brand-50 dark:bg-brand-100">
-              <svg viewBox="0 0 36 36" className="absolute size-12 -rotate-90" aria-hidden="true">
-                <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" strokeWidth="3" className="text-slate-200 dark:text-slate-300" />
-                <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" strokeWidth="3" strokeDasharray={`${Math.min(100, Math.max(0, percent)) * 0.942} 100`} strokeLinecap="round" className="text-brand-600 transition-all duration-700" />
-              </svg>
-              <span className="text-xs font-bold text-brand-700 dark:text-brand-700">{percent}%</span>
-            </div>
-            <div>
-              <p className="text-[10px] text-slate-500">Overall Progress</p>
-              <p className="text-xs font-semibold text-slate-900 dark:text-slate-900">{completed} of {available} solved</p>
-            </div>
-          </div>}
-        </div>
-      </section>
-
-      <section className="profile-enter grid gap-3 sm:grid-cols-[minmax(240px,2fr)_repeat(3,minmax(100px,0.55fr))]" style={{ animationDelay: '100ms' }}>
-        <div className="flex items-center gap-4 rounded-2xl border border-emerald-200/80 bg-linear-to-r from-emerald-50 via-white to-teal-50 p-4 shadow-sm dark:border-emerald-900 dark:from-slate-100 dark:via-slate-100 dark:to-emerald-950/40 sm:px-5">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-2xl" aria-hidden="true">🔥</span>
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-              <h2 className="text-lg font-bold text-slate-900">Level {level}</h2>
-              <p className="text-sm font-semibold text-brand-600">{points} points</p>
-            </div>
-            <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-200" role="progressbar" aria-label="Progress to next level" aria-valuenow={nextLevelProgress} aria-valuemin="0" aria-valuemax="100">
-              <div className="h-full rounded-full bg-linear-to-r from-brand-500 to-emerald-400 transition-[width] duration-500" style={{ width: `${nextLevelProgress}%` }} />
-            </div>
-            <p className="mt-2 text-[10px] text-slate-500">{100 - nextLevelProgress} points to level {level + 1}</p>
+            <p className="mt-1 break-all text-sm text-fg-muted">{user?.email}</p>
+            {joined && <p className="mt-0.5 text-sm text-fg-subtle">Joined {joined}</p>}
           </div>
         </div>
-        <Stat label="Submissions" value={activitySummary.submissions} detail="In the last year" icon={icons.code} tone="bg-cyan-50 text-cyan-600 dark:bg-cyan-950" />
-        <Stat label="Completed" value={completed} detail="Solved questions" icon={icons.check} tone="bg-emerald-50 text-emerald-600 dark:bg-emerald-950" />
-        <Stat label="Active Days" value={activitySummary.activeDays} detail="In the last year" icon={icons.submissions} tone="bg-teal-50 text-teal-600 dark:bg-teal-950" />
-      </section>
+        <div className="border-t border-line bg-surface-2/60 px-5 py-4 sm:px-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <p className="font-semibold text-fg">Level {level}</p>
+            <p className="text-sm text-fg-muted tabular-nums">{points} points</p>
+          </div>
+          <div className="mt-2.5">
+            <ProgressBar percent={nextLevelProgress} label="Progress to next level" />
+          </div>
+          <p className="mt-2 text-xs text-fg-subtle tabular-nums">{100 - nextLevelProgress} points to level {level + 1}</p>
+        </div>
+      </Card>
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.65fr)_minmax(280px,1fr)]">
-        {activityState.loading && <div className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-200 dark:bg-slate-100"><LoadingBlock label="Loading your activity…" /></div>}
-        {activityState.error && <ErrorBlock message={activityState.error} />}
-        {activityState.data && <ActivityHeatmap {...activityState.data} />}
-        <RecentActivity {...submissionsState} />
-      </div>
-
-      {showLearnerProgress && loading && <div className="rounded-2xl border border-slate-200 bg-white p-6"><LoadingBlock label="Loading your progress…" /></div>}
+      <Card as="section" aria-label="Your numbers" padded={false} className="overflow-hidden">
+        <div className={`grid grid-cols-2 gap-px bg-line ${showLearnerProgress ? 'lg:grid-cols-4' : ''}`}>
+        {showLearnerProgress && (
+          <Stat
+            label="Solved"
+            value={c ? `${c.completed}` : '–'}
+            detail={c ? `of ${c.total} C questions · ${c.percent}%` : loading ? 'Loading…' : 'Unavailable'}
+          />
+        )}
+        <Stat label="Submissions" value={activitySummary ? activitySummary.submissions : '–'} detail="In the last year" />
+        <Stat label="Active days" value={activitySummary ? activitySummary.activeDays : '–'} detail="In the last year" />
+        {showLearnerProgress && (
+          <Stat
+            label="Topics unlocked"
+            value={c ? c.unlockedTopics : '–'}
+            detail={c ? `of ${c.topics} in C` : loading ? 'Loading…' : 'Unavailable'}
+          />
+        )}
+        </div>
+      </Card>
       {showLearnerProgress && error && <ErrorBlock message={error} />}
-      {showLearnerProgress && data && (
-        <>
-          <section aria-label="Learning path details" className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-slate-200/80 bg-white px-4 py-3 dark:border-slate-200 dark:bg-slate-100">
-              <p className="text-xs text-slate-500">Available questions</p>
-              <p className="mt-1 text-lg font-bold text-slate-900 dark:text-slate-900">{available}</p>
-            </div>
-            <div className="rounded-2xl border border-slate-200/80 bg-white px-4 py-3 dark:border-slate-200 dark:bg-slate-100">
-              <p className="text-xs text-slate-500">Topics unlocked</p>
-              <p className="mt-1 text-lg font-bold text-slate-900 dark:text-slate-900">{data.categories.filter((topic) => !topic.locked).length} <span className="text-xs font-medium text-slate-500">of {data.categories.length}</span></p>
-            </div>
-          </section>
-          <section data-tour="profile-access" className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-200 dark:bg-slate-100 sm:p-6">
-            <h2 className="font-bold text-slate-900">Your access</h2>
-            <p className="mt-1 text-xs leading-relaxed text-slate-500">The first 10 questions of every language are free. Your admin can unlock the rest of a language for you.</p>
-            <ul className="mt-4 space-y-2">
-              {[['c', 'C programming'], ['javascript', 'JavaScript'], ['python', 'Python']].map(([key, label]) => {
-                const on = unlockedLanguages.includes(key)
-                return (
-                  <li key={key} className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/70 px-3 py-2.5 text-sm">
-                    <span className="font-medium text-slate-800">{label}</span>
-                    <span className={on ? 'font-semibold text-success' : 'text-slate-500'}>{on ? 'Fully unlocked' : 'First 10 questions'}</span>
-                  </li>
-                )
-              })}
-            </ul>
-          </section>
-        </>
-      )}
+
+      {activityState.loading && <div className="skeleton h-52" role="status" aria-label="Loading your activity" />}
+      {activityState.error && <ErrorBlock message={activityState.error} />}
+      {activityState.data && <ActivityHeatmap {...activityState.data} />}
+
+      <div className={`grid gap-6 ${showLearnerProgress ? 'lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]' : ''}`}>
+        <RecentSubmissions {...submissionsState} />
+        {showLearnerProgress && <AccessCard unlocked={user?.unlockedLanguages ?? []} />}
+      </div>
     </div>
   )
 }

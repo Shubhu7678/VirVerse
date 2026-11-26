@@ -1,5 +1,6 @@
 import Task from '../models/Task.js';
 import Submission from '../models/Submission.js';
+import WebDevelopmentProgress from '../models/WebDevelopmentProgress.js';
 import { executeProgram, classifyRun, ExecutorError } from '../services/executor/index.js';
 import { canAccessTask } from '../services/learningAccess.js';
 import { awardTaskPoints } from '../services/gamification.js';
@@ -130,17 +131,32 @@ export async function createSubmission(req, res) {
 
 export async function listSubmissions(req, res) {
   const limit = Math.min(parseInt(req.query.limit, 10) || 20, 100);
-  const submissions = await Submission.find({ user: req.user._id })
-    .sort({ createdAt: -1 })
-    .limit(limit)
-    .select('-code')
-    .populate('task', 'title slug difficulty category language')
-    .lean();
+  const [submissions, htmlDone] = await Promise.all([
+    Submission.find({ user: req.user._id })
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .select('-code')
+      .populate('task', 'title slug difficulty category language')
+      .lean(),
+    // HTML lessons are finished in the HTML course, not submitted, so each finished one is listed as an entry.
+    WebDevelopmentProgress.find({ user: req.user._id, completed: true })
+      .select('taskId completedAt updatedAt')
+      .sort({ updatedAt: -1 })
+      .limit(limit)
+      .lean(),
+  ]);
 
-  res.json({
-    submissions: submissions
-      .filter((s) => s.task)
-      .map((s) => ({
+  const htmlEntries = htmlDone.map((record) => ({
+    id: String(record._id),
+    kind: 'html',
+    taskId: record.taskId,
+    status: 'Completed',
+    createdAt: record.completedAt ?? record.updatedAt,
+  }));
+
+  const codeEntries = submissions
+    .filter((s) => s.task)
+    .map((s) => ({
         id: s._id,
         status: s.status,
         passedCount: s.passedCount,
@@ -153,8 +169,13 @@ export async function listSubmissions(req, res) {
           category: s.task.category,
           language: s.task.language ?? 'c',
         },
-      })),
-  });
+      }));
+
+  const merged = [...codeEntries, ...htmlEntries]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, limit);
+
+  res.json({ submissions: merged });
 }
 
 export async function listSubmissionActivity(req, res) {
@@ -172,8 +193,26 @@ export async function listSubmissionActivity(req, res) {
     { $sort: { _id: 1 } },
   ]);
 
+  // Finishing an HTML lesson counts as activity on that day too.
+  const htmlActivity = await WebDevelopmentProgress.aggregate([
+    { $match: { user: req.user._id, completed: true } },
+    { $addFields: { doneAt: { $ifNull: ['$completedAt', '$updatedAt'] } } },
+    { $match: { doneAt: { $gte: startDate, $lt: endDate } } },
+    {
+      $group: {
+        _id: { $dateToString: { format: '%Y-%m-%d', date: '$doneAt', timezone: 'UTC' } },
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const perDay = new Map();
+  for (const { _id: date, count } of [...activity, ...htmlActivity]) {
+    perDay.set(date, (perDay.get(date) ?? 0) + count);
+  }
+
   res.json({
     asOf: now.toISOString().slice(0, 10),
-    activity: activity.map(({ _id: date, count }) => ({ date, count })),
+    activity: [...perDay.entries()].sort(([a], [b]) => (a < b ? -1 : 1)).map(([date, count]) => ({ date, count })),
   });
 }

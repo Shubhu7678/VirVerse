@@ -48,7 +48,7 @@ export default function CodeEditor({
       value={value}
       onChange={(v) => onChange(v ?? '')}
       options={{ ...options, fontSize, fontLigatures, wordWrap: wordWrap ? 'on' : 'off' }}
-      loading={<div className="p-4 text-sm text-fg-muted">Loading editor…</div>}
+      loading={<div className="skeleton h-full w-full !rounded-none" role="status" aria-label="Loading editor" />}
       onMount={(editor, monaco) => {
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => runRef.current())
         editor.onDidChangeCursorPosition(({ position }) => {

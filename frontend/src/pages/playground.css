@@ -49,16 +49,16 @@
 
 .playground-interactive {
   padding: 4px 7px;
-  border: 1px solid rgb(124 127 248 / 20%);
+  border: 1px solid rgb(128 128 128 / 20%);
   border-radius: 999px;
-  background: rgb(124 127 248 / 9%);
+  background: rgb(128 128 128 / 9%);
   color: #0d7a5f;
   font-size: 8px;
   font-weight: 750;
   letter-spacing: 0.07em;
 }
 
-.dark .playground-interactive { color: #3ecf8e; }
+.dark .playground-interactive { color: #f5f5f7; }
 .playground-subtitle { margin: 4px 0 0; color: var(--pg-muted); font-size: 11px; }
 .playground-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 7px; }
 
@@ -127,8 +127,8 @@
 }
 
 .dark .playground-editor-host .monaco-editor .current-line {
-  border-color: rgb(124 127 248 / 13%) !important;
-  background: rgb(124 127 248 / 6%) !important;
+  border-color: rgb(128 128 128 / 13%) !important;
+  background: rgb(128 128 128 / 6%) !important;
 }
 
 .playground-editor-status {
@@ -164,7 +164,7 @@
 }
 
 .playground-file-tab > span { color: var(--pg-accent); font-size: 13px; }
-.playground-file-tab > i { width: 7px; height: 7px; border-radius: 50%; background: #3ecf8e; box-shadow: 0 0 8px rgb(124 127 248 / 55%); }
+.playground-file-tab > i { width: 7px; height: 7px; border-radius: 50%; background: var(--fg-subtle); }
 
 .playground-editor-language {
   padding: 4px 8px;
@@ -247,10 +247,10 @@
 
 .playground-terminal-status {
   padding: 4px 9px;
-  border: 1px solid rgb(124 127 248 / 15%);
+  border: 1px solid rgb(128 128 128 / 15%);
   border-radius: 999px;
-  background: rgb(124 127 248 / 8%);
-  color: #3ecf8e;
+  background: rgb(128 128 128 / 8%);
+  color: var(--fg-muted);
   font-size: 8px;
 }
 
@@ -263,11 +263,11 @@
   background: rgb(255 255 255 / 3%);
 }
 
-.playground-console .rounded-xl.border-slate-800.bg-slate-950 form > span { color: #3ecf8e; }
+.playground-console .rounded-xl.border-slate-800.bg-slate-950 form > span { color: #f5f5f7; }
 .playground-console .rounded-xl.border-slate-800.bg-slate-950 form > input { color: #edf4f4; font-size: 11px; }
 .playground-console .rounded-xl.border-slate-800.bg-slate-950 form > input::placeholder { color: #819399; }
-.playground-console .rounded-xl.border-slate-800.bg-slate-950 form > button { border: 1px solid rgb(124 127 248 / 14%); }
-.playground-console .rounded-xl.border-slate-800.bg-slate-950 form > button:focus-visible { outline-color: #3ecf8e; }
+.playground-console .rounded-xl.border-slate-800.bg-slate-950 form > button { border: 1px solid rgb(128 128 128 / 14%); }
+.playground-console .rounded-xl.border-slate-800.bg-slate-950 form > button:focus-visible { outline-color: #f5f5f7; }
 
 .dark .playground-console .rounded-xl.border-slate-800.bg-slate-950 {
   background: linear-gradient(145deg, #0b141a, #070d11);

@@ -21,9 +21,10 @@ export function ToastProvider({ children }) {
   }, [])
 
   const show = useCallback(
-    (message, { tone = 'info', duration = tone === 'error' ? 6000 : 3200 } = {}) => {
+    (message, { tone = 'info', duration = tone === 'error' ? 8000 : 3200 } = {}) => {
       const id = nextId.current++
-      setToasts((current) => [...current.slice(-3), { id, message, tone }])
+      // The same message shown twice in a row is just noise.
+      setToasts((current) => [...current.filter((t) => t.message !== message).slice(-3), { id, message, tone }])
       if (duration) timers.current.set(id, setTimeout(() => dismiss(id), duration))
       return id
     },

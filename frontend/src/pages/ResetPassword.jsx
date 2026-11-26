@@ -66,7 +66,7 @@ export default function ResetPassword() {
               {serverError} <Link to="/forgot-password">Get a new link</Link>
             </div>
           )}
-          <Input id="password" name="password" type="password" label="New password" autoComplete="new-password" value={form.password} onChange={onChange} error={errors.password} />
+          <Input id="password" name="password" type="password" autoFocus label="New password" autoComplete="new-password" value={form.password} onChange={onChange} error={errors.password} />
           <Input id="confirm" name="confirm" type="password" label="Confirm new password" autoComplete="new-password" value={form.confirm} onChange={onChange} error={errors.confirm} />
           <button type="submit" disabled={loading} className="au-btn au-btn-primary">{loading ? 'Saving…' : 'Change password'}</button>
         </form>

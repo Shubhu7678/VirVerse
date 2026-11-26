@@ -284,10 +284,56 @@ const validators = {
   },
 }
 
+const VOID_TAGS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr'])
+// HTML allows these to be left open, so a missing end tag is not a mistake.
+const OPTIONAL_END_TAGS = new Set(['html', 'head', 'body', 'p', 'li', 'dt', 'dd', 'tr', 'td', 'th', 'thead', 'tbody', 'tfoot', 'option', 'optgroup', 'colgroup', 'caption', 'rt', 'rp'])
+// Content of these is plain text, so tags inside are not tags.
+const TEXT_ONLY_TAGS = new Set(['script', 'style', 'textarea', 'title'])
+const TAG_PATTERN = /<!--[\s\S]*?-->|<![^>]*>|<(\/?)([a-zA-Z][a-zA-Z0-9-]*)(?:[^>"']|"[^"]*"|'[^']*')*>/g
+
+// A browser quietly stretches a tag that was never closed to the end of the page, so `<em>` alone
+// looks like it holds all the text after it. Treat such a tag as empty until the learner closes it.
+export function repairUnclosedTags(code) {
+  const stack = []
+  const unclosed = []
+  TAG_PATTERN.lastIndex = 0
+  for (let match = TAG_PATTERN.exec(code); match; match = TAG_PATTERN.exec(code)) {
+    const [token, closing, rawName] = match
+    if (!rawName) continue
+    const name = rawName.toLowerCase()
+    if (closing) {
+      const at = stack.map((entry) => entry.name).lastIndexOf(name)
+      if (at === -1) continue
+      for (const skipped of stack.splice(at)) {
+        if (skipped.name !== name) unclosed.push(skipped)
+      }
+      continue
+    }
+    if (VOID_TAGS.has(name) || token.endsWith('/>')) continue
+    const entry = { name, end: match.index + token.length }
+    if (TEXT_ONLY_TAGS.has(name)) {
+      const close = new RegExp(`</${name}\\s*>`, 'i')
+      const found = close.exec(code.slice(entry.end))
+      if (found) TAG_PATTERN.lastIndex = entry.end + found.index + found[0].length
+      else unclosed.push(entry)
+      continue
+    }
+    stack.push(entry)
+  }
+  unclosed.push(...stack)
+  const problems = unclosed.filter((entry) => !OPTIONAL_END_TAGS.has(entry.name))
+  let repaired = code
+  for (const entry of [...problems].sort((a, b) => b.end - a.end)) {
+    repaired = `${repaired.slice(0, entry.end)}</${entry.name}>${repaired.slice(entry.end)}`
+  }
+  return { repaired, unclosed: [...new Set(problems.map((entry) => entry.name))] }
+}
+
 export function validateHtmlTask(taskId, code) {
   if (!HTML_TASK_BY_ID[taskId]) throw new Error('Unknown HTML task.')
   if (typeof code !== 'string') throw new TypeError('Task code must be a string.')
-  const doc = parseDocument(code)
+  const { repaired, unclosed } = repairUnclosedTags(code)
+  const doc = parseDocument(repaired)
   const checks = validators[taskId](code, doc)
-  return { passed: checks.every((result) => result.passed), checks }
+  return { passed: unclosed.length === 0 && checks.every((result) => result.passed), checks, unclosed }
 }

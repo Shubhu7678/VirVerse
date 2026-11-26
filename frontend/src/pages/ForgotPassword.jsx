@@ -46,7 +46,7 @@ export default function ForgotPassword() {
       ) : (
         <form onSubmit={onSubmit} noValidate className="au-form">
           {error && <div role="alert" className="au-error">{error}</div>}
-          <Input id="email" name="email" type="email" label="Email address" placeholder="you@example.com" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input id="email" name="email" type="email" autoFocus label="Email address" placeholder="you@example.com" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           <button type="submit" disabled={loading} className="au-btn au-btn-primary">{loading ? 'Sending…' : 'Send reset link'}</button>
         </form>
       )}

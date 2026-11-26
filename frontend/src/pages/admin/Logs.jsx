@@ -8,6 +8,7 @@ const PAGE_SIZE = 10
 const FILTERS = [
   { value: '', label: 'All' },
   { value: 'student.signup', label: 'Sign-ups' },
+  { value: 'student.login', label: 'Sign-ins' },
   { value: 'question.completed', label: 'Completed' },
   { value: 'access.updated', label: 'Access changes' },
   { value: 'password.reset', label: 'Passwords' },
@@ -15,8 +16,8 @@ const FILTERS = [
   { value: 'student.disabled', label: 'Disabled' },
   { value: 'student.deleted', label: 'Deleted' },
 ]
-const TYPE_LABEL = { 'student.signup': 'Sign-up', 'access.updated': 'Access', 'question.completed': 'Solved', 'password.reset': 'Password', 'student.updated': 'Edit', 'student.disabled': 'Disabled', 'student.enabled': 'Enabled', 'student.deleted': 'Deleted' }
-const TYPE_TONE = { 'student.signup': 'bg-surface-2 text-fg-muted', 'access.updated': 'bg-warn-soft text-warn', 'question.completed': 'bg-success-soft text-success', 'password.reset': 'bg-surface-2 text-fg-muted', 'student.updated': 'bg-surface-2 text-fg-muted', 'student.disabled': 'bg-danger-soft text-danger', 'student.enabled': 'bg-success-soft text-success', 'student.deleted': 'bg-danger-soft text-danger' }
+const TYPE_LABEL = { 'student.signup': 'Sign-up', 'student.login': 'Sign-in', 'access.updated': 'Access', 'question.completed': 'Solved', 'password.reset': 'Password', 'student.updated': 'Edit', 'student.disabled': 'Disabled', 'student.enabled': 'Enabled', 'student.deleted': 'Deleted' }
+const TYPE_TONE = { 'student.signup': 'bg-surface-2 text-fg-muted', 'student.login': 'bg-surface-2 text-fg-muted', 'access.updated': 'bg-warn-soft text-warn', 'question.completed': 'bg-success-soft text-success', 'password.reset': 'bg-surface-2 text-fg-muted', 'student.updated': 'bg-surface-2 text-fg-muted', 'student.disabled': 'bg-danger-soft text-danger', 'student.enabled': 'bg-success-soft text-success', 'student.deleted': 'bg-danger-soft text-danger' }
 
 function when(value) {
   const d = new Date(value)
@@ -34,7 +35,7 @@ export default function AdminLogs() {
       <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 className="text-2xl font-semibold tracking-tight text-fg">Activity log</h2>
-          <p className="mt-1 text-fg-muted">Sign-ups, solved questions and access changes, newest first.</p>
+          <p className="mt-1 text-fg-muted">Sign-ups, sign-ins, solved questions and access changes, newest first.</p>
         </div>
         <div className="flex flex-wrap gap-1 self-start rounded-control border border-line p-0.5" role="group" aria-label="Filter log type">
           {FILTERS.map((f) => (
@@ -53,7 +54,7 @@ export default function AdminLogs() {
 
       {loading && <LoadingBlock label="Loading activity…" />}
       {error && <ErrorBlock message={error} />}
-      {data && data.logs.length === 0 && <EmptyState title="Nothing logged yet" text="Sign-ups, solved questions and access changes will appear here." />}
+      {data && data.logs.length === 0 && <EmptyState title="Nothing logged yet" text="Sign-ups, sign-ins, solved questions and access changes will appear here." />}
       {data && data.logs.length > 0 && (
         <>
           <ol className="overflow-hidden rounded-card border border-line bg-surface">

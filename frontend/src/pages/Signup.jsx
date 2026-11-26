@@ -22,6 +22,7 @@ export default function Signup() {
   const [codeError, setCodeError] = useState('')
   const [notice, setNotice] = useState('')
   const [cooldown, setCooldown] = useState(0)
+  const [resending, setResending] = useState(false)
 
   useEffect(() => {
     if (cooldown <= 0) return undefined
@@ -91,6 +92,7 @@ export default function Signup() {
   const resend = async () => {
     setCodeError('')
     setNotice('')
+    setResending(true)
     try {
       const info = await resendSignupCode(verifying.email)
       setCooldown(info.resendInSeconds ?? 60)
@@ -101,6 +103,8 @@ export default function Signup() {
       const wait = err?.response?.data?.retryAfter
       if (wait) setCooldown(wait)
       setCodeError(getErrorMessage(err, 'Could not send a new code'))
+    } finally {
+      setResending(false)
     }
   }
 
@@ -125,7 +129,7 @@ export default function Signup() {
             Did not get it? Check spam.{' '}
             {cooldown > 0
               ? <span>Resend in {cooldown}s</span>
-              : <button type="button" className="au-link-button" onClick={resend}>Send a new code</button>}
+              : <button type="button" className="au-link-button" onClick={resend} disabled={resending}>{resending ? 'Sending…' : 'Send a new code'}</button>}
           </p>
         </form>
       </AuthShell>
@@ -140,7 +144,7 @@ export default function Signup() {
     >
       <form onSubmit={onSubmit} noValidate className="au-form">
         {serverError && <div role="alert" className="au-error">{serverError}</div>}
-        <Input id="name" name="name" label="Full name" placeholder="Jane Doe" autoComplete="name" value={form.name} onChange={onChange} error={errors.name} />
+        <Input id="name" name="name" autoFocus label="Full name" placeholder="Jane Doe" autoComplete="name" value={form.name} onChange={onChange} error={errors.name} />
         <Input id="email" name="email" type="email" label="Email address" placeholder="you@example.com" autoComplete="email" value={form.email} onChange={onChange} error={errors.email} />
         <Input id="password" name="password" type="password" label="Password" placeholder="At least 8 characters" autoComplete="new-password" value={form.password} onChange={onChange} error={errors.password} />
         <ul className="au-rules" aria-label="Password requirements">

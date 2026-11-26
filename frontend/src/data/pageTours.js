@@ -62,7 +62,7 @@ const PAGES = [
     steps: [
       intro('Leaderboard', 'See how you compare with other students.'),
       { target: '[data-tour="lb-me"]', title: 'Your position', body: 'Your rank and points. You earn points the first time you solve a question: 10 for Easy, 20 for Medium, 30 for Hard.' },
-      { target: 'main ol', title: 'The ranking', body: 'Names, levels and points, 10 per page. Other students\' question counts are private.' },
+      { target: '[data-tour="lb-list"]', title: 'The ranking', body: 'Everyone ranked by points, 10 per page. Filter by level above the table. Other students\' question counts are private.' },
       close,
     ],
   },

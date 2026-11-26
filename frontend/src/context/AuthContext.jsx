@@ -1,5 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import api from '../api/client'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import api, { setUnauthorizedHandler } from '../api/client'
+import { purgeLegacyStorage } from '../utils/legacyStorage'
+import { clearAsyncCache } from '../hooks/useAsync'
 import { useToast } from '../components/ui/Toast'
 
 const AuthContext = createContext(null)
@@ -8,8 +10,26 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const toast = useToast()
+  const signedIn = useRef(false)
 
   useEffect(() => {
+    signedIn.current = Boolean(user)
+  }, [user])
+
+  // A protected call answering 401 means the session ended: clear everything and show the sign-in page.
+  useEffect(() => {
+    setUnauthorizedHandler((message) => {
+      if (!signedIn.current) return
+      signedIn.current = false
+      clearAsyncCache()
+      setUser(null)
+      toast.error(message || 'Your session has expired. Please sign in again.')
+    })
+    return () => setUnauthorizedHandler(null)
+  }, [toast])
+
+  useEffect(() => {
+    purgeLegacyStorage()
     api
       .get('/auth/me')
       .then(({ data }) => {
@@ -25,30 +45,31 @@ export function AuthProvider({ children }) {
   }, [])
 
   const login = useCallback(async (credentials) => {
-    await api.post('/auth/login', credentials)
-    await loadSession()
-    toast.success('Signed in successfully')
-  }, [loadSession, toast])
+    const { data } = await api.post('/auth/login', credentials)
+    clearAsyncCache()
+    setUser(data.user)
+  }, [])
 
   const startDemo = useCallback(async () => {
-    await api.post('/auth/demo')
-    await loadSession()
-    toast.success('Demo started. Your progress is kept for 24 hours')
-  }, [loadSession, toast])
+    const { data } = await api.post('/auth/demo')
+    clearAsyncCache()
+    setUser(data.user)
+  }, [])
 
   // Step 1 only emails a 6-digit code; the account exists after verifySignup.
   const signup = useCallback(async (details) => (await api.post('/auth/signup', details)).data, [])
 
   const verifySignup = useCallback(async (email, code) => {
-    await api.post('/auth/signup/verify', { email, code })
-    await loadSession()
+    const { data } = await api.post('/auth/signup/verify', { email, code })
+    setUser(data.user)
     toast.success('Email verified. Welcome to VirVerse!')
-  }, [loadSession, toast])
+  }, [toast])
 
   const resendSignupCode = useCallback(async (email) => (await api.post('/auth/signup/resend', { email })).data, [])
 
   const logout = useCallback(async () => {
     await api.post('/auth/logout').catch(() => {})
+    clearAsyncCache() // never show one account's cached data to the next
     setUser(null)
     toast.success('Signed out successfully')
   }, [toast])

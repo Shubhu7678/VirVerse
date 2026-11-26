@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import { Lock } from 'lucide-react'
 import { fetchTaskSummary } from '../api/tasks'
 import useAsync from '../hooks/useAsync'
@@ -7,11 +8,11 @@ import TopicCard from '../components/TopicCard'
 import ProgressBar from '../components/ProgressBar'
 import Icon, { icons } from '../components/Icon'
 import { buttonClasses } from '../components/buttonStyles'
-import { LAST_TASK_KEY } from '../utils/lastTask'
+import { lastTaskKey } from '../utils/lastTask'
 
-function readLastSlug() {
+function readLastSlug(userId) {
   try {
-    return JSON.parse(localStorage.getItem(LAST_TASK_KEY))?.slug
+    return JSON.parse(localStorage.getItem(lastTaskKey(userId)))?.slug
   } catch {
     return undefined
   }
@@ -19,8 +20,9 @@ function readLastSlug() {
 
 export default function Topics({ language = 'c' }) {
   const title = language === 'javascript' ? 'JavaScript' : language === 'python' ? 'Python' : 'C'
+  const { user } = useAuth()
   const prefix = language === 'c' ? '' : `/${language}`
-  const { data, loading, error } = useAsync(() => fetchTaskSummary(language, readLastSlug()), `topics-${language}`)
+  const { data, loading, error } = useAsync(() => fetchTaskSummary(language, readLastSlug(user.id)), `topics-${user.id}-${language}`)
 
   if (loading) return <LoadingBlock label="Loading topics…" />
   if (error) return <ErrorBlock message={error} />

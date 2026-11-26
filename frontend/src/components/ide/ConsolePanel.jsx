@@ -61,11 +61,22 @@ function Hint({ children }) {
   )
 }
 
+// After a few seconds, explains the wait so a slow run doesn't look frozen.
+function SlowHint() {
+  const [slow, setSlow] = useState(false)
+  useEffect(() => {
+    const timer = setTimeout(() => setSlow(true), 8000)
+    return () => clearTimeout(timer)
+  }, [])
+  return slow ? <p className="mt-2 text-xs text-fg-subtle">Taking longer than usual. An infinite loop can cause this; runs stop after a minute.</p> : null
+}
+
 function OutputTab({ running, runError, result }) {
   if (running) {
     return (
       <div className="flex items-center gap-2 text-sm text-fg-muted">
         <Spinner className="size-4 text-accent-text" /> Compiling and running…
+        <SlowHint />
       </div>
     )
   }
@@ -97,6 +108,7 @@ function TestsTab({ submitting, submitError, submission }) {
     return (
       <div className="flex items-center gap-2 text-sm text-fg-muted">
         <Spinner className="size-4 text-accent-text" /> Running your code against the test cases…
+        <SlowHint />
       </div>
     )
   }

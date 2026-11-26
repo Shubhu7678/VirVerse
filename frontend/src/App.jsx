@@ -1,26 +1,31 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { GuestRoute, ProtectedRoute, AdminRoute } from './components/RouteGuards'
-import Login from './pages/Login'
-import Signup from './pages/Signup'
-import LandingPage from './pages/LandingPage'
-import ForgotPassword from './pages/ForgotPassword'
-import ResetPassword from './pages/ResetPassword'
 import Dashboard from './pages/Dashboard'
 import Tasks from './pages/Tasks'
 import Topics from './pages/Topics'
 import TopicDetail from './pages/TopicDetail'
-import AdminStudents from './pages/admin/Students'
-import AdminStudentDetail from './pages/admin/StudentDetail'
-import AdminLogs from './pages/admin/Logs'
-import AdminEmails from './pages/admin/Emails'
 import Leaderboard from './pages/Leaderboard'
-import { PythonGuideIndex, PythonGuideLesson } from './pages/PythonGuide'
-import { LoadingBlock } from './components/States'
+import NotFound from './pages/NotFound'
+import Spinner from './components/Spinner'
+import { LoadingBlock, EditorSkeleton } from './components/States'
 import Submissions from './pages/Submissions'
 import Profile from './pages/Profile'
 import DashboardLayout from './components/DashboardLayout'
+
+// Pages a signed-in learner doesn't open first (landing, auth, admin, guide) load on demand.
+const LandingPage = lazy(() => import('./pages/LandingPage'))
+const Login = lazy(() => import('./pages/Login'))
+const Signup = lazy(() => import('./pages/Signup'))
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
+const ResetPassword = lazy(() => import('./pages/ResetPassword'))
+const AdminStudents = lazy(() => import('./pages/admin/Students'))
+const AdminStudentDetail = lazy(() => import('./pages/admin/StudentDetail'))
+const AdminLogs = lazy(() => import('./pages/admin/Logs'))
+const AdminEmails = lazy(() => import('./pages/admin/Emails'))
+const PythonGuideIndex = lazy(() => import('./pages/PythonGuide').then((m) => ({ default: m.PythonGuideIndex })))
+const PythonGuideLesson = lazy(() => import('./pages/PythonGuide').then((m) => ({ default: m.PythonGuideLesson })))
 
 // The IDE page bundles Monaco, so load it only when a task is opened.
 const TaskDetail = lazy(() => import('./pages/TaskDetail'))
@@ -28,10 +33,19 @@ const Playground = lazy(() => import('./pages/Playground'))
 const WebDevelopment = lazy(() => import('./pages/WebDevelopment'))
 const HtmlCatalog = lazy(() => import('./pages/HtmlCatalog'))
 
+function PageFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <Spinner className="size-8 text-brand-600" />
+    </div>
+  )
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <Suspense fallback={<PageFallback />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -64,7 +78,7 @@ export default function App() {
               <Route
                 path="/javascript/tasks/:slug"
                 element={
-                  <Suspense fallback={<LoadingBlock label="Opening editor…" />}>
+                  <Suspense fallback={<EditorSkeleton />}>
                     <TaskDetail language="javascript" />
                   </Suspense>
                 }
@@ -72,7 +86,7 @@ export default function App() {
               <Route
                 path="/python/tasks/:slug"
                 element={
-                  <Suspense fallback={<LoadingBlock label="Opening editor…" />}>
+                  <Suspense fallback={<EditorSkeleton />}>
                     <TaskDetail language="python" />
                   </Suspense>
                 }
@@ -85,7 +99,7 @@ export default function App() {
               <Route
                 path="/tasks/:slug"
                 element={
-                  <Suspense fallback={<LoadingBlock label="Opening editor…" />}>
+                  <Suspense fallback={<EditorSkeleton />}>
                     <TaskDetail />
                   </Suspense>
                 }
@@ -93,7 +107,7 @@ export default function App() {
               <Route
                 path="/playground"
                 element={
-                  <Suspense fallback={<LoadingBlock label="Opening editor…" />}>
+                  <Suspense fallback={<EditorSkeleton />}>
                     <Playground key="c-playground" />
                   </Suspense>
                 }
@@ -101,7 +115,7 @@ export default function App() {
               <Route
                 path="/javascript/playground"
                 element={
-                  <Suspense fallback={<LoadingBlock label="Opening editor…" />}>
+                  <Suspense fallback={<EditorSkeleton />}>
                     <Playground key="javascript-playground" language="javascript" />
                   </Suspense>
                 }
@@ -109,7 +123,7 @@ export default function App() {
               <Route
                 path="/python/playground"
                 element={
-                  <Suspense fallback={<LoadingBlock label="Opening editor…" />}>
+                  <Suspense fallback={<EditorSkeleton />}>
                     <Playground key="python-playground" language="python" />
                   </Suspense>
                 }
@@ -119,8 +133,9 @@ export default function App() {
               <Route path="/profile" element={<Profile />} />
             </Route>
           </Route>
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </AuthProvider>
     </BrowserRouter>
   )

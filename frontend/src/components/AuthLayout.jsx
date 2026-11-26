@@ -12,17 +12,17 @@ export function Logo({ className = '' }) {
 export default function AuthLayout({ title, subtitle, children, footer }) {
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
-      <aside className="relative hidden overflow-hidden bg-linear-to-br from-brand-600 via-brand-700 to-brand-700 p-12 text-white lg:flex lg:flex-col lg:justify-between">
+      <aside className="relative hidden overflow-hidden bg-linear-to-br from-brand-600 via-brand-700 to-brand-700 p-12 text-white dark:bg-surface-2 dark:bg-none dark:text-fg lg:flex lg:flex-col lg:justify-between">
         <Logo />
         <div className="relative z-10 max-w-md">
           <h2 className="text-4xl leading-tight font-bold">Everything you need, in one place.</h2>
-          <p className="mt-4 text-indigo-100">
+          <p className="mt-4 text-indigo-100 dark:text-fg-muted">
             Sign in to manage your workspace, track your progress and stay on top of what matters.
           </p>
         </div>
-        <p className="text-sm text-indigo-200">© {YEAR} VirVerse</p>
-        <div className="absolute -right-24 -bottom-24 size-96 rounded-full bg-white/10 blur-2xl" />
-        <div className="absolute -top-16 right-16 size-64 rounded-full bg-violet-400/20 blur-2xl" />
+        <p className="text-sm text-indigo-200 dark:text-fg-subtle">© {YEAR} VirVerse</p>
+        <div className="absolute -right-24 -bottom-24 size-96 rounded-full bg-white/10 blur-2xl dark:hidden" />
+        <div className="absolute -top-16 right-16 size-64 rounded-full bg-violet-400/20 blur-2xl dark:hidden" />
       </aside>
 
       <main className="flex items-center justify-center px-6 py-12">

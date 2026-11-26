@@ -54,12 +54,13 @@
   --fg-muted: #a1a1a6;
   --fg-subtle: #8e8e93;
 
-  --accent: #3ecf8e;
-  --accent-hover: #6ddfaa;
-  --accent-fg: #04140d;
-  --accent-soft: #3ecf8e29;
-  --accent-border: #3ecf8e52;
-  --accent-text: #7ee3b0;
+  /* Neutral on purpose: no tinted accent in dark mode. */
+  --accent: #f5f5f7;
+  --accent-hover: #d2d2d7;
+  --accent-fg: #000000;
+  --accent-soft: #ffffff14;
+  --accent-border: #ffffff29;
+  --accent-text: #f5f5f7;
 
   --cta: #ffffff;
   --cta-fg: #000000;
@@ -259,30 +260,42 @@ h1, h2 { font-family: var(--font-display); }
   --color-slate-800: #e5e5ea;
   --color-slate-900: #f5f5f7;
 
-  --color-brand-50: #3ecf8e14;
-  --color-brand-100: #3ecf8e29;
-  --color-brand-500: #3ecf8e;
-  --color-brand-600: #3ecf8e;
-  --color-brand-700: #7ee3b0;
+  --color-brand-50: #ffffff0f;
+  --color-brand-100: #ffffff1a;
+  --color-brand-500: #f5f5f7;
+  --color-brand-600: #f5f5f7;
+  --color-brand-700: #ffffff;
 
-  --color-indigo-50: #3ecf8e14;
-  --color-indigo-200: #3ecf8e52;
-  --color-indigo-500: #3ecf8e;
-  --color-indigo-600: #3ecf8e;
-  --color-indigo-700: #7ee3b0;
-  --color-indigo-900: #d1fae5;
-  --color-violet-50: #3ecf8e14;
-  --color-violet-200: #3ecf8e52;
-  --color-violet-500: #3ecf8e;
-  --color-violet-600: #3ecf8e;
-  --color-violet-700: #7ee3b0;
-  --color-violet-900: #d1fae5;
-  --color-blue-50: #3ecf8e14;
-  --color-blue-200: #3ecf8e52;
-  --color-blue-500: #3ecf8e;
-  --color-blue-600: #3ecf8e;
-  --color-blue-700: #7ee3b0;
-  --color-blue-900: #d1fae5;
+  --color-indigo-50: #ffffff0f;
+  --color-indigo-100: #ffffff1a;
+  --color-indigo-200: #ffffff33;
+  --color-indigo-300: #a1a1a6;
+  --color-indigo-400: #a1a1a6;
+  --color-indigo-500: #f5f5f7;
+  --color-indigo-600: #f5f5f7;
+  --color-indigo-700: #ffffff;
+  --color-indigo-900: #3a3a3c;
+
+  --color-violet-50: #ffffff0f;
+  --color-violet-100: #ffffff1a;
+  --color-violet-200: #ffffff33;
+  --color-violet-300: #a1a1a6;
+  --color-violet-400: #a1a1a6;
+  --color-violet-500: #f5f5f7;
+  --color-violet-600: #f5f5f7;
+  --color-violet-700: #ffffff;
+  --color-violet-900: #3a3a3c;
+
+  --color-blue-50: #ffffff0f;
+  --color-blue-100: #ffffff1a;
+  --color-blue-200: #ffffff33;
+  --color-blue-300: #a1a1a6;
+  --color-blue-400: #a1a1a6;
+  --color-blue-500: #f5f5f7;
+  --color-blue-600: #f5f5f7;
+  --color-blue-700: #ffffff;
+  --color-blue-900: #3a3a3c;
+
   --color-emerald-50: #12261a;
   --color-amber-50: #2a2308;
   --color-red-50: #301618;
@@ -303,3 +316,16 @@ h1, h2 { font-family: var(--font-display); }
 .dark .text-red-600 { color: #f87171; }
 .dark .hover\:text-red-600:hover { color: #f87171; }
 .dark .bg-slate-900\/40 { background-color: rgb(0 0 0 / 0.6); }
+
+/* Sidebar list still scrolls, but without a bulky bar; a thin one appears only on hover. */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  overscroll-behavior: contain;
+}
+.sidebar-scroll:hover {
+  scrollbar-color: var(--color-line, rgb(128 128 128 / 0.35)) transparent;
+}
+.sidebar-scroll::-webkit-scrollbar { width: 4px; }
+.sidebar-scroll::-webkit-scrollbar-thumb { background: transparent; border-radius: 9999px; }
+.sidebar-scroll:hover::-webkit-scrollbar-thumb { background: rgb(128 128 128 / 0.35); }

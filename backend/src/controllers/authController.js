@@ -2,6 +2,7 @@ import { randomBytes, randomUUID } from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import PendingSignup from '../models/PendingSignup.js';
+import ActivityLog from '../models/ActivityLog.js';
 import { logActivity } from '../services/activity.js';
 import { findUserByResetToken, issueResetLink } from '../services/passwordReset.js';
 import { sendMail, resetEmail, verifyEmail } from '../services/mailer.js';
@@ -9,6 +10,19 @@ import { CODE_TTL_MS, RESEND_COOLDOWN_MS, MAX_ATTEMPTS, MAX_SENDS, generateCode,
 import { setAuthCookie, clearAuthCookie } from '../utils/token.js';
 
 const DEMO_SESSION_MS = 24 * 60 * 60 * 1000;
+// A student's sign-ins are logged at most once an hour, so the log shows who is active without filling up.
+const SIGN_IN_LOG_GAP_MS = 60 * 60 * 1000;
+
+async function logSignIn(user) {
+  if (user.platformRole) return;
+  const recent = await ActivityLog.exists({
+    type: 'student.login',
+    target: user._id,
+    createdAt: { $gte: new Date(Date.now() - SIGN_IN_LOG_GAP_MS) },
+  });
+  if (recent) return;
+  await logActivity({ type: 'student.login', actor: user._id, target: user._id, message: `${user.name} signed in` });
+}
 
 // Step 1: nothing is created yet. We keep the details aside and email a 6-digit code.
 export async function signup(req, res) {
@@ -112,6 +126,8 @@ export async function login(req, res) {
   if (user.disabled) return res.status(403).json({ message: 'This account is disabled. Contact your admin.' });
 
   setAuthCookie(res, user._id);
+  // The log must never slow down or break signing in.
+  logSignIn(user).catch((err) => console.error('Could not write sign-in log:', err.message));
   res.json({ user: user.toSafeObject() });
 }
 
@@ -146,7 +162,7 @@ const FORGOT_MESSAGE = 'If an account exists for that email, a reset link is on 
 
 // Always answers the same way, so the form cannot be used to find out who has an account.
 export async function forgotPassword(req, res) {
-  const user = await User.findOne({ email: req.body.email, isDemo: false, disabled: { $ne: true } });
+  const user = await User.findOne({ email: req.body.email, isDemo: { $ne: true }, disabled: { $ne: true } });
   if (user) {
     const { link } = await issueResetLink(user);
     const { subject, text } = resetEmail(user.name, link);

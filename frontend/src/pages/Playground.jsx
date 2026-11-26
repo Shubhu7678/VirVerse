@@ -1,4 +1,6 @@
 import { useRef, useState } from 'react'
+import ConfirmModal from '../components/ConfirmModal'
+import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import useInteractiveRun from '../hooks/useInteractiveRun'
 import { useTheme } from '../context/ThemeContext'
@@ -25,21 +27,19 @@ const DEFAULT_JAVASCRIPT_CODE = `console.log("Hello VirVerse!")
 const DEFAULT_PYTHON_CODE = `print("Hello VirVerse!")
 `
 
-const codeKey = (language) => `virvese:playground:${language}:code`
+const codeKey = (userId, language) => `virvese:playground:${userId}:${language}:code`
 const defaultCode = (language) => language === 'javascript'
   ? DEFAULT_JAVASCRIPT_CODE
   : language === 'python' ? DEFAULT_PYTHON_CODE : DEFAULT_C_CODE
-const loadCode = (language) =>
-  localStorage.getItem(codeKey(language))
-  ?? (language === 'c' ? localStorage.getItem('virvese:playground:code') : null)
-  ?? defaultCode(language)
+const loadCode = (userId, language) => localStorage.getItem(codeKey(userId, language)) ?? defaultCode(language)
 
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max)
 const isMac = typeof navigator !== 'undefined' && /Mac/i.test(navigator.platform)
 
 export default function Playground({ language = 'c' }) {
   const navigate = useNavigate()
-  const [code, setCode] = useState(() => loadCode(language))
+  const { user } = useAuth()
+  const [code, setCode] = useState(() => loadCode(user.id, language))
   const [stdin, setStdin] = useState('')
   const [tab, setTab] = useState(language === 'c' ? 'terminal' : 'input')
   const { theme, toggle: toggleTheme } = useTheme()
@@ -55,8 +55,7 @@ export default function Playground({ language = 'c' }) {
 
   const updateCode = (value) => {
     setCode(value)
-    localStorage.setItem(codeKey(language), value)
-    if (language === 'c') localStorage.setItem('virvese:playground:code', value)
+    localStorage.setItem(codeKey(user.id, language), value)
   }
 
   const handleRun = async () => {
@@ -80,8 +79,8 @@ export default function Playground({ language = 'c' }) {
     execute({ code })
   }
 
+  const [confirmReset, setConfirmReset] = useState(false)
   const resetCode = () => {
-    if (!window.confirm('Reset the playground to the default program? Your current code will be lost.')) return
     updateCode(defaultCode(language))
   }
 
@@ -119,6 +118,7 @@ export default function Playground({ language = 'c' }) {
   return (
     // Cancel the layout's page padding so the playground uses the full content area.
     <div className="playground-page -m-4 min-h-[calc(100vh-4rem)] sm:-m-6">
+      {confirmReset && <ConfirmModal title="Reset the playground?" message="Your code goes back to the default program. This cannot be undone." onConfirm={resetCode} onClose={() => setConfirmReset(false)} />}
       <div
         ref={layoutRef}
         style={{ '--console': `${consoleSize * 100}%` }}
@@ -163,7 +163,7 @@ export default function Playground({ language = 'c' }) {
               </svg>
               Download .{isJavaScript ? 'js' : language === 'python' ? 'py' : 'c'}
             </button>
-            <button onClick={resetCode} className="playground-tool-button">
+            <button onClick={() => setConfirmReset(true)} className="playground-tool-button">
               <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M3 11a9 9 0 0 1 15.4-6.4L21 7M21 3v4h-4M21 13a9 9 0 0 1-15.4 6.4L3 17m0 4v-4h4" />
               </svg>

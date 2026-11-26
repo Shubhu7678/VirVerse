@@ -5,7 +5,7 @@ import { runCode, submitSolution } from '../api/execute'
 import { getErrorMessage } from '../api/client'
 import useAsync from '../hooks/useAsync'
 import { useTheme } from '../context/ThemeContext'
-import { LoadingBlock, ErrorBlock } from '../components/States'
+import { EditorSkeleton, ErrorBlock } from '../components/States'
 import Icon, { icons } from '../components/Icon'
 import Button from '../components/Button'
 import ProgressBar from '../components/ProgressBar'
@@ -18,10 +18,11 @@ import ConsolePanel from '../components/ide/ConsolePanel'
 import ResizeHandle from '../components/ide/ResizeHandle'
 import { rememberTask } from '../utils/lastTask'
 import { taskPath, topicPath } from '../utils/languageRoutes'
+import ConfirmModal from '../components/ConfirmModal'
 import { useAuth } from '../context/AuthContext'
 
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max)
-const draftKey = (slug) => `virvese:draft:${slug}`
+const draftKey = (userId, slug) => `virvese:draft:${userId}:${slug}`
 const editorThemeKey = 'virvese:python-editor-theme'
 const editorLigaturesKey = 'virvese:editor-ligatures'
 const editorThemeOptions = ['app', 'virverse-vscode-dark', 'virverse-one-dark', 'virverse-dracula']
@@ -29,11 +30,11 @@ const isMac = typeof navigator !== 'undefined' && /Mac/i.test(navigator.platform
 
 function Workspace({ task, assignmentId }) {
   // Drafts are kept per task so code survives tab switches and page reloads.
-  const [code, setCode] = useState(() => localStorage.getItem(draftKey(task.slug)) ?? task.starterCode)
+  const { user, updateGamification } = useAuth()
+  const [code, setCode] = useState(() => localStorage.getItem(draftKey(user.id, task.slug)) ?? task.starterCode)
   const [stdin, setStdin] = useState('')
   const [tab, setTab] = useState('input')
   const { theme, toggle: toggleTheme } = useTheme()
-  const { updateGamification } = useAuth()
 
   const [fontSize, setFontSize] = useState(() => Number(localStorage.getItem('virvese:editor-font')) || 14)
   const [wrap, setWrap] = useState(() => localStorage.getItem('virvese:editor-wrap') === '1')
@@ -50,7 +51,7 @@ function Workspace({ task, assignmentId }) {
   const setToast = (message, tone) => show(message, { tone })
   const navigate = useNavigate()
 
-  useEffect(() => rememberTask(task.slug, task.title), [task.slug, task.title])
+  useEffect(() => rememberTask(user.id, task.slug, task.title), [user.id, task.slug, task.title])
 
   const changeFont = (delta) =>
     setFontSize((f) => {
@@ -122,13 +123,13 @@ function Workspace({ task, assignmentId }) {
 
   const updateCode = (value) => {
     setCode(value)
-    localStorage.setItem(draftKey(task.slug), value)
+    localStorage.setItem(draftKey(user.id, task.slug), value)
   }
 
+  const [confirmReset, setConfirmReset] = useState(false)
   const resetCode = () => {
-    if (!window.confirm('Reset your code to the starter code? Your changes will be lost.')) return
     setCode(task.starterCode)
-    localStorage.removeItem(draftKey(task.slug))
+    localStorage.removeItem(draftKey(user.id, task.slug))
   }
 
   const handleRun = useCallback(async () => {
@@ -178,6 +179,7 @@ function Workspace({ task, assignmentId }) {
 
   return (
     <div className="flex flex-col bg-bg lg:h-[calc(100dvh-3.5rem)]">
+      {confirmReset && <ConfirmModal title="Reset your code?" message="Your code goes back to the starter code. This cannot be undone." onConfirm={resetCode} onClose={() => setConfirmReset(false)} />}
       <header data-tour="ide-progress" className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-line bg-surface px-4 py-2.5">
         <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-2 text-sm text-fg-muted">
           <Link to={topicPath(task.language, task.category)} aria-label="Back to topic" className="rounded-control p-1 transition-colors hover:bg-surface-2 hover:text-fg">
@@ -212,7 +214,7 @@ function Workspace({ task, assignmentId }) {
         <section
           ref={rightRef}
           style={{ '--console': `${consoleSize * 100}%` }}
-          className="flex h-180 min-h-0 min-w-0 flex-none flex-col border-t border-line lg:h-auto lg:flex-1 lg:border-t-0"
+          className="flex h-[min(45rem,90dvh)] min-h-0 min-w-0 flex-none flex-col border-t border-line lg:h-auto lg:flex-1 lg:border-t-0"
         >
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-surface px-3 py-2">
             <div className="flex items-center gap-2 rounded-md bg-surface-2 px-2.5 py-1 font-mono text-xs text-fg">
@@ -251,7 +253,7 @@ function Workspace({ task, assignmentId }) {
               <ToolButton onClick={toggleTheme} label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}>
                 <Icon d={theme === 'dark' ? icons.sun : icons.moon} className="size-4" />
               </ToolButton>
-              <ToolButton onClick={resetCode} label="Reset to starter code"><RotateCcw className="size-4" aria-hidden="true" /> Reset</ToolButton>
+              <ToolButton onClick={() => setConfirmReset(true)} label="Reset to starter code"><RotateCcw className="size-4" aria-hidden="true" /> Reset</ToolButton>
             </div>
           </div>
 
@@ -335,7 +337,7 @@ export default function TaskDetail({ language = 'c' }) {
   const assignmentId = searchParams.get('assignmentId')
   const { data: task, loading, error } = useAsync(() => fetchTask(slug), slug)
 
-  if (loading) return <LoadingBlock label="Loading task…" />
+  if (loading) return <EditorSkeleton label="Loading task…" />
   if (error) {
     return (
       <div className="mx-auto max-w-3xl space-y-4">

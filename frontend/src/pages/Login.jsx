@@ -68,7 +68,7 @@ export default function Login() {
     >
       <form onSubmit={onSubmit} noValidate className="au-form">
         {serverError && <div role="alert" className="au-error">{serverError}</div>}
-        <Input id="email" name="email" type="email" label="Email address" placeholder="you@example.com" autoComplete="email" value={form.email} onChange={onChange} error={errors.email} />
+        <Input id="email" name="email" type="email" autoFocus label="Email address" placeholder="you@example.com" autoComplete="email" value={form.email} onChange={onChange} error={errors.email} />
         <Input id="password" name="password" type="password" label="Password" placeholder="Enter your password" autoComplete="current-password" value={form.password} onChange={onChange} error={errors.password} />
         <p className="-mt-1 text-right text-sm"><Link to="/forgot-password">Forgot password?</Link></p>
         <button type="submit" disabled={loading || demoLoading} className="au-btn au-btn-primary">

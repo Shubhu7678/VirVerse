@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { fetchTaskSummary } from '../api/tasks'
+import { fetchOverview } from '../api/tasks'
 import { fetchSubmissions } from '../api/execute'
 import useAsync from '../hooks/useAsync'
 import { LoadingBlock, ErrorBlock, EmptyState } from '../components/States'
@@ -10,7 +10,7 @@ import ProgressBar from '../components/ProgressBar'
 import { DifficultyBadge } from '../components/Badges'
 import { buttonClasses } from '../components/buttonStyles'
 import Card from '../components/ui/Card'
-import { taskPath } from '../utils/languageRoutes'
+import { submissionView } from '../utils/submissionView'
 
 const verdictTone = {
   Accepted: 'bg-success-soft text-success',
@@ -18,6 +18,7 @@ const verdictTone = {
   'Compilation Error': 'bg-warn-soft text-warn',
   'Runtime Error': 'bg-danger-soft text-danger',
   'Time Limit Exceeded': 'bg-warn-soft text-warn',
+  Completed: 'bg-success-soft text-success',
 }
 
 function PathCard({ to, mark, title, state, index = 0 }) {
@@ -47,24 +48,21 @@ function PathCard({ to, mark, title, state, index = 0 }) {
 export default function Dashboard() {
   const { user } = useAuth()
   const [showDemoGuide, setShowDemoGuide] = useState(true)
-  const { data, loading, error } = useAsync(() => fetchTaskSummary('c'), 'dashboard')
-  const javascript = useAsync(() => fetchTaskSummary('javascript'), 'dashboard-javascript')
-  const python = useAsync(() => fetchTaskSummary('python'), 'dashboard-python')
-  const subs = useAsync(fetchSubmissions, 'dashboard-subs')
+  const { data, loading, error } = useAsync(fetchOverview, 'overview')
+  const subs = useAsync(() => fetchSubmissions(5), 'recent-submissions-5')
 
   if (loading) return <LoadingBlock />
   if (error) return <ErrorBlock message={error} />
 
-  const { stats, continueTask } = data
-  const recent = (subs.data || []).slice(0, 5)
+  const { c: stats, c: { continueTask } } = data
+  const recent = subs.data || []
   const firstName = user.name?.trim().split(/\s+/)[0] || 'Learner'
 
-  const pathState = (result) => ({
-    loading: result.loading,
-    error: result.error,
-    completed: result.data?.stats.completed,
-    total: result.data?.stats.total,
-    topics: result.data?.categories.length,
+  const pathState = (language) => ({
+    loading: false,
+    completed: data[language].completed,
+    total: data[language].total,
+    topics: data[language].topics,
   })
 
   return (
@@ -127,9 +125,9 @@ export default function Dashboard() {
       <section data-tour="dash-paths">
         <h2 className="text-lg font-semibold text-fg">Learning paths</h2>
         <div className="stagger mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <PathCard to="/tasks" index={0} mark="C" title="C programming" state={{ loading: false, completed: stats.completed, total: stats.total, topics: data.categories.length }} />
-          <PathCard to="/javascript" index={1} mark="JS" title="JavaScript" state={pathState(javascript)} />
-          <PathCard to="/python" index={2} mark="Py" title="Python" state={pathState(python)} />
+          <PathCard to="/tasks" index={0} mark="C" title="C programming" state={pathState('c')} />
+          <PathCard to="/javascript" index={1} mark="JS" title="JavaScript" state={pathState('javascript')} />
+          <PathCard to="/python" index={2} mark="Py" title="Python" state={pathState('python')} />
         </div>
       </section>
 
@@ -155,21 +153,26 @@ export default function Dashboard() {
             </EmptyState>
           ) : (
             <Card padded={false} className="divide-y divide-line">
-              {recent.map((s) => (
+              {recent.map((s) => {
+                const view = submissionView(s)
+                return (
                 <div key={s.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
                   <Link
-                    to={taskPath(s.task.language || 'c', s.task.slug)}
+                    to={view.to}
                     className="min-w-0 flex-1 basis-48 truncate font-medium text-fg hover:text-accent-text"
                   >
-                    {s.task.title}
+                    {view.title}
                   </Link>
-                  <DifficultyBadge level={s.task.difficulty} />
+                  {view.html
+                    ? <span className="rounded-full bg-surface-2 px-2.5 py-0.5 text-xs font-medium text-fg-muted">{view.label}</span>
+                    : <DifficultyBadge level={view.difficulty} />}
                   <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${verdictTone[s.status] || 'bg-surface-2 text-fg-muted'}`}>{s.status}</span>
                   <time dateTime={s.createdAt} className="text-xs text-fg-subtle tabular-nums">
                     {new Date(s.createdAt).toLocaleString()}
                   </time>
                 </div>
-              ))}
+                )
+              })}
             </Card>
           )}
         </div>

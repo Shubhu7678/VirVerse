@@ -8,5 +8,7 @@ export const fetchTaskSummary = (language = 'c', resumeSlug) =>
 // Categories plus just one topic's questions.
 export const fetchTopicTasks = (language = 'c', category) =>
   api.get('/tasks', { params: { language, category } }).then((r) => r.data)
+// Progress counts for every language in one call.
+export const fetchOverview = () => api.get('/tasks/overview').then((r) => r.data)
 export const fetchTask = (slug) => api.get(`/tasks/${slug}`).then((r) => r.data.task)
 export const fetchTaskSolution = (slug) => api.get(`/tasks/${slug}/solution`).then((r) => r.data)

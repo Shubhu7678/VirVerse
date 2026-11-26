@@ -11,7 +11,8 @@ import { issueResetLink } from '../services/passwordReset.js';
 import { sendMail, resetEmail } from '../services/mailer.js';
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-const studentFilter = { platformRole: null, isDemo: false };
+// `$ne: true` also matches older accounts that never had an isDemo field stored.
+const studentFilter = { platformRole: null, isDemo: { $ne: true } };
 
 // Number of distinct tasks each user has solved, per language: Map<"userId:language", count>.
 async function solvedCounts(userIds) {

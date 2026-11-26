@@ -26,15 +26,14 @@ export async function getStatusMap(userId) {
 
 const progressState = (percent) => (percent === 0 ? 'not-started' : percent === 100 ? 'completed' : 'in-progress');
 
-export async function listTasks(req, res) {
-  const language = req.query.language || 'c';
-  if (!['c', 'javascript', 'python'].includes(language)) {
-    return res.status(400).json({ message: 'Unsupported programming language.' });
-  }
+const LANGUAGES = ['c', 'javascript', 'python'];
+
+// Builds a language's tasks, categories and stats for one user. `statusMap` can be shared across languages.
+async function buildTaskList(user, language, statusMap) {
   const categoriesForLanguage = language === 'javascript'
     ? JAVASCRIPT_CATEGORIES
     : language === 'python' ? PYTHON_CATEGORIES : CATEGORIES;
-  const expandedAccess = hasLanguageLearningAccess(req.user, language);
+  const expandedAccess = hasLanguageLearningAccess(user, language);
   // Without an unlock only the free questions are returned; the rest are not visible at all.
   const accessFilter = expandedAccess
     ? {}
@@ -43,10 +42,9 @@ export async function listTasks(req, res) {
     ? { $or: [{ language: 'c' }, { language: { $exists: false } }] }
     : { language };
   const taskFilter = { ...languageFilter, ...accessFilter };
-  const [tasks, statusMap, categoryCounts] = await Promise.all([
+  const [tasks, categoryCounts] = await Promise.all([
     Task.find(taskFilter)
       .select('slug title category order difficulty questionOrder').sort({ order: 1 }).lean(),
-    getStatusMap(req.user._id),
     // Real size of every topic, so locked topics can say how much is inside without exposing questions.
     Task.aggregate([{ $match: languageFilter }, { $group: { _id: '$category', n: { $sum: 1 } } }]),
   ]);
@@ -91,6 +89,50 @@ export async function listTasks(req, res) {
     .sort((a, b) => new Date(b.lastAttemptAt) - new Date(a.lastAttemptAt))[0];
   const continueTask = lastAttempted || withStatus.find((t) => t.status === 'todo') || null;
 
+  return { language, withStatus, categories, completed, continueTask };
+}
+
+const statsOf = (withStatus, completed) => ({
+  total: withStatus.length,
+  completed,
+  pending: withStatus.length - completed,
+  percent: withStatus.length ? Math.round((completed / withStatus.length) * 100) : 0,
+});
+
+const continueOf = ({ language, continueTask }) => continueTask && {
+  slug: continueTask.slug,
+  language,
+  title: continueTask.title,
+  category: continueTask.category,
+  difficulty: continueTask.difficulty,
+  attempted: continueTask.status === 'attempted',
+};
+
+// Progress for all languages in one round trip: counts only, no question lists or topic details.
+export async function overview(req, res) {
+  const statusMap = await getStatusMap(req.user._id);
+  const lists = await Promise.all(LANGUAGES.map((l) => buildTaskList(req.user, l, statusMap)));
+  const out = {};
+  for (const list of lists) {
+    out[list.language] = {
+      ...statsOf(list.withStatus, list.completed),
+      topics: list.categories.length,
+      unlockedTopics: list.categories.filter((c) => !c.locked).length,
+      continueTask: continueOf(list),
+    };
+  }
+  res.json(out);
+}
+
+export async function listTasks(req, res) {
+  const language = req.query.language || 'c';
+  if (!LANGUAGES.includes(language)) {
+    return res.status(400).json({ message: 'Unsupported programming language.' });
+  }
+  const { withStatus, categories, completed, continueTask } = await buildTaskList(
+    req.user, language, await getStatusMap(req.user._id),
+  );
+
   // ?summary=true leaves the question list out (counts, categories and "continue" only).
   // ?category=<slug> returns only that topic's questions. ?resumeSlug=<slug> adds that
   // question as `resumeTask` when it exists and is unfinished.
@@ -107,20 +149,8 @@ export async function listTasks(req, res) {
     ...(tasksOut && { tasks: tasksOut }),
     ...(resumeTask && { resumeTask: { slug: resumeTask.slug, title: resumeTask.title, category: resumeTask.category } }),
     categories,
-    stats: {
-      total: withStatus.length,
-      completed,
-      pending: withStatus.length - completed,
-      percent: withStatus.length ? Math.round((completed / withStatus.length) * 100) : 0,
-    },
-    continueTask: continueTask && {
-      slug: continueTask.slug,
-      language,
-      title: continueTask.title,
-      category: continueTask.category,
-      difficulty: continueTask.difficulty,
-      attempted: continueTask.status === 'attempted',
-    },
+    stats: statsOf(withStatus, completed),
+    continueTask: continueOf({ language, continueTask }),
   });
 }
 
@@ -134,7 +164,6 @@ export async function getTask(req, res) {
     });
   }
 
-  const statusMap = await getStatusMap(req.user._id);
   const language = task.language ?? 'c';
   const nextFilter = !hasLanguageLearningAccess(req.user, language)
     ? {
@@ -147,7 +176,13 @@ export async function getTask(req, res) {
     : language === 'c'
       ? { order: { $gt: task.order }, $or: [{ language: 'c' }, { language: { $exists: false } }] }
       : { language, order: { $gt: task.order } };
-  const next = await Task.findOne(nextFilter).sort({ order: 1 }).select('slug').lean();
+  // Only this task's status is needed, so don't aggregate every submission the user has.
+  const [next, solved, attempted] = await Promise.all([
+    Task.findOne(nextFilter).sort({ order: 1 }).select('slug').lean(),
+    Submission.exists({ user: req.user._id, task: task._id, status: 'Accepted' }),
+    Submission.exists({ user: req.user._id, task: task._id }),
+  ]);
+  const guide = guideForQuestion(language, task.slug);
   const sampleTests = task.testCases
     .filter((tc) => !tc.isHidden)
     .map(({ input, expectedOutput }) => ({ input, expectedOutput }));
@@ -172,10 +207,10 @@ export async function getTask(req, res) {
       starterCode: task.starterCode,
       sampleTests,
       hiddenTestCount: task.testCases.length - sampleTests.length,
-      ...(guideForQuestion(language, task.slug) && { guide: guideForQuestion(language, task.slug) }),
+      ...(guide && { guide }),
       solutionAvailable: task.questionOrder >= 1 && task.questionOrder <= 20
         && (language !== 'c' || task.category === 'basics'),
-      status: statusMap.get(String(task._id))?.status || 'todo',
+      status: solved ? 'completed' : attempted ? 'attempted' : 'todo',
       nextSlug: next?.slug || null,
     },
   });
