@@ -82,7 +82,7 @@ function TaskCheck({ results, task, completed, containerRef, announcement, onCon
       )}
       <ul className="mt-3 space-y-1">
         {results.checks.map((item) => (
-          <li key={item.label} className="flex items-start gap-2.5 rounded-md bg-surface-2/60 px-3 py-2">
+          <li key={item.label} className="flex items-start gap-2.5 rounded-lg bg-surface-2/60 px-3 py-2">
             <span aria-hidden="true" className="mt-px grid size-4 shrink-0 place-items-center">
               {item.passed
                 ? <Check className="size-4 text-success" strokeWidth={2.5} />
@@ -100,7 +100,7 @@ function TaskCheck({ results, task, completed, containerRef, announcement, onCon
       </ul>
       <p className="sr-only" aria-live="polite">{announcement}</p>
       {remaining === 0 && (
-        <div className="mt-3 rounded-md border border-line bg-surface-2 p-3">
+        <div className="mt-3 rounded-lg bg-surface-2 p-3">
           <p className="flex items-center gap-1.5 text-[13px] font-medium text-fg">
             <Check className="size-4 text-success" strokeWidth={2.5} aria-hidden="true" />
             {completed ? 'Done. Nice work.' : 'Every requirement is in place.'}
@@ -130,9 +130,9 @@ function DocsCard({ task, onOpen, triggerRef }) {
       type="button"
       onClick={onOpen}
       aria-haspopup="dialog"
-      className="group flex w-full items-center gap-3 rounded-md border border-line bg-surface px-3 py-2.5 text-left transition-colors hover:bg-surface-2"
+      className="group flex w-full items-center gap-3 rounded-lg bg-surface-2/70 px-3 py-2.5 text-left transition-colors hover:bg-surface-2"
     >
-      <span className="grid size-8 shrink-0 place-items-center rounded-md bg-surface-2 text-fg-muted transition-colors group-hover:bg-inset group-hover:text-fg">
+      <span className="grid size-8 shrink-0 place-items-center rounded-md bg-surface text-fg-muted transition-colors group-hover:text-fg">
         <BookOpen className="size-4" aria-hidden="true" />
       </span>
       <span className="min-w-0 flex-1">
@@ -160,7 +160,7 @@ function Instructions({ task, onOpenDocs, docsTriggerRef }) {
         </ul>
       </div>
       <DocsCard task={task} onOpen={onOpenDocs} triggerRef={docsTriggerRef} />
-      <div className="rounded-md border border-line bg-surface-2/60 px-3 py-2.5">
+      <div className="rounded-lg bg-surface-2/70 px-3 py-2.5">
         <h3 className="text-xs text-fg-subtle">What you should see</h3>
         <p className="mt-1 text-[13px] leading-relaxed text-fg">{task.expectedBehavior}</p>
       </div>

@@ -44,7 +44,7 @@ function Podium({ entries }) {
         const first = e.rank === 1
         return (
           <li key={e.id} className={first ? 'max-sm:order-first' : ''}>
-            <Card className={`relative flex flex-col items-center gap-2.5 text-center ${first ? 'border-fg-subtle pt-8 pb-6 sm:pt-9 sm:pb-7' : 'pt-6'} ${e.you ? 'ring-1 ring-fg-subtle' : ''}`}>
+            <Card className={`relative flex flex-col items-center gap-2.5 text-center ${first ? 'border-fg-subtle pt-8 pb-6 sm:pt-9 sm:pb-7' : 'border-transparent bg-surface-2/70 pt-6'} ${e.you ? 'ring-1 ring-fg-subtle' : ''}`}>
               {first ? (
                 <span className={`absolute -top-3.5 grid size-8 place-items-center rounded-full text-black ${MEDAL[1]}`} aria-label="First place">
                   <Crown className="size-4" strokeWidth={2.25} aria-hidden="true" />
@@ -205,7 +205,7 @@ export default function Leaderboard() {
       </header>
 
       {me && (
-        <div data-tour="lb-me" className="flex flex-wrap items-center gap-x-8 gap-y-3 rounded-control border border-line bg-surface-2/60 px-4 py-3">
+        <div data-tour="lb-me" className="flex flex-wrap items-center gap-x-8 gap-y-3 rounded-xl bg-surface-2/70 px-4 py-3">
           <div>
             <p className="text-xs text-fg-subtle">Your rank</p>
             <p className="text-base font-semibold text-fg tabular-nums">#{me.rank} <span className="text-[13px] font-normal text-fg-muted">of {data.overall}</span></p>

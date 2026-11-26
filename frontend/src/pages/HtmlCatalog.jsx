@@ -6,7 +6,6 @@ import {
   PanelsTopLeft, Pilcrow, Play, Quote, Table, Tag, TextCursorInput, Type, UserRound,
 } from 'lucide-react'
 import { ErrorBlock } from '../components/States'
-import Card from '../components/ui/Card'
 import ProgressBar from '../components/ProgressBar'
 import { buttonClasses } from '../components/buttonStyles'
 import { fetchHtmlProgress } from '../api/webDevelopment'
@@ -127,30 +126,27 @@ const countDone = (tasks, progress) => tasks.filter((task) => progress[task.id]?
 function ContinueBanner({ nextActivity, completedCount }) {
   if (!nextActivity) {
     return (
-      <Card className="bg-surface-2/50">
-        <h2 className="text-base font-semibold text-fg">You finished the HTML course</h2>
-        <p className="mt-1 text-sm text-fg-muted">Every lesson and project is done. You can reopen any of them to practise again.</p>
-      </Card>
+      <div className="rounded-xl bg-surface-2/70 px-5 py-3.5">
+        <h2 className="text-[15px] font-semibold text-fg">You finished the HTML course</h2>
+        <p className="text-sm text-fg-muted">Every lesson and project is done. You can reopen any of them to practise again.</p>
+      </div>
     )
   }
   const isProject = nextActivity.category === 'project'
   const eyebrow = isProject ? 'Lessons done. Time to build' : completedCount ? 'Start where you left off' : 'Start here'
   return (
-    <Card className="bg-surface-2/50 !py-4">
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-        <span className="grid size-10 shrink-0 place-items-center rounded-control border border-line bg-surface text-fg" aria-hidden="true">
-          <Play className="size-[18px] fill-current" />
-        </span>
-        <div className="min-w-0 flex-1 basis-64">
-          <p className="text-xs text-fg-subtle">{eyebrow}</p>
-          <h2 className="mt-0.5 text-base font-semibold tracking-tight text-fg">{nextActivity.title}</h2>
-          <p className="mt-0.5 text-[13px] text-fg-muted">{nextActivity.objectives.join(', ')}</p>
-        </div>
-        <Link to={`${TOPICS_PATH}/${nextActivity.id}`} className={buttonClasses({ size: 'md' })}>
-          {isProject ? 'Start project' : completedCount ? 'Continue lesson' : 'Start lesson'} <ArrowRight className="size-4" aria-hidden="true" />
-        </Link>
+    <div className="flex items-center gap-4 rounded-xl bg-surface-2/70 px-5 py-3.5">
+      <span className="grid size-10 shrink-0 place-items-center rounded-control bg-surface text-fg" aria-hidden="true">
+        <Play className="size-4 fill-current" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-xs text-fg-subtle">{eyebrow}</p>
+        <h2 className="truncate text-[15px] font-semibold text-fg">{nextActivity.title}</h2>
       </div>
-    </Card>
+      <Link to={`${TOPICS_PATH}/${nextActivity.id}`} className={buttonClasses({ size: 'md' })}>
+        {isProject ? 'Start project' : completedCount ? 'Continue lesson' : 'Start lesson'} <ArrowRight className="size-4" aria-hidden="true" />
+      </Link>
+    </div>
   )
 }
 
@@ -160,15 +156,15 @@ function SectionNav({ activeId, onSelect, progress, known, completedCount }) {
   return (
     <>
       <nav aria-label="Course content" className="hidden lg:block">
-        <Card padded={false} className="sticky top-4 max-h-[calc(100dvh-6rem)] overflow-y-auto p-2.5">
-          <div className="flex items-baseline justify-between px-2 pt-1.5 pb-2">
+        <div className="sticky top-4 max-h-[calc(100dvh-6rem)] overflow-y-auto pr-1">
+          <div className="flex items-baseline justify-between px-2.5 pb-2">
             <h2 className="text-sm font-semibold text-fg">Course content</h2>
             <span className="text-xs text-fg-subtle tabular-nums">{known ? completedCount : 0} / {HTML_TASKS.length}</span>
           </div>
           {levels.map((level) => (
             <div key={level} className="mt-2 first:mt-0">
-              <p className="px-2 pt-2 pb-1 text-xs text-fg-subtle">{level}</p>
-              <ul className="space-y-0.5">
+              <p className="px-2.5 pt-3 pb-1 text-xs font-medium text-fg-subtle">{level}</p>
+              <ul className="space-y-px">
                 {SECTIONS.filter((section) => section.level === level).map((section) => {
                   const active = section.id === activeId
                   const done = countDone(section.tasks, progress)
@@ -178,7 +174,7 @@ function SectionNav({ activeId, onSelect, progress, known, completedCount }) {
                         type="button"
                         onClick={() => onSelect(section.id)}
                         aria-current={active ? 'true' : undefined}
-                        className={`flex w-full items-center gap-2.5 rounded-control px-2 py-1.5 text-left transition-colors ${
+                        className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-left transition-colors ${
                           active ? 'bg-surface-2' : 'hover:bg-surface-2/60'
                         }`}
                       >
@@ -189,8 +185,8 @@ function SectionNav({ activeId, onSelect, progress, known, completedCount }) {
                         }`}>
                           {known && done === section.tasks.length ? <Check className="size-4" strokeWidth={2.5} aria-hidden="true" /> : section.number}
                         </span>
-                        <span className={`min-w-0 flex-1 truncate text-[13px] ${active ? 'font-medium text-fg' : 'text-fg-muted'}`}>{section.title}</span>
-                        <span className="shrink-0 text-xs text-fg-subtle tabular-nums">{known ? done : 0} / {section.tasks.length}</span>
+                        <span className={`min-w-0 flex-1 truncate text-sm ${active ? 'font-medium text-fg' : 'text-fg-muted'}`}>{section.title}</span>
+                        <span className="shrink-0 text-xs text-fg-subtle tabular-nums">{known ? done : 0}/{section.tasks.length}</span>
                       </button>
                     </li>
                   )
@@ -198,7 +194,7 @@ function SectionNav({ activeId, onSelect, progress, known, completedCount }) {
               </ul>
             </div>
           ))}
-        </Card>
+        </div>
       </nav>
 
       <nav aria-label="Course content" className="-mx-4 overflow-x-auto px-4 sm:-mx-6 sm:px-6 lg:hidden">
@@ -236,18 +232,16 @@ function LessonRow({ task, done, isNext }) {
         to={`${TOPICS_PATH}/${task.id}`}
         data-task-id={task.id}
         aria-label={`${task.title}${done ? ', completed' : isNext ? ', up next' : ''}`}
-        className={`group flex items-center gap-3.5 rounded-control border px-3.5 py-3 transition-colors ${
-          isNext ? 'border-line-strong bg-surface-2' : 'border-line hover:bg-surface-2/60'
-        }`}
+        className={`group flex items-center gap-3.5 px-4 py-3 transition-colors hover:bg-surface-2/60 ${isNext ? 'bg-surface-2/60' : ''}`}
       >
-        <span className="grid size-10 shrink-0 place-items-center rounded-control border border-line bg-surface text-fg-muted" aria-hidden="true">
+        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-fg-muted" aria-hidden="true">
           <Icon className="size-[18px]" strokeWidth={1.75} />
         </span>
         <span className="min-w-0 flex-1">
           <span className="block text-sm font-medium text-fg">{task.title}</span>
           <span className="mt-0.5 line-clamp-2 block text-[13px] leading-snug text-fg-muted">{task.objectives.slice(0, 2).join('. ')}.</span>
         </span>
-        <span className="hidden shrink-0 items-center gap-1.5 text-xs text-fg-subtle sm:inline-flex">
+        <span className="hidden shrink-0 items-center gap-1.5 text-xs text-fg-subtle tabular-nums sm:inline-flex">
           <Clock className="size-3.5" aria-hidden="true" /> {isProject ? '10–15 min' : '4–5 min'}
         </span>
         <span className={`grid size-8 shrink-0 place-items-center rounded-full transition-colors ${
@@ -268,26 +262,26 @@ function SectionPanel({ section, progress, known, nextId }) {
   const done = countDone(section.tasks, progress)
   const percent = section.tasks.length ? Math.round((done / section.tasks.length) * 100) : 0
   return (
-    <Card as="section" aria-labelledby="section-title" className="!p-4 sm:!p-5">
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+    <section aria-labelledby="section-title" className="overflow-hidden rounded-xl border border-line bg-surface">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-3 px-4 py-4">
         <span className="grid size-10 shrink-0 place-items-center rounded-full bg-surface-2 text-sm font-semibold text-fg tabular-nums" aria-hidden="true">
           {section.number}
         </span>
         <div className="min-w-0 flex-1 basis-56">
           <h2 id="section-title" className="text-base font-semibold tracking-tight text-fg">{section.title}</h2>
-          <p className="mt-0.5 text-[13px] text-fg-muted">{section.description}</p>
+          <p className="text-[13px] text-fg-muted">{section.description}</p>
         </div>
         <div className="w-full sm:w-40">
           <p className="text-xs text-fg-subtle tabular-nums sm:text-right">{known ? done : 0} / {section.tasks.length} completed</p>
           <div className="mt-1.5"><ProgressBar percent={known ? percent : 0} label={`${section.title} progress`} /></div>
         </div>
       </div>
-      <ol className="mt-4 space-y-2">
+      <ol className="divide-y divide-line border-t border-line">
         {section.tasks.map((task) => (
           <LessonRow key={task.id} task={task} done={Boolean(progress[task.id]?.completed)} isNext={known && task.id === nextId} />
         ))}
       </ol>
-    </Card>
+    </section>
   )
 }
 
@@ -301,31 +295,25 @@ function CourseOverview({ completedCount, progress, loading, error }) {
   const activeSection = SECTIONS.find((section) => section.id === picked) ?? currentSection
 
   return (
-    <div className="mx-auto max-w-5xl space-y-5">
-      <header className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
-        <div className="max-w-xl">
-          <p className="text-xs text-fg-subtle">Web development</p>
-          <h1 className="mt-1 text-xl font-semibold tracking-tight text-fg">HTML basics</h1>
-          <p className="mt-1 text-sm text-fg-muted">
-            Build your first web pages step by step. Each lesson is a few minutes long, with a live editor and preview.
-          </p>
+    <div className="mx-auto max-w-7xl space-y-5">
+      <header className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
+        <div className="min-w-0">
+          <h1 className="text-xl font-semibold tracking-tight text-fg">HTML basics</h1>
+          <p className="mt-0.5 text-sm text-fg-muted">Build web pages step by step. Short lessons with a live editor and preview.</p>
         </div>
-        <div className="w-full sm:w-56" aria-label={known ? `${completedCount} of ${HTML_TASKS.length} activities complete` : 'Progress loading'}>
+        <div className="w-full sm:w-52" aria-label={known ? `${completedCount} of ${HTML_TASKS.length} activities complete` : 'Progress loading'}>
           <div className="flex items-baseline justify-between text-[13px]">
-            <span className="text-fg-muted">Your progress</span>
+            <span className="text-fg-muted">{known ? `${completedCount} of ${HTML_TASKS.length} done` : `${HTML_LESSONS.length} lessons · ${HTML_PROJECTS.length} projects`}</span>
             <span className="font-medium text-fg tabular-nums">{known ? `${percent}%` : '–'}</span>
           </div>
-          <div className="mt-2"><ProgressBar percent={known ? percent : 0} label="HTML course completion" /></div>
-          <p className="mt-1.5 text-xs text-fg-subtle tabular-nums">
-            {known ? `${completedCount} of ${HTML_TASKS.length} done` : `${HTML_LESSONS.length} lessons · ${HTML_PROJECTS.length} projects`}
-          </p>
+          <div className="mt-1.5"><ProgressBar percent={known ? percent : 0} label="HTML course completion" /></div>
         </div>
       </header>
 
       {error && <ErrorBlock message={error} />}
       {known && <ContinueBanner nextActivity={nextActivity} completedCount={completedCount} />}
 
-      <div className="grid gap-4 lg:grid-cols-[16rem_minmax(0,1fr)] lg:items-start">
+      <div className="grid gap-5 lg:grid-cols-[17rem_minmax(0,1fr)] lg:items-start">
         <SectionNav activeId={activeSection.id} onSelect={setPicked} progress={progress} known={known} completedCount={completedCount} />
         <SectionPanel section={activeSection} progress={progress} known={known} nextId={nextActivity?.id} />
       </div>
